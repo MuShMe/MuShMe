@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MuShMe - Welcome !</title>
+	<strong><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></strong>
+</head>
+<body>
+	<header>
+		<div class="container"><a href="/"><h1 class="logo">MuShMe</h1></a>
+			<strong><nav>
+		      <ul class="menu">
+		        <li><a href="{{ url_for('home') }}">Home</a></li>
+		        <li><a href="{{ url_for('about') }}">About</a></li>
+		        {% if not session.logged_in %}
+		        <li><a href="{{ url_for('signup') }}">SignUp</a></li>
+		        <li><a href="{{ url_for('login') }}">LogIn</a></li>
+		        {% else %}
+		        
+		        <li><a href="{{ url_for('logout') }}">LogOut</a></li>
+		        {% endif %}
+		      </ul>
+		    </nav></strong>
+		</div>
+	</header>
+	<div>
+		{% block content %}
+		{% endblock %}
+	</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+ 
+{% block content %}
+  <h2>Sign In</h2>
+  {% if session.logged_in == True %}
+    <h2> You have not logged in. Please login for better results !</h2>
+  {% else %}
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    {% for message in form.email.errors %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+     
+    {% for message in form.password.errors %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+     
+    <form action="{{ url_for('login') }}" method=post>
+      {{ form.hidden_tag() }}
+       
+      {{ form.email.label }}
+      {{ form.email }}
+       
+      {{ form.password.label }}
+      {{ form.password }}
+       
+      {{ form.submit }}
+    </form>
+  {% endif %}
+{% endblock %}

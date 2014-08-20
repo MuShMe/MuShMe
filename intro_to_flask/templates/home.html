@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="home">
+	{% if not session.signed_up %}
+		<h2>Welcome</h2>
+	{% else %}
+		<h2> Thank You for signing Up </h2>
+	{% endif %}
+	</div>
+{% endblock %}
