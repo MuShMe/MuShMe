@@ -54,7 +54,7 @@ def login():
 def signup():
     form = ContactForm(request.form)
     if request.method == 'POST':
-        if form.validate() ==False :
+        if form.validate ==False :
             flash('All * fields are required !')
             return render_template('signup.html',form=form)
         else:
