@@ -8,10 +8,10 @@ Username VARCHAR(100) NOT NULL,
 Email_id VARCHAR(120) NOT NULL UNIQUE,
 Pwdhash VARCHAR(100) NOT NULL,
 Privilege INT NOT NULL,
-Profile_pic BLOB NOT NULL,														-----
+Profile_pic LONGBLOB,
 Name VARCHAR(100) NOT NULL,
-DOB	date ,
-Last_login date
+DOB	DATE,
+Last_login DATE
 );
 
 drop table if exists songs;
@@ -30,12 +30,12 @@ Uploaded_when DATETIME NOT NULL
 drop table if exists albums;
 CREATE TABLE albums (
 Album_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Album_pic              																-----
+Album_pic LONGBLOB,
 Album_name VARCHAR(100) NOT NULL,
 Album_year INT,
 No_of_tracks INT,
 Total_length TIME NOT NULL,
-Publisher VARCHAR(100) NOT NULL,
+Publisher VARCHAR(100) NOT NULL
 );
 
 drop table if exists artists;
@@ -43,10 +43,10 @@ CREATE TABLE artists (
 Artist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Country VARCHAR(100),
 Begin_date_year INT,
-Artist_pic
+Artist_pic LONGBLOB,
 Artist_name VARCHAR(100) NOT NULL,
 End_date_year INT,
-Last_updated DATETIME NOT NULL;
+Last_updated DATETIME NOT NULL
 );
 
 drop table if exists playlists;
