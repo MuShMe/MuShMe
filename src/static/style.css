@@ -23,7 +23,6 @@ header h1.logo{
 
 header h1.logo:hover{
   	text-decoration: none;
-	background-color: green;
 }
 
 div .home{
@@ -51,10 +50,6 @@ h2 {
   display: inline;
 }
 
-.menu li:hover{
-	background-color: green;
-}
- 
 .menu li + li {
   margin-left: 2em;
 }
