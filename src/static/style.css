@@ -23,6 +23,7 @@ header h1.logo{
 
 header h1.logo:hover{
   	text-decoration: none;
+    color: #d3d3d3;
 }
 
 div .home{
@@ -50,13 +51,21 @@ h2 {
   display: inline;
 }
 
+.menu li:hover{
+  color:#d3d3d3;
+}
+
 .menu li + li {
   margin-left: 2em;
 }
  
 .menu li a {
-  color: #999;
+  color: #FFF;
   text-decoration: none;
+}
+
+.menu li a:hover{
+  color: #d3d3d3;
 }
 
 /* Contact form */
