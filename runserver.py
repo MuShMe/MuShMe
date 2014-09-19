@@ -1,3 +1,6 @@
-from intro_to_flask import app
+#!/usr/bin/python
+from src import app
  
-app.run(debug=True)
+app.debug = True
+app.run();
+

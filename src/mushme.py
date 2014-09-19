@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from intro_to_flask import app
+from src import app
 import os
 from flask import Flask, render_template, session, request, flash, url_for, redirect
 from Forms import ContactForm, RegistrationForm, LoginForm
