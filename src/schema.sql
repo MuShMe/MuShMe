@@ -1,6 +1,6 @@
-
+/*
 PARTICULAR TABLES :
-
+*/
 drop table if exists entries;
 CREATE TABLE entries (
 User_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -10,7 +10,7 @@ Pwdhash VARCHAR(100) NOT NULL,
 Privilege INT NOT NULL,
 Profile_pic LONGBLOB,
 Name VARCHAR(100) NOT NULL,
-DOB	DATE,
+DOB DATE,
 Last_login DATE
 );
 
@@ -101,7 +101,9 @@ foreign key(User_id_from) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-RELATIONSHIP TABLES :
+/*
+ *RELATIONSHIP TABLES :
+ */
 
 drop table if exists friends;
 CREATE TABLE friends (
@@ -158,7 +160,7 @@ ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 drop table if exists playlist_comments;
-CREATE TABLE palylist_comments (
+CREATE TABLE playlist_comments (
 Playlist_id INT NOT NULL,
 Comment_id INT NOT NULL,
 foreign key(Playlist_id) references playlists(Playlist_id),
