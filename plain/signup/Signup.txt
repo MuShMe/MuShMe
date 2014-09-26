@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MuShMe - Welcome !</title>
+	<strong><link rel="stylesheet" href="/static/style.css"></strong>
+</head>
+<body>
+	<header>
+		<div class="container"><a href="/"><h1 class="logo">MuShMe</h1></a>
+			<strong><nav>
+		      <ul class="menu">
+		        <li><a href="/">Home</a></li>
+		        <li><a href="/about">About</a></li>
+		        
+		        <li><a href="/signup">SignUp</a></li>
+		        <li><a href="/login">LogIn</a></li>
+		        
+		      </ul>
+		    </nav></strong>
+		</div>
+	</header>
+	<div>
+		
+		<h2>SignUp</h2>
+		
+		
+
+		
+
+		<form action=" /signup " method=post>
+			<div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1411659100.99##537188729f3edd0362d22340118b7a428f5b6d02"></div>
+
+			<label for="name">Full Name*</label>
+			<input id="name" name="name" type="text" value="">
+
+			<label for="email">E-mail*</label>
+			<input id="email" name="email" type="text" value="">
+
+			<label for="mobile">Mobile (Optional)</label>
+			<input id="mobile" name="mobile" type="text" value="">
+
+			<label for="city">Current City (Optional)</label>
+			<input id="city" name="city" type="text" value="">
+
+			<input id="submit" name="submit" type="submit" value="Continue">
+		
+		</form>
+
+
+	</div>
+</body>
+</html>
