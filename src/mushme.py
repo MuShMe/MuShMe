@@ -24,6 +24,11 @@ session = Session()
 mail = Mail()
 mail.init_app(app)
 
+@app.route('/api/addtocollection/<uuid>',methods=['GET','POST'])
+def add():
+    print request.json
+    return uuid
+
 @app.route('/')
 def home():
     #session['signed_up']=False

@@ -3,23 +3,41 @@
 import os
 import sys
 
+#To create a json to throw at the server
+import json
+
 #For the network capabilities
 import urllib2
 import urllib
 
 #For parsing the ID3 tags
-import ID3
+from ID3 import *
 
 def read(library):
     
     if library[-1] != '/':
         library += '/'
 
-    for file in os.listdir(library):
+    for files in os.listdir(library):
 
-        if os.path.isdir(library + file) == False:
-            #send data from file to server as a JSON
+        filepath=library + files
+        #print filepath
 
+        if os.path.isdir(filepath) == False:
+            ext= os.path.splitext(filepath)[-1].lower() 
+            #print ext
+
+            if ext == ".mp3":
+
+                id3tags=ID3(library+files);
+                #encode the tags into a JSON to send to the server
+                tagjson=json.dumps(id3tags.as_dict()).encode('utf-8')
+
+                headers = {}
+                headers['Content-Type'] = 'application/json'
+                request = urllib2.Request('http://localhost:5000/api/addtocollection/1',tagjson, headers)
+                response = urllib2.urlopen(request)
+                print str(response.read())
 
 '''
 MAIN starts here
