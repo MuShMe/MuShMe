@@ -6,6 +6,7 @@ from flask import Flask, render_template, session, request, flash, url_for, redi
 from Forms import ContactForm, RegistrationForm, LoginForm
 from flask.ext.mail import Message, Mail
 from models import db, Entry
+from api import API
 """from sqlalchemy import create_engine, MetaData
 from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy.orm import mapper
@@ -13,7 +14,7 @@ from sqlalchemy.orm import mapper
 from sqlalchemy.orm import sessionmaker
 # an Engine, which the Session will use for connection
 # resources
-some_engine = create_engine('postgresql://root:Internship0@localhost/')
+some_engine = create_engine('postgresql://root:crimson@localhost/')
 # create a configured "Session" class
 Session = sessionmaker(bind=some_engine)
 # create a Session
@@ -24,10 +25,7 @@ session = Session()
 mail = Mail()
 mail.init_app(app)
 
-@app.route('/api/addtocollection/<uuid>',methods=['GET','POST'])
-def add():
-    print request.json
-    return uuid
+app.register_blueprint(API);
 
 @app.route('/')
 def home():

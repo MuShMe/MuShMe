@@ -1,4 +1,5 @@
-#This is a client to read data from ID3 tags and POST the data to the mushme database
+# This is a client to read data from ID3 tags and POST the data to the mushme database
+# @Author rootavish, copyright the DBMS team, 2014
 
 import os
 import sys
@@ -35,10 +36,11 @@ def read(library):
 
                 headers = {}
                 headers['Content-Type'] = 'application/json'
-                request = urllib2.Request('http://localhost:5000/api/addtocollection/1',tagjson, headers)
+                request = urllib2.Request('http://localhost:5000/api/addtocollection',tagjson, headers)
                 response = urllib2.urlopen(request)
                 print str(response.read())
-
+        else:
+            read(filepath)
 '''
 MAIN starts here
 '''
