@@ -102,7 +102,8 @@ ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 /*
- *RELATIONSHIP TABLES :
+ * RELATIONSHIP TABLES :
+ * Copy the ones above this line first, then copy the ones below.
  */
 
 drop table if exists friends;
