@@ -1,27 +1,46 @@
 from flask.ext.wtf import Form
 from wtforms import validators, ValidationError
-from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField
+from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField
 from wtforms.validators import Required
+from wtforms.widgets.core import Select, HTMLString, html_params
 from models import Entry
 
+class SelectDateWidget(object):
+    FORMAT_CHOICES = {
+        '%d': [(x, str(x)) for x in range(1, 32)],
+        '%m': [(x, str(x)) for x in range(1, 13)],
+        '%y': [(x, str(x)) for x in range(1950, 2014)],
+    }
+
+    def __call__(self, field, **kwargs):
+        field_id = kwargs.pop('id', field.id)
+        html = []
+        for format in field.format.split():
+            choices = self.FORMAT_CHOICES[format]
+            id_suffix = format.replace('%', '-')
+            params = dict(kwargs, name=field.name, id=field_id + id_suffix)
+            html.append('<select %s>' % html_params())
+            if field.data:
+                current_value = int(field.data.strftime(format))
+            else:
+                current_value = None
+            for value, label in choices:
+                selected = (value == current_value)
+                html.append(Select.render_option(value, label, selected))
+            html.append('</select>')
+
+        return HTMLString(''.join(html))
+
 class ContactForm(Form):
-	name = TextField("Full Name*", [validators.Required("Please enter a Name")])
-	email= TextField("E-mail*",[validators.Required("Please enter an e-mail address"), validators.email("Please enter a valid email address")])
-	accept_tos = BooleanField('I accept the Terms Of Services', [validators.Required("Please Accept the Terms Of Services")])
-	stud_co = BooleanField('Student', 'Company',[validators.Required("Please choose one of the fields")])
-	mobile = TextField("Mobile (Optional)")
-	city = TextField("Current City (Optional)")
-	submit=SubmitField("Continue")
-
-
-class RegistrationForm(Form):
+	name = TextField("Full Name", [validators.Required("Please enter a Name")])
 	username = TextField('Username', [validators.Length(min=4, max=25,message="Username should be of minimum 4 and maximum 25 characters"),validators.Required("Please fill in a username")])
 	email = TextField('Email Address', [validators.Length(min=6, max=35),validators.Required()])
 	password = PasswordField('Password', [
 		validators.Required("You need to type a password"),
 		validators.EqualTo('confirm', message='Passwords must match')
 	])
-	confirm = PasswordField('ReType Password',[validators.Required()])
+	confirm = PasswordField('Confirm Password',[validators.Required("Please Enter your Date Of Birth")])
+	dob = DateField(format='%d %m %y', widget=SelectDateWidget() )
 	accept_tos = BooleanField('I accept the Terms Of Services', [validators.Required("Please Accept the Terms Of Services")])
 	submit=SubmitField("Register")
 

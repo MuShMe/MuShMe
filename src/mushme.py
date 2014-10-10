@@ -3,42 +3,38 @@
 from src import app
 import os
 from flask import Flask, render_template, session, request, flash, url_for, redirect
-from Forms import ContactForm, RegistrationForm, LoginForm
+from Forms import ContactForm, LoginForm
 from flask.ext.mail import Message, Mail
 from models import db, Entry
 from api import API
-"""from sqlalchemy import create_engine, MetaData
-from sqlalchemy import Table, Column, Integer, String
-from sqlalchemy.orm import mapper
-#from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-# an Engine, which the Session will use for connection
-# resources
-some_engine = create_engine('postgresql://root:crimson@localhost/')
-# create a configured "Session" class
-Session = sessionmaker(bind=some_engine)
-# create a Session
-session = Session()
-#from flaskr.database import metadata"""
-
  
 mail = Mail()
 mail.init_app(app)
 
 app.register_blueprint(API);
 
-@app.route('/')
+@app.route('/home')
 def home():
-    #session['signed_up']=False
     return render_template('home.html')
+
+@app.route('/404')
+def error():
+    return render_template('error.html')
+
+@app.route('/termsofservices')
+def tos():
+    return render_template('tos.html')
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/changepwd')
+def changepwd():
+    return render_template('changepwd.html')
+
+@app.route('/', methods=['GET', 'POST'])
 def login():
-  #form = LoginForm(request.form)
     form = LoginForm(request.form)
   
     if request.method == 'POST':
@@ -61,66 +57,50 @@ def signup():
             flash('All * fields are required !')
             return render_template('signup.html',form=form)
         else:
-            form = RegistrationForm(request.form)
-            return render_template('fillform.html',form=form, session=True)
+            newuser = Entry(form.username.data , form.name.data, form.email.data, form.password.data, 0, 0, form.dob.data, 0)
+            session['email'] = newuser.Email_id
+            user = Entry.query.filter_by(Email_id = session['email']).first()
+    
+            if user is None:
+                db.session.add(newuser)
+                db.session.commit()
+                session['logged_in'] = True
+                return url_for('profile')
+            else:
+                flash("This email already exists, please try another !")
+                return render_template('signup.html')
     elif request.method == 'GET':
         return render_template('signup.html',form=form)
     return render_template('signup.html');
 
-@app.route('/fillform', methods=['GET','POST'])
-def fillform():
-    form = RegistrationForm(request.form)
-    
-    if request.method == 'POST':
-        if form.validate() ==False :
-            flash('All fields are required !')
-            return render_template('fillform.html',form=form, session=True)
-        else:
-            newuser=Entry(form.username.data, form.email.data, form.password.data)
-            session['email'] = newuser.email
-            user = Entry.query.filter_by(email = session['email']).first()
-    
-        if user is None:
-            db.session.add(newuser)
-            db.session.commit()
-            session['logged_in'] = True
-            return render_template('fillform.html',form=form)
-        else:
-            flash("This email already exists, please try another !")
-            return render_template('fillform.html')
-    if request.method == 'GET':
-        return render_template('fillform',form=form)
-    return render_template('fillform.html', session=True)
-
 @app.route('/logout')
 def logout(): 
     if 'email' not in session: 
-        return redirect(url_for('signin'))
-        session.pop('email', None)
+        return render_template('error.html')
     
     session['logged_in']=False
-    return render_template('home.html')
+    return render_template('login.html')
 
 @app.route('/testdb')
 def testdb():
-    if db.session.query("1").from_statement("SELECT username FROM entries"):
+    if db.session.query("all").from_statement("SELECT username FROM entries"):
         return 'It works.'
     else:
         return 'Something is broken.'
 
 @app.route('/profile')
 def profile():
-    #if session == True:
+    if 'email' not in session:
+        return render_template('error.html')
+    else:
         user = Entry.query.filter_by(email = session['email']).first()
         #flash("Hi")
         if user is None:
             flash ('User Not registered')
-            return render_template('login.html')
+            return render_template('login.html',form=form)
         else:
            return render_template('profile.html')
-    #else:
-    #    flash("You have not yet logged in !")
-    #    return render_template('login.html',form=form)
+        
 
 
 if not app.debug:

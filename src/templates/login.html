@@ -1,12 +1,23 @@
-{% extends "layout.html" %}
- 
-{% block content %}
-  <h2>Sign In</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MuShMe - Welcome !</title>
+  <link rel="icon" href="{{ url_for('static',filename='1411120925_audioguide_512px_GREY3.ico') }}" type="image/x-icon">
+  <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />-->
+  <link rel="stylesheet" href="{{ url_for('static',filename='style-main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='pure-min.css') }}">
+</head>
+<body>
+  <div class="container">
+      
+  <div class="content">  
+
   {% if session.logged_in == True %}
     <h2> You have not logged in. Please login for better results !</h2>
   {% else %}
+    <!--<h2>LogIn</h2>-->
     {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
+      <div class="flash">{{ message }}</div>
     {% endfor %}
 
     {% for message in form.email.errors %}
@@ -16,17 +27,88 @@
     {% for message in form.password.errors %}
       <div class="flash">{{ message }}</div>
     {% endfor %}
-     
-    <form action="{{ url_for('login') }}" method=post>
-      {{ form.hidden_tag() }}
-       
-      {{ form.email.label }}
-      {{ form.email }}
-       
-      {{ form.password.label }}
-      {{ form.password }}
-       
-      {{ form.submit }}
-    </form>
+
+      <div class="form-box" id="login-box">
+            
+            <form class="form-signin" action="login" method="POST">
+                  {{ form.hidden_tag() }}
+              <ul>
+                <li class="name">
+                    <div class=""><img class="image1" src="{{ url_for('static',filename='mushme.jpg') }}"></div>
+                    <div class="tagline" style="text-align:left"><h2>The Music</h2><h2>Sharing Circle</h2></div>
+                </li>
+                <li>
+                    <div class="form-group">
+                            {{ form.email }}
+                    </div></li>
+                <li class="text-password" ><div class="form-group">
+                            {{ form.password }}
+                    </div>
+
+                    </li> 
+                <li class="login-button" >
+                <div class="footer">                                                               
+                    {{ form.submit }}
+                    
+                    <span><a style="text-decoration:none; color: blue" href="{{ url_for('changepwd') }}">Forgot Password ?</a>&nbsp&nbsp<a style="text-decoration:none; color: blue" href="{{ url_for('signup') }}">Sign Up ?</a></span>
+                </div></li>
+            </form>
+
+            <!--<div class="margin text-center">
+                <span>Sign in using social networks</span>
+                <br/>
+                <button class="btn bg-light-blue btn-circle"><i class="fa fa-facebook"></i></button>
+                <button class="btn bg-aqua btn-circle"><i class="fa fa-twitter"></i></button>
+                <button class="btn bg-red btn-circle"><i class="fa fa-google-plus"></i></button>
+
+
+
+        <form class="pure-form pure-form-aligned" action="{{ url_for('login') }}" method=post>
+    <fieldset>
+        
+        <div class="pure-control-group">
+            <label for="email">{{ form.email.label }}</label>
+            
+        </div>
+
+        <div class="pure-control-group">
+            <label for="password">{{ form.password.label }}</label>
+            
+        </div>
+
+        <div class="button">
+        {{ form.submit }}
+        </div>
+    </fieldset>
+
+
+            </div>-->
+        </div>
+
+    
   {% endif %}
-{% endblock %}
+  <script type="text/javascript">
+    btn = document.getElementById('submit');
+    //btn.className += 'pure-button pure-button-primary';
+    btn.className += 'btn-primary';
+    btn.style.width += "370px";
+    c = document.getElementById('email');
+    c.placeholder = "E-mail or Username";
+    c.className += 'form-control'
+    c = document.getElementById('password');
+    c.placeholder = "Password";
+    c.className += 'form-control'
+  </script>
+
+</div>
+  <!--<hr style="color:#fff; margin-left:6%; margin-right:6%" />-->
+  <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery.nouislider.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.10.2.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='material.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='snackbar.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='ripples.js') }}"></script>
+</body>
+<!--<footer style="text-align:left; margin-left:6%">Copyright © 2014, MuShMe team. All rights reserved.</footer>-->
+</html>
+       
