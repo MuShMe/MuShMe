@@ -1,11 +1,3 @@
-html { 
-  background: url(new-york-city.jpg) no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
 body{
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #444;
@@ -59,7 +51,7 @@ h2 {
   font-size: 3em;
   margin-top: 40px;
   text-align: center;
-  letter-spacing: -2px;
+  letter-spacing: 0px;
 }
 
 ul {
@@ -131,7 +123,7 @@ form{
   width: 70%;
 }
 .pure-control-group{
-  margin-top:3em;
+  margin-top: 3em;
 }{
   margin-top: 3em;
   float:right;
@@ -210,8 +202,7 @@ input, button, select, textarea {
     border: medium none;
     image-rendering: optimizespeed;
     background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.88);
-
-
+    float: center;
 }
 
 .form-signin ul input[type="password"]:focus {
@@ -291,7 +282,7 @@ li #password{
 
 }
 
-.form-box .image1{
+.image1{
   width: 190px;
   height:70px;
   float: left;
@@ -311,4 +302,24 @@ li #password{
   text-align: left;
   margin-bottom: -10px;
   color: #db6767;
+}
+
+header .name{
+  float: left;
+  display: inline;
+  line-height: 5px;
+  font-size: 25px;
+  font-weight: none;
+  text-align: left;
+  margin-bottom: -10px;
+  color: #db6767;
+  margin-left: 7%;
+}
+
+header .image1{
+  margin-top: 10px;
+}
+
+.footer-links{
+  text-align: right;
 }

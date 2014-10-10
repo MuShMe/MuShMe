@@ -3,13 +3,13 @@
         <!-- <meta charset="utf-8"> -->
         <title>MuShMe</title>
         <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"> -->
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/ripples.css" rel="stylesheet">
-        <link href="../css/material.css" rel="stylesheet">
+        <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='ripples.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='material.css') }}" rel="stylesheet">
         <!-- <link href="icons/icons-material-design.css" rel="stylesheet"> -->
         <!-- <link href="//fezvrasta.github.io/snackbarjs/dist/snackbar.min.css" rel="stylesheet"> -->
-        <link href="../css/snackbar.min.css" rel="stylesheet">
-        <strong><link rel="stylesheet" href="../css/style.css"></strong>
+        <link href="{{ url_for('static',filename='snackbar.min.css') }}" rel="stylesheet">
+        <strong><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></strong>
     </head>
 <body>
 <body>
@@ -22,7 +22,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="profile.html"><img class=" img-circle profilepic" src="../img/profile.png"  ></a>
+        <a class="navbar-brand" href="profile.html"><img class=" img-circle profilepic" src="{{ url_for('static',filename='profile.png') }}"  ></a>
     </div>
     <div class="navbar-collapse collapse navbar-responsive-collapse">
         <ul class="nav navbar-nav">
@@ -30,21 +30,18 @@
             <li><a href="javascript:void(0)"> Playlist </a></li>
        </ul>
         <form class="navbar-form navbar-left">
-            <input class="form-control col-lg-12" type="text" placeholder="Search Songs">
+            <input class="form-control col-lg-12" type="text" placeholder="Search Songs" style="float:left">
         </form>
-        <ul class="nav navbar-nav">
-                    <li><button class="btn btn-primary small" type="submit">Click Here</button></li>
-        </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="javascript:void(0)">Sign Out</a></li>
+            <li><a href="javascript:void(0)" style="margin-right:7%">Sign Out</a></li>
         </ul>
     </div>
 </div>
 <!-- NAVBAR ENDS HERE -->
 
-<!-- sidebar -->
+<!-- left-sidebar -->
     <div class="col-lg-2" id="sidebar">
-        <a class="navbar-brand col-lg-2" href="profile.html"><img class="img-rounded align-center sidebarpic" id="proficepic-sidebar" src="../img/profile.png"></a>
+        <a class="navbar-brand col-lg-2" href="profile.html"><img class="img-rounded align-center sidebarpic" id="proficepic-sidebar" src="{{ url_for('static',filename='profile.png') }}"></a>
         <div id="sidebar-content">
         <a class="btn btn-primary btn-raised withripple" id="about" href="javascript:void(0)">About</a>
         </div>

@@ -6,6 +6,7 @@
   <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />-->
   <link rel="stylesheet" href="{{ url_for('static',filename='style-main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static',filename='pure-min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='background.css') }}">
 </head>
 <body>
   <div class="container">
@@ -53,36 +54,6 @@
                     <span><a style="text-decoration:none; color: blue" href="{{ url_for('changepwd') }}">Forgot Password ?</a>&nbsp&nbsp<a style="text-decoration:none; color: blue" href="{{ url_for('signup') }}">Sign Up ?</a></span>
                 </div></li>
             </form>
-
-            <!--<div class="margin text-center">
-                <span>Sign in using social networks</span>
-                <br/>
-                <button class="btn bg-light-blue btn-circle"><i class="fa fa-facebook"></i></button>
-                <button class="btn bg-aqua btn-circle"><i class="fa fa-twitter"></i></button>
-                <button class="btn bg-red btn-circle"><i class="fa fa-google-plus"></i></button>
-
-
-
-        <form class="pure-form pure-form-aligned" action="{{ url_for('login') }}" method=post>
-    <fieldset>
-        
-        <div class="pure-control-group">
-            <label for="email">{{ form.email.label }}</label>
-            
-        </div>
-
-        <div class="pure-control-group">
-            <label for="password">{{ form.password.label }}</label>
-            
-        </div>
-
-        <div class="button">
-        {{ form.submit }}
-        </div>
-    </fieldset>
-
-
-            </div>-->
         </div>
 
     
@@ -101,14 +72,20 @@
   </script>
 
 </div>
-  <!--<hr style="color:#fff; margin-left:6%; margin-right:6%" />-->
+  
   <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='jquery.nouislider.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.10.2.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='material.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='snackbar.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='ripples.js') }}"></script>
+  <!--<hr style="color:#fff; margin-left:6%; margin-right:6%; margin-top:50%" />
+  <div class="page-footer" style="text-align:left; margin-left:6%">Copyright © 2014, MuShMe team. All rights reserved.
+      <div class="footer-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+      </div>
+  </div>-->
 </body>
-<!--<footer style="text-align:left; margin-left:6%">Copyright © 2014, MuShMe team. All rights reserved.</footer>-->
+
 </html>
-       

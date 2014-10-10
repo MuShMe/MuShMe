@@ -33,7 +33,7 @@ def about():
 def changepwd():
     return render_template('changepwd.html')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
   
@@ -90,16 +90,16 @@ def testdb():
 
 @app.route('/profile')
 def profile():
-    if 'email' not in session:
-        return render_template('error.html')
-    else:
-        user = Entry.query.filter_by(email = session['email']).first()
-        #flash("Hi")
-        if user is None:
-            flash ('User Not registered')
-            return render_template('login.html',form=form)
-        else:
-           return render_template('profile.html')
+    #if 'email' not in session:
+     #   return render_template('error.html')
+    #else:
+    #user = Entry.query.filter_by(email = session['email']).first()
+    #flash("Hi")
+    #if user is None:
+     #   flash ('User Not registered')
+      #  return render_template('login.html',form=form)
+    #else:
+    return render_template('profile.html')
         
 
 

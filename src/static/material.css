@@ -2091,14 +2091,14 @@ legend {
   float: right;
 }
 .navbar {
-  background-color: #4285f4;
+  background-color: #fff;
   border: 0;
   border-radius: 0;
 }
 .navbar .navbar-brand {
   position: relative;
-  height: 60px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 20px;
   color: rgba(255, 255, 255, 0.84);
 }
 .navbar .navbar-brand:hover,
@@ -2108,7 +2108,7 @@ legend {
 }
 .navbar .navbar-text {
   color: rgba(255, 255, 255, 0.84);
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 20px;
 }
 .navbar .navbar-nav > li > a {
@@ -2232,7 +2232,8 @@ fieldset[disabled] .navbar .btn-link:focus {
 }
 .navbar,
 .navbar-default {
-  background-color: #4285f4;
+  background-color: #2a2929;
+  margin-top: 0px;
 }
 .navbar-primary {
   background-color: #4285f4;
