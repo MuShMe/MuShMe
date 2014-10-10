@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>MuShMe</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <script src="jquery.min.js"></script>
+  <script src="jquery.interactive_bg.js"></script>
+  <link rel="stylesheet" href="style-main.css">
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <script>
+   $(document).ready(function(){
+     $(".bg").interactive_bg();
+     $("#btns").interactive_bg({
+       strength: 10,
+       scale: 1.15,
+       contain: false,
+       wrapContent: true
+     });
+   });
+
+   $(window).resize(function() {
+    $(".wrapper > .ibg-bg").css({
+      width: $(window).outerWidth(),
+      height: $(window).outerHeight()
+    })
+  })
+
+ </script>
+</head>
+<body>
+	<div class="wrapper bg" data-ibg-bg="music.jpg"></div>
+  <div class="header back">
+    <div class="signup">
+      <h1>SignUp</h1>
+      <form role="form">
+        <div class="form-group">
+          <input type="name" class="form-control" id="Name" placeholder="Name">
+        </div>
+        <div class="form-group">
+          <input type="email" class="form-control" id="Email" placeholder="Email">
+        </div>
+        <div class="form-group">
+          <input type="username" class="form-control" id="username" placeholder="User Name">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Re-Password">
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"> I Accept Terms And Condition
+          </label>
+        </div>
+      </form>
+      <div class="btns" id="btns">
+       <a class="reload btn" href="javascript:void(0)">SignUp</a>
+     </div>
+   </div>
+   <div class="signin">
+    <h1>Sign-In</h1>
+    <form role="form">
+      <div class="form-group">
+        <input type="email" class="form-control" id="email" placeholder="Enter Email/Username">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div class="btns" id="btns">
+       <a class="reload btn" href="javascript:void(0)">Sign-In</a>
+     </div>
+     <div>
+        <a class="forgot" href="javascript:void(0)">Forgot Password ?</a>
+     </div>
+   </form>
+   </div>
+   <div class="foot">
+        <a href="javascript:void(0)">About</a>
+        <a href="javascritp:void(0)">Contact</a>
+   </div>
+</div>
+
+<h1 class="footer"> MuShMe</h1>
+<h2 class="footer"> Music   Share   Meta</h2>
+<script type="text/javascript" src="bootstrap.js"></script>
+
+</body>
+</html>
