@@ -18,12 +18,8 @@
             </a>
 			<nav>
 		      <ul class="menu">
-		        {% if not session.logged_in %}
 		        <li><a href="{{ url_for('signup') }}">SignUp</a></li>
 		        <li><a href="{{ url_for('login') }}">LogIn</a></li>
-		        {% else %}
-		        <li><a href="{{ url_for('logout') }}">LogOut</a></li>
-		        {% endif %}
 		      </ul>
 		    </nav>
 		</div>

@@ -43,7 +43,7 @@ def login():
         return redirect(url_for('login',form=form))
       else:
         session['email'] = form.email.data
-        session['username'] = session.execute(select(username).where(Entry.c.email==[session['email']]))
+        #session['username'] = session.execute(select(username).where(Entry.c.Email_id==[session['email']]))
         session['logged_in']=True
         return redirect(url_for('profile', success=True, session=True))
                    
@@ -58,7 +58,7 @@ def signup():
             flash('All * fields are required !')
             return render_template('signup.html',form=form)
         else:
-            newuser = Entry(form.username.data , form.name.data, form.email.data, form.password.data, 0, 0, form.dob.data, 0)
+            newuser = Entry(form.username.data , form.email.data, form.password.data, 0, 0, form.name.data, form.dob.data, 0)
             session['email'] = newuser.Email_id
             user = Entry.query.filter_by(Email_id = session['email']).first()
     

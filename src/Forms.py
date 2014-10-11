@@ -50,7 +50,7 @@ class ContactForm(Form):
 	def validate(self):
 		if not Form.validate(self): 
 		  return False
-		user = Entry.query.filter_by(email = self.email.data.lower()).first()
+		user = Entry.query.filter_by(Email_id = self.Email_id.data.lower()).first()
 		if user is None:
 			return True
 		else:
@@ -69,7 +69,8 @@ class LoginForm(Form):
 	if not Form.validate(self):
 	  return False
 	 
-	user = Entry.query.filter_by(email = self.email.data.lower()).first()
+	user = Entry.query.filter_by(Email_id = self.email.data.lower()).first()
+
 	if user and user.check_password(self.password.data):
 	  return True
 	else:
