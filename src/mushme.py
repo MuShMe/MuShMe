@@ -33,13 +33,14 @@ def about():
 def changepwd():
     return render_template('changepwd.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
   
     if request.method == 'POST':
       if form.validate() == False:
-        return render_template('login.html', form=form, session=False)
+        flash("Invalid Username or Password !")
+        return redirect(url_for('login',form=form))
       else:
         session['email'] = form.email.data
         session['username'] = session.execute(select(username).where(Entry.c.email==[session['email']]))
