@@ -7,7 +7,7 @@ API = Blueprint('API',__name__,template_folder='templates')
 
 def addtodatabase(metadata):
 	print metadata
-	pass
+	
 	return True
 
 #function to add the data from the request json to the database:

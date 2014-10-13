@@ -18,7 +18,7 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 from mushme import mail
 mail.init_app(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Internship0@localhost/MuShMe'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:crimson@localhost/MuShMe'
  
 from models import db
 db.init_app(app)
