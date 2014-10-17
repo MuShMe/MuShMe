@@ -1,0 +1,89 @@
+
+.navbar11{
+	width: 1200px;
+	margin: 0 auto;
+	padding-bottom: 5px;
+
+}
+.profilepic{
+	float: left;
+	margin: 2px 5px 0px 3px;
+}
+img.profilepic{
+  width:  45px;
+  height: 40px;
+}
+.input-size{
+	width: 400px;
+}
+.main-body{
+	width: 1100px;
+	margin: 0 auto;
+	border:2px solid #0088dd;
+	height: 100%;
+	overflow: auto;
+}
+.sector-1{
+	border:2px solid grey;
+	height: 100%;
+}
+.sector-2{
+	height: 100%;
+	border:2px solid grey;
+
+}
+.sector-3{
+	height: 100%;
+	border:2px solid grey;
+
+}
+.profilepic-area{
+	height: 400px;
+}
+img.profilepic-large{
+	width: 150px;
+	height: 150px;
+	margin-left: 40px;
+	margin-top: 100px;
+}
+a.logout{
+	margin-right: 5px;
+}
+img.profilepic-small{
+	width: 40px;
+	height: 35px;
+	float: left;
+}
+dd{
+	margin: 8px auto;
+}
+a:hover{
+	text-decoration: none;
+	color:#6E727B;
+}
+.About-us{
+	margin-bottom: 75px;
+}
+.playlist-section{
+	height: 400px;
+}
+tr{
+	margin-left: 5px;
+}
+
+.comments{
+	margin-top: 25px;
+}
+.playlists{
+	margin-right: 10px;
+}
+.button-center{
+	margin-left: 45px;
+}
+.submit{
+	margin-left: 400px;
+	margin-top: 25px;
+}
+.placesector-3{
+	margin-left: 5px;
+}
