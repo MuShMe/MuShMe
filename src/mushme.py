@@ -11,12 +11,28 @@ from api import API
 mail = Mail()
 mail.init_app(app)
 
+#For the collector script.
 app.register_blueprint(API);
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
+@app.route('/')
+def homepage():
+    return render_template('homepage/index.html')
 
+#All your profile are belong to us.
+@app.route('/artist/<aprofileid>')
+def artistProfile(aprofileid):
+    return render_template('artistpage/index.html')
+
+@app.route('/user/<userid>')
+def userProfile(userid):
+    return render_template('userprofile/index.html')
+
+@app.route('/song/<songid>')
+def songPage(songid):
+    return render_template('songpage/index.html')
+
+
+#To handle 404 not found errors
 @app.errorhandler(404)
 def page_not_found_error(error):
     return render_template('error.html'), 404
@@ -88,20 +104,6 @@ def testdb():
         return 'It works.'
     else:
         return 'Something is broken.'
-
-@app.route('/profile')
-def profile():
-    #if 'email' not in session:
-     #   return render_template('error.html')
-    #else:
-    #user = Entry.query.filter_by(email = session['email']).first()
-    #flash("Hi")
-    #if user is None:
-     #   flash ('User Not registered')
-      #  return render_template('login.html',form=form)
-    #else:
-    return render_template('profile.html')
-        
 
 
 if not app.debug:

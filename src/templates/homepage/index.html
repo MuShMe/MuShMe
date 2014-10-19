@@ -4,10 +4,10 @@
 	<meta charset="utf-8">
 	<title>MuShMe</title>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-  <script src="jquery.min.js"></script>
-  <script src="jquery.interactive_bg.js"></script>
-  <link rel="stylesheet" href="style-main.css">
-  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+  <script src="{{url_for('static',filename='js/jquery.interactive_bg.js')}}"></script>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/style-main.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
   <script>
    $(document).ready(function(){
      $(".bg").interactive_bg();
@@ -29,7 +29,7 @@
  </script>
 </head>
 <body>
-	<div class="wrapper bg" data-ibg-bg="music.jpg"></div>
+	<div class="wrapper bg" data-ibg-bg="{{url_for('static',filename='img/music.jpg')}}"></div>
   <div class="header back pushitup">
     <div class="signup">
       <h1>SignUp</h1>
@@ -84,7 +84,7 @@
 
 <h1 class="footer"> MuShMe</h1>
 <h2 class="footer"> Music   Share   Meta</h2>
-<script type="text/javascript" src="bootstrap.js"></script>
+<script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
 
 </body>
 </html>
