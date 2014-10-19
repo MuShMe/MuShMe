@@ -2,14 +2,14 @@
 <head>
 	<!-- <meta charset="utf-8"> -->
 	<title>MuShMe</title>
-	<link href="../css/bootstrap.css" rel="stylesheet">
-	<strong><link rel="stylesheet" href="../css/user.css"></strong>
+    <link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
+    <strong><link rel="stylesheet" href="{{url_for('static',filename='css/user.css')}}"></strong>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<div class="navbar11">
 		<nav class="navbar navbar-default" role="navigation">
-			<a class="profilepic" href="profile.html"><img class=" img-circle profilepic" src="../img/profile.png"  ></a>
+			<a class="profilepic" href="profile.html"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png')}}"  ></a>
 
 
 			<ul class="nav navbar-nav">
@@ -30,7 +30,7 @@
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
 		<div class="profilepic-area" >
-			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="../img/artist.jpg"></a>
+			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename='img/artist.jpg')}}"></a>
 		</div>
 		<div class="col-xs-12">
 			<h1>Likes on Songs(no. of like in this bracket): </h1>
@@ -40,15 +40,15 @@
 					<th></th>
 				</thead>
 				<tbody>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> User1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> User2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> User3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> User4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> User5</b></h3></a></tr>
 				</tbody>
 			</table>
@@ -87,15 +87,15 @@
 					<th></th>
 				</thead>
 				<tbody>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Album name1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Album name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Album name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Album name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Album name5</b></h3></a></tr>
 				</tbody>
 			</table>
@@ -109,25 +109,25 @@
 					<th></th>
 				</thead>
 				<tbody>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name5</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name6</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name7</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name8</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name9</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>
 				</tbody>
 			</table>
@@ -135,6 +135,6 @@
 	</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="../script/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename ='js/bootstrap.min.js')}}"></script>
 
 </body>
