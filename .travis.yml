@@ -1,8 +1,12 @@
 language: python
-
 python:
-  -"2.7"
-
-install: "pip install -r requirements.txt"
-
-script: nosetests
+- "2.6"
+- "2.7"
+install:
+- pip install -r requirements.txt
+before_script:
+- mysql --user=root -e "CREATE DATABASE MuShMe;"
+- mysql --user=root -e "CREATE USER 'dummy'@'localhost' IDENTIFIED BY 'pass'";
+- mysql --user=root -e "GRANT ALL PRIVILEGES ON * . * TO 'dummy'@'localhost'";
+script: python test.py
+sudo: false
