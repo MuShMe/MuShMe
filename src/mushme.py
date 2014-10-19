@@ -17,9 +17,9 @@ app.register_blueprint(API);
 def home():
     return render_template('home.html')
 
-@app.route('/404')
-def error():
-    return render_template('error.html')
+@app.errorhandler(404)
+def page_not_found_error(error):
+    return render_template('error.html'), 404
 
 @app.route('/termsofservices')
 def tos():
