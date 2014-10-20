@@ -31,6 +31,9 @@ def userProfile(userid):
 def songPage(songid):
     return render_template('songpage/index.html')
 
+@app.route('/playlist/<playlistid>')
+def playlistPage(playlistid):
+    return render_template('playlist/index.html')
 
 #To handle 404 not found errors
 @app.errorhandler(404)
