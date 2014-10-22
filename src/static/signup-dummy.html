@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+		<h2>SignUp</h2>
+		
+		{% for message in get_flashed_messages() %}
+			<div class="flash">{{ message }}</div>
+			{% for message in form.name.errors %}
+			  <div class="flash">{{ message }}</div>
+			{% endfor %}
+			 
+			{% for message in form.email.errors %}
+			  <div class="flash">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
+		
+		<form class="pure-form pure-form-aligned" action=" {{ url_for('signup') }} " method=post>
+    <fieldset>
+    	{{ form.hidden_tag() }}
+        <div class="pure-control-group">
+            <label for="name">{{ form.name.label }}</label>
+           	{{ form.name }}
+        </div>
+
+        <div class="pure-control-group">
+            <label for="email">{{ form.email.label }}</label>
+            {{ form.email }}
+        </div>
+
+        <div class="pure-control-group">
+            <label >{{ form.username.label }}</label>
+          	{{ form.username }}
+        </div>
+
+        <div class="pure-control-group">
+            <label >Date Of Birth</label>
+            {{ form.dob }}
+        </div>
+
+        <div class="pure-control-group">
+            <label >{{ form.password.label }}</label>
+            {{ form.password }}
+        </div>
+
+        <div class="pure-control-group">
+            <label >{{ form.confirm.label }}</label>
+            {{ form.confirm }}
+        </div>
+
+        <div class="pure-control-group">
+        	{{ form.accept_tos }}
+            I accept the <a href="{{ url_for('tos') }}">Terms Of Services</a>
+        	
+        </div>
+        <div class="button">
+       {{ form.submit }}
+       
+        </div>
+    </fieldset>
+    <script type="text/javascript">
+    btn = document.getElementById('submit');
+    btn.className += 'pure-button pure-button-primary';
+    c = document.getElementById('confirm');
+    c.placeholder = "Confirm Password"
+    c = document.getElementById('password');
+    c.placeholder = "Password"
+    c = document.getElementById('username');
+    c.placeholder = "Username"
+    c = document.getElementById('email');
+    c.placeholder = "E-mail"
+    c = document.getElementById('name');
+    c.placeholder = "Name"
+  </script>
+{% endblock %}
