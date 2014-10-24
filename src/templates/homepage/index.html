@@ -33,58 +33,59 @@
   <div class="header back pushitup">
     <div class="signup">
       <h1>SignUp</h1>
-      <form role="form" class="top">
+    <form class="top" action="{{ url_for('signup') }}" method="POST">
+      {{ form2.hidden_tag() }}
         <div class="form-group">
-          <input type="name" class="form-control" id="Name" placeholder="Name">
+          {{ form2.name(placeholder='Name',class_='form-control') }}
         </div>
         <div class="form-group">
-          <input type="email" class="form-control" id="Email" placeholder="Email">
+          {{ form2.email(placeholder='Email',class_='form-control') }}
         </div>
         <div class="form-group">
-          <input type="username" class="form-control" id="username" placeholder="User Name">
+          {{ form2.username(placeholder='User Name',class_='form-control') }}
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          {{ form2.password(placeholder='Password',class_='form-control') }}
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Re-Password">
+          {{ form2.confirm(placeholder='Re-Password',class_='form-control') }}
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox"> I Accept Terms And Condition
+            <input type="checkbox">{{ form2.accept_tos }} I Accept Terms And Condition
           </label>
         </div>
-      </form>
       <div class="btns" id="btns">
-       <a class="reload btn" href="javascript:void(0)">SignUp</a>
+     <input class="reload btn" type='submit' name='btn' value='signup'>
      </div>
+    </form>
    </div>
-   <div class="signin">
+  <div class="signin">
     <h1>Sign-In</h1>
-    <form role="form" class="top">
-      <div class="form-group">
-        <input type="email" class="form-control" id="email" placeholder="Enter Email/Username">
-      </div>
-      <div class="form-group">
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-      </div>
-      <div class="btns" id="btns">
-       <a class="reload btn" href="javascript:void(0)">Sign-In</a>
-     </div>
-     <div>
-      <a class="forgot" href="javascript:void(0)">Forgot Password ?</a>
+      <form class="top" action="{{ url_for('login') }}" method="POST">
+          {{ form1.hidden_tag() }}
+          <div class="form-group">
+            {{ form1.email(placeholder='Email',class_='form-control') }}
+          </div>
+          <div class="form-group">
+            {{ form1.password(placeholder='Password',class_='form-control') }}
+          </div>
+          <div>
+          <!--<a class="forgot" href="{{url_for('changepwd')}}">Forgot Password ?</a>-->
+          </div>
+    <div class="btns" id="btns">
+     <input class="reload btn" type='submit' name='btn' value='login'>
     </div>
-  </form>
-</div>
-<div class="foot">
-  <a href="javascript:void(0)">About</a>
-  <a href="javascritp:void(0)">Contact</a>
-</div>
+   </form>
+  </div>
+  <div class="foot">
+    <a href="javascript:void(0)">About</a>
+    <a href="javascritp:void(0)">Contact</a>
+  </div>
 </div>
 
 <h1 class="footer"> MuShMe</h1>
-<h2 class="footer"> Music   Share   Meta</h2>
+<h2 class="footer"> MusicShareMeta</h2>
 <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
-
 </body>
 </html>

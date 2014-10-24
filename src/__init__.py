@@ -19,8 +19,8 @@ from mushme import mail
 mail.init_app(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:crimson@localhost/MuShMe'
- 
+
 from models import db
 db.init_app(app)
- 
+
 import src.mushme

@@ -1,7 +1,7 @@
 Flask==0.10.1
 Flask-SQLAlchemy==1.0
 Jinja2==2.7.2
-MarkupSafe==0.23
+flask-wtf
+flask-mail
 PyMySQL==0.6.2
-SQLAlchemy==0.9.4
 Werkzeug==0.9.4

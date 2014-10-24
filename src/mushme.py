@@ -7,7 +7,10 @@ from Forms import ContactForm, LoginForm
 from flask.ext.mail import Message, Mail
 from models import db, Entry
 from api import API
- 
+from models import database, conn
+
+import hashlib
+
 mail = Mail()
 mail.init_app(app)
 
@@ -15,8 +18,46 @@ mail.init_app(app)
 app.register_blueprint(API);
 
 @app.route('/')
-def homepage():
-    return render_template('homepage/index.html')
+def index():
+    return render_template('homepage/index.html', form1= LoginForm(prefix='form1'), form2 = ContactForm(prefix='form2'))
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    loginform = LoginForm(request.form, prefix='form1')
+
+    if loginform.validate_on_submit():
+        check_login = database.execute("SELECT User_id from MuShMe.entries WHERE Email_id='%s' AND Pwdhash='%s'" %
+                                        (loginform.email.data, hashlib.sha1(loginform.password.data).hexdigest()))
+        if check_login:
+            userid= database.fetchone()
+            for uid in userid:
+                return redirect(url_for('userProfile', userid=uid))
+
+    return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    contactform = ContactForm(request.form, prefix='form2')
+
+    if contactform.validate_on_submit():
+        check_signup = database.execute("INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ('%s','%s','%s','%s')" % 
+                                        (contactform.username.data,
+                                        contactform.email.data,
+                                        hashlib.sha1(contactform.password.data).hexdigest(),
+                                        contactform.name.data))
+
+        if check_signup == True:
+            conn.commit()
+            database.execute("SELECT User_id from entries WHERE Email_id='%s' AND Pwdhash='%s'" %
+                                        (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
+            user_id = database.fetchone()
+            for uid in user_id:
+                return redirect(url_for('userProfile',userid=uid))
+
+    return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
+
 
 #All your profile are belong to us.
 @app.route('/artist/<aprofileid>')
@@ -52,47 +93,6 @@ def about():
 def changepwd():
     return render_template('changepwd.html')
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    form = LoginForm(request.form)
-  
-    if request.method == 'POST':
-      if form.validate() == False:
-        flash("Invalid Username or Password !")
-        return redirect(url_for('login',form=form))
-      else:
-        session['email'] = form.email.data
-        #session['username'] = session.execute(select(username).where(Entry.c.Email_id==[session['email']]))
-        session['logged_in']=True
-        return redirect(url_for('profile', success=True, session=True))
-                   
-    elif request.method == 'GET':
-      return render_template('login.html', form=form, session=False)
-  
-@app.route('/signup', methods=['GET','POST'])
-def signup():
-    form = ContactForm(request.form)
-    if request.method == 'POST':
-        if form.validate ==False :
-            flash('All * fields are required !')
-            return render_template('signup.html',form=form)
-        else:
-            newuser = Entry(form.username.data , form.email.data, form.password.data, 0, 0, form.name.data, form.dob.data, 0)
-            session['email'] = newuser.Email_id
-            user = Entry.query.filter_by(Email_id = session['email']).first()
-    
-            if user is None:
-                db.session.add(newuser)
-                db.session.commit()
-                session['logged_in'] = True
-                return url_for('profile')
-            else:
-                flash("This email already exists, please try another !")
-                return render_template('signup.html')
-    elif request.method == 'GET':
-        return render_template('signup.html',form=form)
-    return render_template('signup.html');
-
 @app.route('/logout')
 def logout(): 
     if 'email' not in session: 
@@ -100,14 +100,6 @@ def logout():
     
     session['logged_in']=False
     return render_template('login.html')
-
-@app.route('/testdb')
-def testdb():
-    if db.session.query("all").from_statement("SELECT username FROM entries"):
-        return 'It works.'
-    else:
-        return 'Something is broken.'
-
 
 if not app.debug:
     import logging

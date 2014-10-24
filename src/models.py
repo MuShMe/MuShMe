@@ -4,7 +4,11 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy.orm import mapper
 #from yourapplication.database import metadata, db_session
- 
+import pymysql  
+
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe') 
+database = conn.cursor()
+
 db = SQLAlchemy()
 
 class Entry(db.Model):
@@ -38,5 +42,3 @@ class Entry(db.Model):
     self.DOB = DOB
     self.Profile_pic = Profile_pic
     self.Last_login = Last_login
-
-  
