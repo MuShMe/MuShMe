@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<head>
+	<!-- <meta charset="utf-8"> -->
+	<title>MuShMe</title>
+	<link href="../css/bootstrap.css" rel="stylesheet">
+	<strong><link rel="stylesheet" href="../css/user.css"></strong>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="navbar11">
+		<nav class="navbar navbar-default" role="navigation">
+			<a class="profilepic" href="profile.html"><img class=" img-circle profilepic" src="../img/profile.png"  ></a>
+
+
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">UserName</a></li>
+			</ul>
+			<form class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+					<input type="text" class="form-control input-size" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Search</button>
+			</form>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a class="logout" href="#">Logout</a></li>
+			</ul>
+		</div>
+	</nav>
+</div>
+<div class="container main-body">
+	<div class="col-xs-3 sector-1">
+		<div class="profilepic-area" >
+			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="../img/profile.png"></a>
+		</div>
+		<div class="col-xs-12">
+			<h1>Friends: </h1>
+			<table class="table table-hover">
+				<thead>
+					<th></th>
+					<th></th>
+				</thead>
+				<tbody>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><h3><b> Friend1</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><h3><b> Friend2</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><h3><b> Friend3</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><h3><b> Friend4</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
+					<tr><a href="#"><h3><b> Friend5</b></h3></a></tr>
+				</tbody>
+			</table>
+			<!-- Apply some logic to check if the user is already a friend and then show this button -->
+			<button type="button" class="btn btn-primary button-center">Send Request</button>
+		</div>
+	</div>
+	<div class="col-xs-6 sector-2">
+		<div class="About-us">
+			<h2 class="text-center"> About </h2>
+			<dl class="dl-horizontal">
+				<dt> <h3> <b>Name:</b></h3></dt>
+				<dd><h3> User's Name</h3></dd> 
+				<dt> <h3> <b>Date of Birth:</b></h3></dt>
+				<dd><h3> User's dob</h3></dd> 
+				<dt> <h3> <b>Last login:</b></h3></dt>
+				<dd><h3> Last login</h3></dd> 
+				<dd><h3><a href="#"> Recently added song </a></h3></dd> 
+			</dl>
+			<!-- Edit modal -->
+			<a href="javascript:void(null);" class="btn btn-default submit" onclick="launch_modal('useredit');">Edit</a>
+			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content edit-modal">
+						<form role="form" class="center" >
+							<div class="form-group spacing">
+								<input type="name" class="form-control" id="Name" placeholder="Name">
+							</div>
+							<div class="form-group spacing">
+								<input type="dob" class="form-control" id="DateOfBirth" placeholder="DOB as dd/mm/yyyy">
+							</div>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save changes</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="comm-recom">
+			<form >
+				<textarea class="form-control" rows="4" placeholder="Comments...."></textarea>
+			</form>
+			<button type="button" class="btn btn-default submit">Submit</button>
+		</div>
+		<div class="comments">
+			<blockquote>
+				<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
+				<footer><a href="#"><cite title="Username">Username</cite></a></footer>
+				<!-- Report Add modal -->
+				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
+				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content edit-modal">
+							<form role="form" class="center" >
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+										It contains Vulgarity
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+										Its a Spam
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+										It's an inappropriate comment
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios" id="optionsRadios4" value="option4">
+										Other
+									</label>
+								</div>
+								<textarea class="form-control" rows="4" placeholder="Write some description for your Complaint..."></textarea>
+							</form>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary">Submit</button>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</blockquote>
+
+			<blockquote>
+				<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
+				<footer><a href="#"><cite title="Username">Username</cite></a></footer>
+				<a href="#"><p class="text-right">Report</p></a>
+			</blockquote>
+		</div>
+	</div>
+	<div class="col-xs-3 sector-3">
+		<div class="playlist-section">
+			<h2>Playlists:</h2>
+			<p>Recent 5</p>
+			<table class="table table-hover">
+				<thead>
+					<th></th>
+					<th></th>
+				</thead>
+				<tbody>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Playlist name1</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Playlist name2</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Playlist name3</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Playlist name4</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Playlist name5</b></h3></a></tr>
+					
+				</tbody>
+			</table>
+			<!-- Playlist Add modal -->
+			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addplaylist');">Add New+</a>
+			<div class="modal fade bs-example-modal-lg" id="addplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content edit-modal">
+						<form role="form" class="center" >
+							<div class="form-group spacing">
+								<input type="pname" class="form-control" id="Plalist-Name" placeholder="Playlist Name">
+							</div>
+							<h5> Select Song from DB, for this first we need to connect the db to the server</h5>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save changes</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="songs-section">
+			<h2>Songs:</h2>
+			<p>Recent 10</p>
+			<table class="table table-hover">
+				<thead>
+					<th></th>
+					<th></th>
+				</thead>
+				<tbody>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name1</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name3</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name4</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name5</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name6</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name7</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name8</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name9</b></h3></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></tr>
+					<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>
+				</tbody>
+			</table>
+			<!-- Songs Add modal -->
+			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
+			<div class="modal fade bs-example-modal-lg" id="addsong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content edit-modal">
+						<form role="form" class="center" >
+							<div class="form-group spacing">
+								<input type="sname" class="form-control" id="Song-Name" placeholder="Song's Name"><!-- Check if it's not in the DB -->
+							</div>
+							<div class="form-group">
+								<label for="Album-art">Album art(Optional)</label>
+								<input type="file" id="album-art">
+								<p class="help-block">Upload Song's Album art</p>
+							</div>
+							<div class="form-group spacing">
+								<input type="srating" class="form-control" placeholder="Song's Rating">
+							</div>
+							<div class="form-group spacing">
+								<input type="sgenre" class="form-control"  placeholder="Song's Genre">
+							</div>
+							<div class="form-group spacing">
+								<input type="stype" class="form-control"  placeholder="Song's Type">
+							</div>
+							<div class="form-group spacing">
+								<input type="slenght" class="form-control"  placeholder="Song's lenght in (min)">
+							</div>
+							<div class="form-group spacing">
+								<input type="stitle" class="form-control"  placeholder="Song's Title">
+							</div>
+							<div class="form-group spacing">
+								<input type="scountry" class="form-control"  placeholder="Song's Country">
+							</div>
+							<div class="form-group spacing">
+								<input type="syear" class="form-control"  placeholder="Song's Year">
+							</div>
+							<div class="form-group spacing">
+								<input type="salbum" class="form-control"  placeholder="Song from which Album (link from DB)">
+							</div>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save changes</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	function launch_modal(id) {
+     // Hide all modals using class if required.
+     $('.modal').modal('hide');
+     $('#'+id).modal('show');
+ }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="../script/bootstrap.min.js"></script>
+
+</body>
