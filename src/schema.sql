@@ -7,43 +7,42 @@ User_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Username VARCHAR(100) NOT NULL,
 Email_id VARCHAR(120) NOT NULL UNIQUE,
 Pwdhash VARCHAR(100) NOT NULL,
-Privilege INT NOT NULL,
-Profile_pic LONGBLOB,
+Privilege INT NOT NULL default 0,
+Profile_pic VARCHAR(100),
 Name VARCHAR(100) NOT NULL,
 DOB DATE,
-Last_login DATE
+Last_login TIMESTAMP default CURRENT_TIMESTAMP
 );
 
 drop table if exists songs;
 CREATE TABLE songs (
 Song_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Song_title VARCHAR(100) NOT NULL,
+Song_Album VARCHAR(100) NOT NULL,
 Genre VARCHAR(100),
-Song_type VARCHAR(100),
-Rating INT,
+Publisher VARCHAR(100),
 Length VARCHAR(100) NOT NULL,
-Country VARCHAR(100) NOT NULL,
+Track_number INT,
 Song_year INT,
-Uploaded_when DATETIME NOT NULL
+Uploaded_when TIMESTAMP default CURRENT_TIMESTAMP,
+recommended INT
 );
 
 drop table if exists albums;
 CREATE TABLE albums (
 Album_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Album_pic LONGBLOB,
+Album_pic VARCHAR(100),
 Album_name VARCHAR(100) NOT NULL,
 Album_year INT,
 No_of_tracks INT,
-Total_length TIME NOT NULL,
 Publisher VARCHAR(100) NOT NULL
 );
 
 drop table if exists artists;
 CREATE TABLE artists (
 Artist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Country VARCHAR(100),
 Begin_date_year INT,
-Artist_pic LONGBLOB,
+Artist_pic VARCHAR(100),
 Artist_name VARCHAR(100) NOT NULL,
 End_date_year INT,
 Last_updated DATETIME NOT NULL
@@ -52,20 +51,20 @@ Last_updated DATETIME NOT NULL
 drop table if exists playlists;
 CREATE TABLE playlists (
 Playlist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Playlist_name VARCHAR(100) NOT NULL,
-Favourite INT NOT NULL
+Playlist_name VARCHAR(100) NOT NULL
+Recommended INT(11);
 );
 
 drop table if exists comments;
 CREATE TABLE comments (
 Comment_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+comment_type VARCHAR(2);
 Comment VARCHAR(5000) NOT NULL,
 Flag_on_comment INT,
 User_id INT NOT NULL,
 foreign key(User_id) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
-
 
 drop table if exists complains;
 CREATE TABLE complains (
@@ -84,7 +83,7 @@ Request_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Request_from INT NOT NULL,
 Request_to INT NOT NULL,
 Status INT NOT NULL,
-Date_of_sending DATE NOT NULL,
+Date_of_sending TIMESTAMP default CURRENT_TIMESTAMP,
 foreign key(Request_to) references entries(User_id),
 foreign key(Request_from) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE
@@ -133,12 +132,21 @@ foreign key(User_id) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-drop table if exists album_songs;
-CREATE TABLE album_songs (
-Album_id INT NOT NULL,
+drop table if exists user_like_playlist;
+CREATE TABLE user_like_playlist (
+Playlist_id INT NOT NULL,
+User_id INT NOT NULL,
+foreign key(User_id) references entries(User_id),
+foreign key(Playlist_id) references playlists(Playlist_id)
+ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+drop table if exists user_like_song;
+CREATE TABLE user_like_song (
+User_id INT NOT NULL,
 Song_id INT NOT NULL,
 foreign key(Song_id) references songs(Song_id),
-foreign key(Album_id) references albums(Album_id)
+foreign key(User_id) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
