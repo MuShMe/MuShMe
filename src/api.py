@@ -15,7 +15,7 @@ def addtodatabase(metadata):
 def getjson():
     
     if addtodatabase(request.json) == True:
-    	return "Successfully added "+request.json['TITLE']+" by "+request.json['ARTIST'] + " to your collection."
+    	return "Successfully added "+request.json['title'][0]+" by "+request.json['artist'][0] + " to your collection."
     
     else:
     	return "Could not add this song to the database, make sure the tags for the song are complete."
