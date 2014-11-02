@@ -51,14 +51,14 @@ Last_updated DATETIME NOT NULL
 drop table if exists playlists;
 CREATE TABLE playlists (
 Playlist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Playlist_name VARCHAR(100) NOT NULL
-Recommended INT(11);
+Playlist_name VARCHAR(100) NOT NULL,
+Recommended INT
 );
 
 drop table if exists comments;
 CREATE TABLE comments (
 Comment_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-comment_type VARCHAR(2);
+comment_type VARCHAR(2),
 Comment VARCHAR(5000) NOT NULL,
 Flag_on_comment INT,
 User_id INT NOT NULL,
@@ -66,8 +66,8 @@ foreign key(User_id) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-drop table if exists complains;
-CREATE TABLE complains (
+drop table if exists complaints;
+CREATE TABLE complaints (
 Complain_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Complain_type INT,
 Complain_description VARCHAR(100) NOT NULL,
@@ -192,15 +192,6 @@ User_id INT NOT NULL,
 Comment_id INT NOT NULL,
 foreign key(User_id) references entries(User_id),
 foreign key(Comment_id) references comments(Comment_id)
-ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-drop table if exists user_complains;
-CREATE TABLE user_complains (
-User_id INT NOT NULL,
-Complain_id INT NOT NULL,
-foreign key(User_id) references entries(User_id),
-foreign key(Complain_id) references complains(Complain_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
