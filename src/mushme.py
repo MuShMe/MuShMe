@@ -22,23 +22,29 @@ def index():
     return render_template('homepage/index.html', form1= LoginForm(prefix='form1'), form2 = ContactForm(prefix='form2'))
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST','GET'])
 def login():
-    loginform = LoginForm(request.form, prefix='form1')
+    session["login"] = True
+    session["signup"] = False
+    if request.method == 'POST':
+        loginform = LoginForm(request.form, prefix='form1')
 
-    if loginform.validate_on_submit():
-        check_login = database.execute("SELECT User_id from MuShMe.entries WHERE Email_id='%s' AND Pwdhash='%s'" %
-                                        (loginform.email.data, hashlib.sha1(loginform.password.data).hexdigest()))
-        if check_login:
-            userid= database.fetchone()
-            for uid in userid:
-                return redirect(url_for('userProfile', userid=uid))
+        if loginform.validate_on_submit():
+            check_login = database.execute("SELECT User_id from MuShMe.entries WHERE Email_id='%s' AND Pwdhash='%s'" %
+                                            (loginform.email.data, hashlib.sha1(loginform.password.data).hexdigest()))
+            if check_login:
+                userid= database.fetchone()
+                for uid in userid:
+                    return redirect(url_for('userProfile', userid=uid))
 
-    return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
-
+        return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
+    else:
+        return render_template('homepage/index.html', form1= LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
+    session["login"] = False
+    session["signup"] = True
     contactform = ContactForm(request.form, prefix='form2')
 
     if contactform.validate_on_submit():
@@ -66,6 +72,26 @@ def artistProfile(aprofileid):
 
 @app.route('/user/<userid>')
 def userProfile(userid):
+    session["User_id"] = userid
+    database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
+    session["UserName"]=database.fetchone()
+    database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
+    session["Name"]=database.fetchone()
+    database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
+    session["dob"]=database.fetchone()
+
+
+    database.execute("SELECT Playlist_id from user_playlist WHERE User_id='%s' " % userid)
+    for playlist in database.fetchall():
+        database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
+        playlistName = database.fetchone()
+        return playlistName
+
+    database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
+    for song in database.fetchall():
+        database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
+        songName = database.fetchone()
+        return songName
     return render_template('userprofile/index.html')
 
 @app.route('/song/<songid>')
@@ -100,6 +126,10 @@ def logout():
     
     session['logged_in']=False
     return render_template('login.html')
+
+@app.route('/testdb')
+def testdb():
+    return "hello"
 
 if not app.debug:
     import logging

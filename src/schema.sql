@@ -1,3 +1,8 @@
+/*initialise databse*/
+
+create database MuShMe;
+use MuShMe
+
 /*
 PARTICULAR TABLES :
 */

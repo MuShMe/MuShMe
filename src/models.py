@@ -6,7 +6,7 @@ from sqlalchemy.orm import mapper
 #from yourapplication.database import metadata, db_session
 import pymysql  
 
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe') 
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='Internship0', db='MuShMe') 
 database = conn.cursor()
 
 db = SQLAlchemy()
