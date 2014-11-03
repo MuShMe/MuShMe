@@ -35,7 +35,13 @@
       <h1>SignUp</h1>
     <form class="top" action="{{ url_for('signup') }}" method="POST">
       {{ form2.hidden_tag() }}
+
         <div class="form-group">
+          {% if session.signup == True %}
+          <span>{% for message in get_flashed_messages() %}
+                                        <div class="flash">{{ message }}</div>
+                                {% endfor %}</span>
+                                {% endif %}
           {{ form2.name(placeholder='Name',class_='form-control') }}
         </div>
         <div class="form-group">
@@ -65,6 +71,11 @@
       <form class="top" action="{{ url_for('login') }}" method="POST">
           {{ form1.hidden_tag() }}
           <div class="form-group">
+          {% if session.login == True %}
+          <span>{% for message in get_flashed_messages() %}
+                                        <div class="flash">{{ message }}</div>
+                                {% endfor %}</span>
+                                {% endif %}
             {{ form1.email(placeholder='Email',class_='form-control') }}
           </div>
           <div class="form-group">

@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import validators, ValidationError
-from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField
+from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField, SelectField
 from wtforms.validators import Required
 from wtforms.widgets.core import Select, HTMLString, html_params
 from models import Entry
@@ -40,9 +40,25 @@ class ContactForm(Form):
 		validators.EqualTo('confirm', message='Passwords must match')
 	])
 	confirm = PasswordField('Confirm Password',[validators.Required("Please Enter your Date Of Birth")])
-	#dob = DateField(format='%d %m %y', widget=SelectDateWidget() )
 	accept_tos = BooleanField('I accept the Terms Of Services', [validators.Required("Please Accept the Terms Of Services")])
 
 class LoginForm(Form):
 	email = TextField("Email",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
 	password = PasswordField('Password', [validators.Required("Please enter a password.")])
+
+#class AddPlaylist(Form):
+
+
+#class AddSong(Form):
+
+class ReportForm(Form):
+    spam=SelectField("Spam", choices=[('It contains Vulgarity','Its a Spam','It is an inappropriate comment','Other')])
+
+#class AddPlaylist(Form):
+
+class editForm(Form):
+    name = TextField("Full Name")
+    dob = DateField(format='%d %m %y', widget=SelectDateWidget() )
+
+class CommentForm(Form):
+    comment = TextField("Add Comment ... ")

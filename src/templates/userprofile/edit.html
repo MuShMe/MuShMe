@@ -1,0 +1,25 @@
+
+{% extends "userprofile/index.html" %}
+{% block content %}
+
+<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content edit-modal">
+						<form role="form" class="center" >
+							<div class="form-group spacing">
+								{{ form3.name(placeholder='Name',class_='form-control') }}
+							</div>
+							<div class="form-group spacing">
+								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
+							</div>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<input class="reload btn" type='submit' name='btn' value='Save Changes'>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+{% endblock %}

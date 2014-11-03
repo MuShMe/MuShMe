@@ -86,11 +86,10 @@ h2 {
   color: #d3d3d3;
 }
 .flash {
-  background-color: #FBB0B0;
   padding: 10px;
   width: 600px;
-  margin-left: 6%;
-  margin-right: 6%;
+  text-align: center;
+  color:red;
 }
 #button {
   background-color: #95EB4E;

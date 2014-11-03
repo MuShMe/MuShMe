@@ -3,7 +3,7 @@
 from src import app
 import os
 from flask import Flask, render_template, session, request, flash, url_for, redirect
-from Forms import ContactForm, LoginForm
+from Forms import ContactForm, LoginForm, editForm, ReportForm, CommentForm
 from flask.ext.mail import Message, Mail
 from models import db, Entry
 from api import API
@@ -19,10 +19,12 @@ app.register_blueprint(API);
 
 @app.route('/')
 def index():
-    return render_template('homepage/index.html', form1= LoginForm(prefix='form1'), form2 = ContactForm(prefix='form2'))
+    session["login"] = False
+    session["signup"] = False
+    return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
 
 
-@app.route('/login', methods=['POST','GET'])
+@app.route('/login', methods=['POST'])
 def login():
     session["login"] = True
     session["signup"] = False
@@ -35,16 +37,20 @@ def login():
             if check_login:
                 userid= database.fetchone()
                 for uid in userid:
-                    return redirect(url_for('userProfile', userid=uid))
+                    return redirect(url_for('userProfile', userid=uid, form3=editForm(prefix='form3')))
+        else:
+            flash("Incorrect Email-Id or Password")
 
         return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
     else:
-        return render_template('homepage/index.html', form1= LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
+        session["login"] = False
+        session["signup"] = False
+        return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
+    session["signup"] = True    
     session["login"] = False
-    session["signup"] = True
     contactform = ContactForm(request.form, prefix='form2')
 
     if contactform.validate_on_submit():
@@ -53,15 +59,16 @@ def signup():
                                         contactform.email.data,
                                         hashlib.sha1(contactform.password.data).hexdigest(),
                                         contactform.name.data))
-
         if check_signup == True:
             conn.commit()
             database.execute("SELECT User_id from entries WHERE Email_id='%s' AND Pwdhash='%s'" %
                                         (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
             user_id = database.fetchone()
             for uid in user_id:
-                return redirect(url_for('userProfile',userid=uid))
-
+                return redirect(url_for('userProfile',userid=uid, form3=editForm(prefix='form3')))
+    else:
+        flash("Please Enter Valid Data !")
+    
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
 
 
@@ -70,29 +77,62 @@ def signup():
 def artistProfile(aprofileid):
     return render_template('artistpage/index.html')
 
-@app.route('/user/<userid>')
+@app.route('/user/<userid>',methods=['POST','GET'])
 def userProfile(userid):
-    session["User_id"] = userid
-    database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
-    session["UserName"]=database.fetchone()
-    database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
-    session["Name"]=database.fetchone()
-    database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
-    session["dob"]=database.fetchone()
+    uid=userid
+    if request.method != 'POST':
+        database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
+        session["UserName"]=database.fetchone()
+        database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
+        session["Name"]=database.fetchone()
+        database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
+        session["dob"]=database.fetchone()
+
+        database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
+        for user in database.fetchall():
+            database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
+            friendName = database.fetchone()
+            return friendName
+
+        database.execute("SELECT Playlist_id from user_playlist WHERE User_id='%s' " % userid)
+        for playlist in database.fetchall():
+            database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
+            playlistName = database.fetchone()
+            return playlistName
+
+        database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
+        for song in database.fetchall():
+            database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
+            songName = database.fetchone()
+            return songName
+        return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editForm(prefix='form3'))
+
+    if request.method == 'POST':
+        return render_template(url_for('editName', userid=uid))
 
 
-    database.execute("SELECT Playlist_id from user_playlist WHERE User_id='%s' " % userid)
-    for playlist in database.fetchall():
-        database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
-        playlistName = database.fetchone()
-        return playlistName
 
-    database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
-    for song in database.fetchall():
-        database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
-        songName = database.fetchone()
-        return songName
-    return render_template('userprofile/index.html')
+@app.route('/user/edit',methods=['POST','GET'])
+def editName(userid):
+    if request.method == 'POST':
+        editform = editForm(request.form, prefix='form3')
+
+        if editForm.validate_on_submit():
+            check_edit = database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
+            return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editform)
+    else:
+        return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editForm(prefix='form3'))
+
+@app.route('/user/<userid>/report',methods=['POST','GET'])
+def reportUser(userid):
+    if request.method == POST:
+        reportform = ReportFrom(request.form, prefix='form4')
+
+        if reportform.validate_on_submit():
+            check_report = database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % 
+                                            (editform.name.data,
+                                                editform.dob.data), (userid))
+            #return render_template('userprofile/edit.html',userid)
 
 @app.route('/song/<songid>')
 def songPage(songid):
