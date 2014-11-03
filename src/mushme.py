@@ -5,7 +5,6 @@ import os
 from flask import Flask, render_template, session, request, flash, url_for, redirect
 from Forms import ContactForm, LoginForm, editForm, ReportForm, CommentForm
 from flask.ext.mail import Message, Mail
-from models import db, Entry
 from api import API
 from models import database, conn
 
@@ -40,11 +39,10 @@ def login():
                     return redirect(url_for('userProfile', userid=uid, form3=editForm(prefix='form3')))
         else:
             flash("Incorrect Email-Id or Password")
-        return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
+        return render_template('index', form1=loginform, form2=ContactForm(prefix='form2')))
     else:
-        session["login"] = False
-        session["signup"] = False
-        return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
+        return redirect(url_for(('index')))
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
