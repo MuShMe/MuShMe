@@ -40,7 +40,6 @@ def login():
                     return redirect(url_for('userProfile', userid=uid, form3=editForm(prefix='form3')))
         else:
             flash("Incorrect Email-Id or Password")
-
         return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
     else:
         session["login"] = False
@@ -68,7 +67,6 @@ def signup():
                 return redirect(url_for('userProfile',userid=uid, form3=editForm(prefix='form3')))
     else:
         flash("Please Enter Valid Data !")
-    
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
 
 
