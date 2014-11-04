@@ -1,44 +1,79 @@
-from flask.ext.sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy import Table, Column, Integer, String
-from sqlalchemy.orm import mapper
-#from yourapplication.database import metadata, db_session
 import pymysql  
+from helpers import *
 
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='Internship0', db='MuShMe') 
+
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe', charset='utf8') 
 database = conn.cursor()
 
-db = SQLAlchemy()
 
-class Entry(db.Model):
-  __tablename__ = 'entries'
-  User_id = db.Column(db.Integer, primary_key = True)
-  Username =db.Column(db.String(100))
-  Name = db.Column(db.String(100))
-  Email_id = db.Column(db.String(120), unique=True)
-  Pwdhash = db.Column(db.String(100))
-  Privilege = db.Column(db.Integer)
-  Profile_pic = db.Column(db.LargeBinary)
-  DOB = db.Column(db.Date)
-  Last_login = db.Column(db.Date)
+#Function to check and add album data
+def albumHook(albumname, art,albumartist, publisher, year):
+   
+  flag = 0
+  foundalbums = database.execute("SELECT Album_id,Album_name FROM albums WHERE Album_name='%s'" % (albumname))
+  results = database.fetchall()
 
-  def set_password(self, Pwdhash):
-    self.phash = generate_password_hash(Pwdhash)
-    return self.phash
+  for result in results:
+    foundbyartist = database.execute("SELECT Artist_name FROM artists WHERE Artist_id IN (SELECT Artist_id FROM album_artists WHERE Album_id='%s'" %
+                                    (result)) 
+    if foundbyartist > 0 :
+      flag = 1
 
-  def check_password(self,Pwdhash):
-    self.phash = generate_password_hash(Pwdhash)
-    return check_password_hash(self.phash, Pwdhash)
+  if flag == 1:
+    database.execute("INSERT INTO albums(Album_pic, Album_name, Publisher, Album_year) VALUES('%s','%s','%s',%s)" % 
+                      (art,albumname, publisher, year))
+    conn.commit()
 
 
-  def __init__(self, Username, Email_id, Pwdhash, Privilege, Profile_pic, Name, DOB, Last_login):
+#Function to check and add song data
+def artistHook(albumartist):
+  insert = database.execute
+  pass
+
+
+#Main insert function
+def dbinsert(metadata):
+  insert = database.execute
+  commit = conn.commit
+
+  insertvalues = {}
+
+  for key in metadata:
+
+    if key == 'title':
+      insertvalues['Song_Title'] = metadata['title'][0]
+    elif key == 'album':
+      insertvalues['Song_Album'] = metadata['album'][0]
+      albumHook(metadata['album'][0],'static/AlbumArt/'+ metadata['album'][0]+metadata['artist'][0]+'.png',
+                metadata['artist'][0], publisherkey(metadata)[0],
+                metadata['date'][0].rsplit('-',2)[0])
+
+    elif key == 'artist':
+      artistHook(metadata['artist'])
+    elif key == 'copyright':
+      insertvalues['Publisher'] = metadata['copyright'][0]
+    elif key == 'publisher':
+      insertvalues['Publisher'] = metadata['publisher'][0]
+    elif key == 'genre':
+      insertvalues['Genre'] = metadata['genre'][0]
+  
+  #insert this data into the main songs list
+  if (database.execute("SELECT * from songs WHERE Song_Title='%s' AND Song_Album='%s'" 
+                        % (metadata['title'][0], metadata['album'][0])) == 0):
     
-    self.Username = Username
-    self.Email_id = Email_id.lower()
-    self.set_password(Pwdhash)
-    self.Name = Name
-    self.Privilege = Privilege
-    self.DOB = DOB
-    self.Profile_pic = Profile_pic
-    self.Last_login = Last_login
+    query = u'INSERT INTO songs('
+    for key in insertvalues:
+      query = unicode(query) + unicode(key) + u','
+    
+    query = unicode(query[:-1]) +u')'
+    query += u' VALUES ('
+    for key in insertvalues:
+      query = unicode(query) + u"'"+unicode(insertvalues[key]) +u"'"+ u','
+    query = unicode(query[:-1]) + u') '
+
+    if insertvalues : 
+      insert(query)
+      commit()
+      return True
+
+  return False    

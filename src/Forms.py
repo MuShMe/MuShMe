@@ -3,7 +3,6 @@ from wtforms import validators, ValidationError
 from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField, SelectField
 from wtforms.validators import Required
 from wtforms.widgets.core import Select, HTMLString, html_params
-from models import Entry
 
 class SelectDateWidget(object):
     FORMAT_CHOICES = {

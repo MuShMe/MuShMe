@@ -216,3 +216,12 @@ foreign key(Song_id) references songs(Song_id),
 foreign key(Recommend_id) references recommend(Recommend_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+
+/*
+ * Set the encoding.
+ */
+
+ALTER TABLE `MuShMe`.`album_artists` CHARACTER SET = utf8 ;
+ALTER TABLE `MuShMe`.`songs` CHARACTER SET = utf8 ;
+ALTER TABLE `MuShMe`.`songs` CHANGE COLUMN `Publisher` `Publisher` VARCHAR(100) CHARACTER SET 'utf8' NULL DEFAULT NULL  ;

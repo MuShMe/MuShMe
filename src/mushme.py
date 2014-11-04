@@ -39,7 +39,7 @@ def login():
                     return redirect(url_for('userProfile', userid=uid, form3=editForm(prefix='form3')))
         else:
             flash("Incorrect Email-Id or Password")
-        return render_template('index', form1=loginform, form2=ContactForm(prefix='form2')))
+        return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
     else:
         return redirect(url_for(('index')))
 
