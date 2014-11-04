@@ -7,24 +7,21 @@
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename='img/albumart.jpg')}}"></a>
 		</div>
 		<div class="col-xs-12">
-			<h1>Likes(--with likes count in this bracket--): </h1>
+			<h1>Likes({{likes}}): </h1>
 			<table class="table table-hover">
 				<thead>
 					<th></th>
 					<th></th>
 				</thead>
 				<tbody>
+				{% if likes > 0 %}
+				{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> User1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User5</b></h3></a></tr>
-					
+				{% endfor %}
+				{%else%}
+					<tr>Be the first one to like this.</tr>
+				{%endif%}
 				</tbody>
 			</table>
 			<!-- if(already_liked)!=True -->
@@ -36,23 +33,15 @@
 			<h2 class="text-center"> About : </h2>
 			<dl class="dl-horizontal">
 				<dt> <h3> <b>Song's Name:</b></h3></dt>
-				<dd><h3> Song's Name</h3></dd> 
-				<dt> <h3> <b>Rating:</b></h3></dt>
-				<dd><h3> Rating</h3></dd> 
+				<dd><h3> {{data['song_name']}}</h3></dd> 
 				<dt> <h3> <b>Genre:</b></h3></dt>
-				<dd><h3>Song's Genre</h3></dd>
-				<dt> <h3> <b>Type:</b></h3></dt>
-				<dd><h3> Song's type</h3></dd>
-				<dt> <h3> <b>Lenght:</b></h3></dt>
-				<dd><h3> Song's Lenght</h3></dd>
-				<dt> <h3> <b>Title:</b></h3></dt>
-				<dd><h3> Song's Title</h3></dd>
-				<dt> <h3> <b>County:</b></h3></dt>
-				<dd><h3> Country</h3></dd>
+				<dd><h3>{{data['genre']}}</h3></dd>
+				<dt> <h3> <b>Publisher:</b></h3></dt>
+				<dd><h3>{{data['publisher']}}</h3></dd>
 				<dt> <h3> <b>Year:</b></h3></dt>
 				<dd><h3> Song's Year</h3></dd> 			
 				<dt> <h3> <b>Album:</b></h3></dt>
-				<dd><h3><a href="#"> Song's Album Name  </a></h3></dd> 
+				<dd><h3><a href="#"> {{ data['song_album']}}  </a></h3></dd> 
 			</dl>
 		</div>
 		<div class="comm-recom">

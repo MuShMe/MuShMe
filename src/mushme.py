@@ -6,6 +6,7 @@ from flask import Flask, render_template, session, request, flash, url_for, redi
 from Forms import ContactForm, LoginForm, editForm, ReportForm, CommentForm
 from flask.ext.mail import Message, Mail
 from api import API
+from songs import SONG
 from models import database, conn
 
 import hashlib
@@ -15,6 +16,9 @@ mail.init_app(app)
 
 #For the collector script.
 app.register_blueprint(API);
+#For the songs
+app.register_blueprint(SONG);
+
 
 @app.route('/')
 def index():
@@ -130,9 +134,6 @@ def reportUser(userid):
                                                 editform.dob.data), (userid))
             #return render_template('userprofile/edit.html',userid)
 
-@app.route('/song/<songid>')
-def songPage(songid):
-    return render_template('songpage/index.html')
 
 @app.route('/playlist/<playlistid>')
 def playlistPage(playlistid):
