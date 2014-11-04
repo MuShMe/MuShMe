@@ -7,10 +7,9 @@ from Forms import ContactForm, LoginForm, editForm, ReportForm, CommentForm
 from flask.ext.mail import Message, Mail
 from api import API
 from songs import SONG
-from models import database, conn
-
+import pymysql
 import hashlib
-
+from flask import g
 mail = Mail()
 mail.init_app(app)
 
@@ -26,6 +25,17 @@ def index():
     session["signup"] = False
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
 
+#For database connections.
+@app.before_request
+def before_request():
+    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe', charset='utf8') 
+    g.database = g.conn.cursor()
+
+
+@app.teardown_request
+def teardown_request(exception):
+    g.conn.close()
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -35,10 +45,10 @@ def login():
         loginform = LoginForm(request.form, prefix='form1')
 
         if loginform.validate_on_submit():
-            check_login = database.execute("SELECT User_id from MuShMe.entries WHERE Email_id='%s' AND Pwdhash='%s'" %
+            check_login = g.database.execute("SELECT User_id from MuShMe.entries WHERE Email_id='%s' AND Pwdhash='%s'" %
                                             (loginform.email.data, hashlib.sha1(loginform.password.data).hexdigest()))
             if check_login:
-                userid= database.fetchone()
+                userid= g.database.fetchone()
                 for uid in userid:
                     return redirect(url_for('userProfile', userid=uid, form3=editForm(prefix='form3')))
         else:
@@ -55,16 +65,16 @@ def signup():
     contactform = ContactForm(request.form, prefix='form2')
 
     if contactform.validate_on_submit():
-        check_signup = database.execute("INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ('%s','%s','%s','%s')" % 
+        check_signup = g.database.execute("INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ('%s','%s','%s','%s')" % 
                                         (contactform.username.data,
                                         contactform.email.data,
                                         hashlib.sha1(contactform.password.data).hexdigest(),
                                         contactform.name.data))
         if check_signup == True:
-            conn.commit()
-            database.execute("SELECT User_id from entries WHERE Email_id='%s' AND Pwdhash='%s'" %
+            g.conn.commit()
+            g.database.execute("SELECT User_id from entries WHERE Email_id='%s' AND Pwdhash='%s'" %
                                         (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
-            user_id = database.fetchone()
+            user_id = g.database.fetchone()
             for uid in user_id:
                 return redirect(url_for('userProfile',userid=uid, form3=editForm(prefix='form3')))
     else:
@@ -81,29 +91,29 @@ def artistProfile(aprofileid):
 def userProfile(userid):
     uid=userid
     if request.method != 'POST':
-        database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
-        session["UserName"]=database.fetchone()
-        database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
-        session["Name"]=database.fetchone()
-        database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
-        session["dob"]=database.fetchone()
+        g.database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
+        session["UserName"]=g.database.fetchone()
+        g.database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
+        session["Name"]=g.database.fetchone()
+        g.database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
+        session["dob"]=g.database.fetchone()
 
-        database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
-        for user in database.fetchall():
-            database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
-            friendName = database.fetchone()
+        g.database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
+        for user in g.database.fetchall():
+            g.database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
+            friendName = g.database.fetchone()
             return friendName
 
-        database.execute("SELECT Playlist_id from user_playlist WHERE User_id='%s' " % userid)
-        for playlist in database.fetchall():
-            database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
-            playlistName = database.fetchone()
+        g.database.execute("SELECT Playlist_id from user_playlist WHERE User_id='%s' " % userid)
+        for playlist in g.database.fetchall():
+            g.database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
+            playlistName = g.database.fetchone()
             return playlistName
 
-        database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
-        for song in database.fetchall():
-            database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
-            songName = database.fetchone()
+        g.database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
+        for song in g.database.fetchall():
+            g.database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
+            songName = g.database.fetchone()
             return songName
         return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editForm(prefix='form3'))
 
@@ -118,7 +128,7 @@ def editName(userid):
         editform = editForm(request.form, prefix='form3')
 
         if editForm.validate_on_submit():
-            check_edit = database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
+            check_edit = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
             return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editform)
     else:
         return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editForm(prefix='form3'))
@@ -129,7 +139,7 @@ def reportUser(userid):
         reportform = ReportFrom(request.form, prefix='form4')
 
         if reportform.validate_on_submit():
-            check_report = database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % 
+            check_report = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % 
                                             (editform.name.data,
                                                 editform.dob.data), (userid))
             #return render_template('userprofile/edit.html',userid)

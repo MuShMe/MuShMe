@@ -2,7 +2,7 @@
 # API for the MuShMe service.
 from flask import Blueprint
 from flask import Flask, request
-from models import database, dbinsert
+from models import dbinsert
 
 #To recieve images
 import base64

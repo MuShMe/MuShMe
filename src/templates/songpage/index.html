@@ -37,9 +37,9 @@
 				<dt> <h3> <b>Genre:</b></h3></dt>
 				<dd><h3>{{data['genre']}}</h3></dd>
 				<dt> <h3> <b>Publisher:</b></h3></dt>
-				<dd><h3>{{data['publisher']}}</h3></dd>
+				<dd><h3>{{data['publisher']}}</h3></dd>	
 				<dt> <h3> <b>Year:</b></h3></dt>
-				<dd><h3> Song's Year</h3></dd> 			
+				<dd><h3>{ data['year']}</h3></dd> 			
 				<dt> <h3> <b>Album:</b></h3></dt>
 				<dd><h3><a href="#"> {{ data['song_album']}}  </a></h3></dd> 
 			</dl>
@@ -73,17 +73,10 @@
 					<th></th>
 				</thead>
 				<tbody>
+					{% for artist in artists %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Artist name1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Artist name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Artist name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Artist name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Artist name5</b></h3></a></tr>
-					
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>
@@ -95,26 +88,10 @@
 					<th></th>
 				</thead>
 				<tbody>
+				{% for other in others %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name5</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name6</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name7</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name8</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name9</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>
+				{% endfor %}
 				</tbody>
 			</table>
 		</div>
