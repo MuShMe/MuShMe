@@ -3,7 +3,7 @@
 	<!-- <meta charset="utf-8"> -->
 	<title>MuShMe</title>
 	<link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
-	<strong><link rel="stylesheet" href="{{url_for('static',filename='css/user.css')}}"></strong>
+	<strong><link href="{{url_for('static',filename='css/user.css')}}" rel="stylesheet"></strong>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -32,7 +32,13 @@
 		{% endblock %}
 
 
-
+<script>
+	function launch_modal(id) {
+     // Hide all modals using class if required.
+     $('.modal').modal('hide');
+     $('#'+id).modal('show');
+ }
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
 

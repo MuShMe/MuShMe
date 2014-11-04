@@ -1,6 +1,6 @@
 {% extends "userprofile/layout.html" %}
 {% block content %}
-		
+
 
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
@@ -17,7 +17,7 @@
 				<tbody>
 					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> {{ friendName }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b> {{ friendName }} Friend{{ i }}</b></h3></a></tr>
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> Friend2</b></h3></a></tr>
@@ -43,7 +43,7 @@
 				<dd><h3>{{ session.dob[0] }}</h3></dd>
 				<dd><h3><a href="#"> Recently added song </a></h3></dd> 
 			</dl>
-		<!-- Edit modal -->
+			<!-- Edit modal -->
 			<a href="{{ url_for('editName', userid=userid) }}" class="btn btn-default submit" onclick="launch_modal('useredit');">Edit</a>
 			
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -136,9 +136,9 @@
 					<th></th>
 				</thead>
 				<tbody>
-				{% for i in range(0,5) %}
+					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ playlistName }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ playlistName }} Playlist Name {{ i }}</b></h3></a></tr>
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Playlist name2</b></h3></a></tr>
@@ -151,8 +151,7 @@
 					
 				</tbody>
 			</table>
-		</div>
-		<!-- Playlist Add modal -->
+			<!-- Playlist Add modal -->
 			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addplaylist');">Add New+</a>
 			<div class="modal fade bs-example-modal-lg" id="addplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
@@ -180,9 +179,9 @@
 					<th></th>
 				</thead>
 				<tbody>
-				{% for i in range(0,5) %}
+					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/albumart.jpg') }}"></a></tr>
-					<tr><a href="#"><h3><b>{{ songName }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ songName }} Song Name{{ i }}</b></h3></a></tr>
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
@@ -204,9 +203,6 @@
 					<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>-->
 				</tbody>
 			</table>
-		</div>
-	</div>
-</div>
 			<!-- Songs Add modal -->
 			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
 			<div class="modal fade bs-example-modal-lg" id="addsong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -257,11 +253,4 @@
 		</div>
 	</div>
 </div>
-<script>
-	function launch_modal(id) {
-     // Hide all modals using class if required.
-     $('.modal').modal('hide');
-     $('#'+id).modal('show');
- }
-</script>
 {% endblock %}
