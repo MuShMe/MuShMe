@@ -91,6 +91,7 @@ def artistProfile(aprofileid):
 def userProfile(userid):
     uid=userid
     if request.method != 'POST':
+        session['userid'] = uid
         g.database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
         session["UserName"]=g.database.fetchone()
         g.database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
