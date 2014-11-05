@@ -12,11 +12,7 @@ API = Blueprint('API',__name__,template_folder='templates')
 def addtodatabase(metadata):
     imagefilename = metadata['artist'][0] + metadata['album'][0] + '.png'
 
-    with open('src/static/AlbumArt/'+imagefilename, 'wb') as f:
-        f.write(base64.b64decode(metadata['ART']))
-    
-
-    if (dbinsert(metadata) == True):
+    if (dbinsert(metadata, imagefilename) == True):
         return True
     else:
         return False

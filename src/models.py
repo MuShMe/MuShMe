@@ -5,14 +5,13 @@ from flask import g
 
 #Function to check and add album data
 def albumHook(albumname, art,albumartist, publisher, year):
-   
   flag = 0
-  foundalbums = g.database.execute("SELECT Album_id,Album_name FROM albums WHERE Album_name='%s'" % (albumname))
+  foundalbums = g.database.execute("SELECT Album_id FROM albums WHERE Album_name='%s'" % (albumname))
   results = g.database.fetchall()
 
   for result in results:
     foundbyartist = g.database.execute("SELECT Artist_name FROM artists WHERE Artist_id IN (SELECT Artist_id FROM album_artists WHERE Album_id='%s')" %
-                                    (result[0])) 
+                                      (result[0]))
     if foundbyartist > 0 :
       flag = 1
 
@@ -20,9 +19,10 @@ def albumHook(albumname, art,albumartist, publisher, year):
     g.database.execute("INSERT INTO albums(Album_pic, Album_name, Publisher, Album_year) VALUES('%s','%s','%s',%s)" % 
                       (art,albumname, publisher, year))
     g.conn.commit()
-    g.database.execute("SELECT Album_id FROM albums WHERE Album_name='%s' AND Album_pic='%s'" % (albumname, art))
   
-  return g.database.fetchone()[0]
+  g.database.execute("SELECT Album_id FROM albums WHERE Album_name='%s' AND Album_pic='%s'" % (albumname, art))
+  a= g.database.fetchone()[0]
+  return a
 
 
 #Function to check and add artist data
@@ -51,7 +51,7 @@ def artistHook(artistnames, albumname,albumid, date):
 
 
 #Main insert function
-def dbinsert(metadata):
+def dbinsert(metadata, imagefilename):
   insert = g.database.execute
   commit = g.conn.commit
 

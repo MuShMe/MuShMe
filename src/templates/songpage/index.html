@@ -75,7 +75,7 @@
 				<tbody>
 					{% for artist in artists %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="{{ url_for() }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
+					<tr><a href="{{ url_for('artistProfile', aprofileid=artist['id']) }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
 					{% endfor %}
 				</tbody>
 			</table>
