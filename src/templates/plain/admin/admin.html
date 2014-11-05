@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<head>
+	<!-- <meta charset="utf-8"> -->
+	<title>MuShMe</title>
+	<link href="../../../static/css/bootstrap.css" rel="stylesheet">
+	<strong><link rel="stylesheet" href="../css/admin.css"></strong>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="navbar11">
+		<nav class="navbar navbar-default" role="navigation">
+			<a class="profilepic" href="profile.html"><img class=" img-circle profilepic" src="../img/profile.png"  ></a>
+
+
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">UserName</a></li>
+			</ul>
+			<form class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+					<input type="text" class="form-control input-size" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Search</button>
+			</form>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a class="admin" href="#">Admin</a></li>
+				<li><a class="logout" href="#">Logout</a></li>
+			</ul>
+		</div>
+	</nav>
+</div>
+<div class="container main-body">
+	<div class="col-xs-3 sector-1">
+		<div class="profilepic-area" >
+			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="../img/profile.png"></a>
+		</div>
+		<div class="col-xs-12">
+			<button type="button" class="btn btn-default btn-lg btn-block">Pending Reports</button>
+			<div class="spacing"><button type="button" class="btn btn-default btn-lg btn-block">Processed Reports</button></div>
+
+		</div>
+	</div>
+	<div class="col-xs-9 ">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><h4><i>Ticket Number</i></h4></th>
+					<th><h4><i>Complainant</i></h4></th>
+					<th><h4><i>Defendant</i></h4></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<div class="spacing">
+						<td>
+							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab" id="id1">
+										<h4 class="panel-title">
+											<a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
+												Ticket #1
+											</a>
+										</h4>
+									</div>
+									<div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id1">
+										<div class="panel-body">
+											<table>
+												<thead>
+													<tr>
+														<th></th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td><p>Comment </p></td>
+														<td>
+															<blockquote>
+																<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
+																<footer><a href="#"><cite title="Username">User 2</cite></a></footer>
+															</blockquote>
+														</td>
+													</tr>
+													<tr>
+														<td> <p >Type </p>
+														</td>
+														<td>
+															<p >It contains Vulgarity (one of the options that complainant had choosed) </p>
+														</td>
+													</tr>
+													<tr>
+														<td><p>Complainant's Remark </p></td>
+														<td><blockquote>
+															<p>I think it's an appropriate language for minors</p>
+														</blockquote></td>
+													</tr>
+													<tr>
+														<td><b>Remove this Comment ?</b></td>
+														<td><label class="radio-inline">
+															<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Yes
+														</label>
+														<label class="radio-inline">
+															<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> No
+														</label>
+													</td>
+												</tr>
+												<tr>
+													<td><b>Remarks </b></td>
+													<td>
+														<div class="spacing">
+															<form >
+																<textarea class="form-control" rows="3" placeholder="Comments...."></textarea>
+															</form>
+															<button type="button" class="btn btn-default submit">Submit</button>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</td>
+					<td><h5><b>User 1</b></h5></td>
+					<td><h5><b>User 2</b></h5></td>
+					<td></td>
+				</div>
+			</tr>
+			<tr>
+					<div class="spacing">
+						<td>
+							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab" id="id2">
+										<h4 class="panel-title">
+											<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="false" aria-controls="collapse2">
+												Ticket #2
+											</a>
+										</h4>
+									</div>
+									<div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id2">
+										<div class="panel-body">
+											<table>
+												<thead>
+													<tr>
+														<th></th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td><p>Comment </p></td>
+														<td>
+															<blockquote>
+																<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
+																<footer><a href="#"><cite title="Username">Chandu</cite></a></footer>
+															</blockquote>
+														</td>
+													</tr>
+													<tr>
+														<td> <p >Type </p>
+														</td>
+														<td>
+															<p >It contains Vulgarity (one of the options that complainant had choosed) </p>
+														</td>
+													</tr>
+													<tr>
+														<td><p>Complainant's Remark </p></td>
+														<td><blockquote>
+															<p>I think it's an appropriate language for minors</p>
+														</blockquote></td>
+													</tr>
+													<tr>
+														<td><b>Remove this Comment ?</b></td>
+														<td><label class="radio-inline">
+															<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Yes
+														</label>
+														<label class="radio-inline">
+															<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> No
+														</label>
+													</td>
+												</tr>
+												<tr>
+													<td><b>Remarks </b></td>
+													<td>
+														<div class="spacing">
+															<form >
+																<textarea class="form-control" rows="3" placeholder="Comments...."></textarea>
+															</form>
+															<button type="button" class="btn btn-default submit">Submit</button>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</td>
+					<td><h5><b>Chattur</b></h5></td>
+					<td><h5><b>Chandu</b></h5></td>
+					<td></td>
+				</div>
+			</tr>
+			<tr>
+					<div class="spacing">
+						<td>
+							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab" id="id3">
+										<h4 class="panel-title">
+											<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false" aria-controls="collapse3">
+												Ticket #3
+											</a>
+										</h4>
+									</div>
+									<div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id3">
+										<div class="panel-body">
+											<table>
+												<thead>
+													<tr>
+														<th></th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td><p>Comment </p></td>
+														<td>
+															<blockquote>
+																<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
+																<footer><a href="#"><cite title="Username">User y</cite></a></footer>
+															</blockquote>
+														</td>
+													</tr>
+													<tr>
+														<td> <p >Type </p>
+														</td>
+														<td>
+															<p >It contains Vulgarity (one of the options that complainant had choosed) </p>
+														</td>
+													</tr>
+													<tr>
+														<td><p>Complainant's Remark </p></td>
+														<td><blockquote>
+															<p>I think it's an appropriate language for minors</p>
+														</blockquote></td>
+													</tr>
+													<tr>
+														<td><b>Remove this Comment ?</b></td>
+														<td><label class="radio-inline">
+															<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Yes
+														</label>
+														<label class="radio-inline">
+															<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> No
+														</label>
+													</td>
+												</tr>
+												<tr>
+													<td><b>Remarks </b></td>
+													<td>
+														<div class="spacing">
+															<form >
+																<textarea class="form-control" rows="3" placeholder="Comments...."></textarea>
+															</form>
+															<button type="button" class="btn btn-default submit">Submit</button>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</td>
+					<td><h5><b>User x</b></h5></td>
+					<td><h5><b>User y</b></h5></td>
+					<td></td>
+				</div>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</div>
+<script>
+	function launch_modal(id) {
+     // Hide all modals using class if required.
+     $('.modal').modal('hide');
+     $('#'+id).modal('show');
+ }
+</script>
+<script src="../../../static/js/jquery.min.js"></script>
+<script src="../../../static/js/bootstrap.min.js"></script>
+</body>
