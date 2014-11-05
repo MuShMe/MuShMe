@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
-from flask import g
+from flask import g, abort
+from flask import session
 
 SONG = Blueprint('SONG',__name__,template_folder='templates')
 
@@ -22,19 +23,45 @@ def getLikes(songid):
 
 
 def getArtistData(songid):
+  data = {}
   g.database.execute("SELECT Artist_id FROM song_artists WHERE Song_id='%s'" % songid)
   artistids = g.database.fetchall()
-  
   artist = []
 
   for artistid in artistids:
-  	g.database.execute("SELECT Aritst_name FROM artists WHERE Artist_id=%s" % artistid)
-  	artist.append(g.database.fetchone()[0])
+    g.database.execute("SELECT Artist_id,Aritst_name FROM artists WHERE Artist_id=%s" % artistid)
+    temp = database.fetchone()
+    print temp
+    if temp ==True:
+      data['id'] = temp[0]
+      data['name'] = temp[1]
+      artist.append(data)
+      print artist
   
   return artist
+
+def getOthers(songid):
+  others = []
+
+  g.database.execute("SELECT Song_Album FROM songs WHERE Song_id=%s" % songid)
+  album = g.database.fetchone()[0]
+  g.database.execute("SELECT Song_title FROM songs WHERE Song_Album='%s' LIMIT 5" % album)
+  result = g.database.fetchall()
+
+  for res in result:
+    others.append(res[0])
+
+  return others
 
 
 @SONG.route('/song/<songid>')
 def songPage(songid):
-    return render_template('songpage/index.html', data=getSongData(songid),
-                            artists=getArtistData(songid), likes=getLikes(songid))
+  if g.database.execute("SELECT * FROM songs WHERE Song_id=%s" % songid) == 0:
+    if 'username' in session:
+        abort(404)
+    else:
+      abort("You must be logged in to see this page.")
+  
+  return render_template('songpage/index.html', data=getSongData(songid),
+              artists=getArtistData(songid), likes=getLikes(songid), 
+              others=getOthers(songid))

@@ -214,4 +214,5 @@ if __name__ == "__main__":
     except:
         pass
     app.run(use_debugger=use_debugger, debug=app.debug,
-            use_reloader=use_debugger, host='0.0.0.0')
+            use_reloader=use_debugger, host='0.0.0.0',
+            threaded=True)

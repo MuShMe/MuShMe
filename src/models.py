@@ -2,6 +2,7 @@ import pymysql
 from helpers import *
 from flask import g
 
+
 #Function to check and add album data
 def albumHook(albumname, art,albumartist, publisher, year):
    
@@ -10,7 +11,6 @@ def albumHook(albumname, art,albumartist, publisher, year):
   results = g.database.fetchall()
 
   for result in results:
-    print result[0]
     foundbyartist = g.database.execute("SELECT Artist_name FROM artists WHERE Artist_id IN (SELECT Artist_id FROM album_artists WHERE Album_id='%s')" %
                                     (result[0])) 
     if foundbyartist > 0 :
@@ -20,11 +20,32 @@ def albumHook(albumname, art,albumartist, publisher, year):
     g.database.execute("INSERT INTO albums(Album_pic, Album_name, Publisher, Album_year) VALUES('%s','%s','%s',%s)" % 
                       (art,albumname, publisher, year))
     g.conn.commit()
+    g.database.execute("SELECT Album_id FROM albums WHERE Album_name='%s' AND Album_pic='%s'" % (albumname, art))
+  
+  return g.database.fetchone()[0]
 
 
 #Function to check and add artist data
-def artistHook(albumartist):
-  pass
+def artistHook(artistnames, albumname,albumid, date):
+  #Check if the artist exists already.
+  for artistname in artistnames:
+    artistexists = g.database.execute("SELECT * FROM artists WHERE Artist_name='%s'" % artistname)
+
+    if artistexists == False:
+      g.database.execute("INSERT INTO artists(Artist_name, Last_updated) VALUES('%s','%s')" % (artistname, date))
+      g.conn.commit()
+
+      g.database.execute("SELECT Artist_id FROM artists WHERE Artist_name='%s' AND Last_updated='%s'" % (artistname, date))
+      artistid= g.database.fetchone()[0]
+      g.database.execute("INESRT INTO album_artists VALUES (%s, %s)" % (artistid, albumid))
+    else:
+      g.database.execute("SELECT Artist_id FROM artists WHERE Artist_name='%s' AND Last_updated='%s'" % (artistname, date))
+      artistid= g.database.fetchone()[0]
+
+      found = g.database.execute("SELECT * FROM album_artists WHERE Artist_id=%s AND Album_id=%s" % (artistid, albumid))
+      if found == 0:
+        g.database.execute("INSERT INTO album_artists(Artist_id, Album_id) VALUES (%s,%s)" % (artistid, albumid));
+        g.conn.commit()
 
 
 #Main insert function
@@ -40,11 +61,12 @@ def dbinsert(metadata):
       insertvalues['Song_Title'] = metadata['title'][0]
     elif key == 'album':
       insertvalues['Song_Album'] = metadata['album'][0]
-      albumHook(metadata['album'][0],'AlbumArt/'+ metadata['artist'][0]+metadata['album'][0]+'.png',
-                metadata['artist'][0], publisherkey(metadata)[0],
-                metadata['date'][0].rsplit('-',2)[0])
+      albumid = albumHook(metadata['album'][0],'AlbumArt/'+ metadata['artist'][0]+metadata['album'][0]+'.png',
+                          metadata['artist'][0], publisherkey(metadata)[0],
+                          metadata['date'][0].rsplit('-',2)[0])
+    
     elif key == 'artist':
-      artistHook(metadata['artist'])
+      artistHook(metadata['artist'], metadata['album'][0],albumid, metadata['date'][0].split()[0])
     elif key == 'copyright':
       insertvalues['Publisher'] = metadata['copyright'][0]
     elif key == 'publisher':

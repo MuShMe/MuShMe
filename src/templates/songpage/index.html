@@ -39,7 +39,7 @@
 				<dt> <h3> <b>Publisher:</b></h3></dt>
 				<dd><h3>{{data['publisher']}}</h3></dd>	
 				<dt> <h3> <b>Year:</b></h3></dt>
-				<dd><h3>{ data['year']}</h3></dd> 			
+				<dd><h3>{{ data['year'] }}</h3></dd> 			
 				<dt> <h3> <b>Album:</b></h3></dt>
 				<dd><h3><a href="#"> {{ data['song_album']}}  </a></h3></dd> 
 			</dl>
@@ -66,7 +66,7 @@
 	</div>
 	<div class="col-xs-3 sector-3">
 		<div class="playlist-section">
-			<h2>Artists</h2>
+			<h2>Artists:</h2>
 			<table class="table table-hover">
 				<thead>
 					<th></th>
@@ -75,7 +75,7 @@
 				<tbody>
 					{% for artist in artists %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Artist name1</b></h3></a></tr>
+					<tr><a href="{{ url_for() }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
 					{% endfor %}
 				</tbody>
 			</table>
@@ -90,7 +90,7 @@
 				<tbody>
 				{% for other in others %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name1</b></h3></a></tr>
+					<tr><a href="#"><h3><b> {{ other }}</b></h3></a></tr>
 				{% endfor %}
 				</tbody>
 			</table>
