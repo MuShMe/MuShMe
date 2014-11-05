@@ -27,16 +27,15 @@ def getArtistData(songid):
   g.database.execute("SELECT Artist_id FROM song_artists WHERE Song_id='%s'" % songid)
   artistids = g.database.fetchall()
   artist = []
+  print artistids
 
   for artistid in artistids:
-    g.database.execute("SELECT Artist_id,Aritst_name FROM artists WHERE Artist_id=%s" % artistid)
+    g.database.execute("SELECT Artist_id,Aritst_name FROM artists WHERE Artist_id=%s" % artistid[0])
     temp = database.fetchone()
-    print temp
     if temp ==True:
       data['id'] = temp[0]
       data['name'] = temp[1]
       artist.append(data)
-      print artist
   
   return artist
 

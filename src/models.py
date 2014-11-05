@@ -47,6 +47,8 @@ def artistHook(artistnames, albumname,albumid, date):
         g.database.execute("INSERT INTO album_artists(Artist_id, Album_id) VALUES (%s,%s)" % (artistid, albumid));
         g.conn.commit()
 
+      return artistid
+
 
 #Main insert function
 def dbinsert(metadata):
@@ -66,7 +68,7 @@ def dbinsert(metadata):
                           metadata['date'][0].rsplit('-',2)[0])
     
     elif key == 'artist':
-      artistHook(metadata['artist'], metadata['album'][0],albumid, metadata['date'][0].split()[0])
+      artistid = artistHook(metadata['artist'], metadata['album'][0],albumid, metadata['date'][0].split()[0])
     elif key == 'copyright':
       insertvalues['Publisher'] = metadata['copyright'][0]
     elif key == 'publisher':
@@ -92,6 +94,11 @@ def dbinsert(metadata):
 
     if insertvalues : 
       insert(query)
+      g.database.execute("SELECT Song_id FROM songs WHERE Song_Title='%s' AND Song_Album='%s'"
+                         % (metadata['title'][0], metadata['album'][0]))
+      songid = g.database.fetchone()[0]
+
+      g.database.execute("INSERT INTO song_artists VALUES (%s,%s)" % (songid, artistid))
       commit()
       return True
 
