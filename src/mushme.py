@@ -175,9 +175,6 @@ def logout():
     session['logged_in']=False
     return render_template('login.html')
 
-@app.route('/testdb')
-def testdb():
-    return "hello"
 
 if not app.debug:
     import logging
@@ -216,4 +213,4 @@ if __name__ == "__main__":
         pass
     app.run(use_debugger=use_debugger, debug=app.debug,
             use_reloader=use_debugger, host='0.0.0.0',
-            threaded=True)
+            threaded=True, port=80)
