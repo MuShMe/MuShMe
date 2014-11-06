@@ -98,7 +98,8 @@ def userProfile(userid):
         session["Name"]=g.database.fetchone()
         g.database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
         session["dob"]=g.database.fetchone()
-
+        g.database.execute("SELECT Privilege FROM entries WHERE User_id=%s", (userid))
+        session['privilege'] = g.database.fetchone()[0]
         g.database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
         for user in g.database.fetchall():
             g.database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
@@ -212,5 +213,4 @@ if __name__ == "__main__":
     except:
         pass
     app.run(use_debugger=use_debugger, debug=app.debug,
-            use_reloader=use_debugger, host='0.0.0.0',
-            threaded=True, port=80)
+            use_reloader=use_debugger, threaded=True, port=8080)

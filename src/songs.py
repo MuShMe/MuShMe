@@ -12,7 +12,8 @@ def getSongData(songid):
   row = g.database.fetchall()[0]
 
   data['song_name'] = row[0]
-  data['song_album'] = row[1]
+  g.database.execute("SELECT Album_name from albums WHERE Album_id=%s", (row[1]))
+  data['song_album'] = g.database.fetchone()[0]
   data['genre'] = row[2]
   data['publisher'] = row[3]
   data['year'] = row[4]
@@ -76,6 +77,13 @@ def getComments(songid):
   return commentlist
 
 
+def getAlbumArt(songid):
+  g.database.execute("SELECT Song_Album FROM songs WHERE song_id=%s", (songid))
+  albumname = g.database.fetchone()[0]
+
+  g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s", (albumname))
+  return g.database.fetchone()[0]
+
 @SONG.route('/song/<songid>')
 def songPage(songid):
   if g.database.execute("SELECT * FROM songs WHERE Song_id=%s" % songid) == 0:
@@ -89,7 +97,8 @@ def songPage(songid):
               others=getOthers(songid),
               commentform=CommentForm(),
               songid=songid,
-              comments= getComments(songid))
+              comments= getComments(songid),
+              art=getAlbumArt(songid))
 
 
 @SONG.route('/song/addcomment/<int:songid>', methods=["POST"])

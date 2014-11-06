@@ -4,7 +4,7 @@
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
 		<div class="profilepic-area" >
-			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename='img/albumart.jpg')}}"></a>
+			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename=art)}}"></a>
 		</div>
 		<div class="col-xs-12">
 			<h1>Likes({{likes}}): </h1>
@@ -86,7 +86,7 @@
 				</thead>
 				<tbody>
 				{% for other in others %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=art)}}"></a></tr>
 					<tr><a href="#"><h3><b> {{ other }}</b></h3></a></tr>
 				{% endfor %}
 				</tbody>

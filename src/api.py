@@ -4,9 +4,6 @@ from flask import Blueprint
 from flask import Flask, request
 from models import dbinsert
 
-#To recieve images
-import base64
-
 API = Blueprint('API',__name__,template_folder='templates')
 
 def addtodatabase(metadata):

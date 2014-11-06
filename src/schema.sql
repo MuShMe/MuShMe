@@ -19,19 +19,6 @@ DOB DATE,
 Last_login TIMESTAMP default CURRENT_TIMESTAMP
 );
 
-drop table if exists songs;
-CREATE TABLE songs (
-Song_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Song_title VARCHAR(100) NOT NULL,
-Song_Album VARCHAR(100) NOT NULL,
-Genre VARCHAR(100),
-Publisher VARCHAR(100),
-Track_number INT,
-Song_year INT,
-Uploaded_when TIMESTAMP default CURRENT_TIMESTAMP,
-recommended INT
-);
-
 drop table if exists albums;
 CREATE TABLE albums (
 Album_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -40,6 +27,20 @@ Album_name VARCHAR(100) NOT NULL,
 Album_year INT,
 No_of_tracks INT,
 Publisher VARCHAR(100) NOT NULL
+);
+
+drop table if exists songs;
+CREATE TABLE songs (
+Song_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+Song_title VARCHAR(100) NOT NULL,
+Song_Album INT(11) NOT NULL,
+Genre VARCHAR(100),
+Publisher VARCHAR(100),
+Track_number INT,
+Song_year INT,
+Uploaded_when TIMESTAMP default CURRENT_TIMESTAMP,
+recommended INT,
+FOREIGN KEY (Song_Album) REFERENCES albums(Album_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 drop table if exists artists;
@@ -227,5 +228,4 @@ ALTER TABLE `MuShMe`.`songs` CHARACTER SET = utf8 ;
 ALTER TABLE `MuShMe`.`songs` CHANGE COLUMN `Publisher` `Publisher` VARCHAR(100) CHARACTER SET 'utf8' NULL DEFAULT NULL  ;
 ALTER TABLE `MuShMe`.`albums` CHARACTER SET = utf8 ;
 ALTER TABLE `MuShMe`.`albums` CHANGE COLUMN `Album_pic` `Album_pic` VARCHAR(100) CHARACTER SET 'utf8' NULL DEFAULT NULL  ;
-ALTER TABLE `MuShMe`.`albums` CHARACTER SET = latin1 ;
 ALTER TABLE `MuShMe`.`artists` CHANGE COLUMN `Last_updated` `Last_updated` DATE NOT NULL  ;
