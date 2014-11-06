@@ -57,7 +57,8 @@ drop table if exists playlists;
 CREATE TABLE playlists (
 Playlist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Playlist_name VARCHAR(100) NOT NULL,
-Recommended INT
+Recommended INT,
+User_id INT NOT NULL
 );
 
 drop table if exists comments;
@@ -116,15 +117,6 @@ User_id1 INT NOT NULL,
 User_id2 INT NOT NULL,
 foreign key(User_id1) references entries(User_id),
 foreign key(User_id2) references entries(User_id)
-ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-drop table if exists user_playlist;
-CREATE TABLE user_playlist (
-Playlist_id INT NOT NULL,
-User_id INT NOT NULL,
-foreign key(User_id) references entries(User_id),
-foreign key(Playlist_id) references playlists(Playlist_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 

@@ -64,7 +64,7 @@ def getComments(songid):
 
   for comment in comments:
     data = {}
-    g.database.execute("SELECT User_id, Comment FROM comments WHERE Comment_id=%s", (comment[0]))
+    g.database.execute("SELECT User_id, Comment FROM comments WHERE Comment_id=%s ORDER BY Comment_id DESC", (comment[0]))
     row = g.database.fetchone()
 
     data['userid'] = row[0]

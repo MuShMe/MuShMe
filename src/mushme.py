@@ -139,7 +139,7 @@ def editName(userid):
 def reportUser(userid):
     if request.method == POST:
         reportform = ReportFrom(request.form, prefix='form4')
-
+        
         if reportform.validate_on_submit():
             check_report = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % 
                                             (editform.name.data,
