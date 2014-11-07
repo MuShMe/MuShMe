@@ -67,7 +67,7 @@ CREATE TABLE comments (
 Comment_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 comment_type VARCHAR(2),
 Comment VARCHAR(5000) NOT NULL,
-Flag_on_comment INT,
+Flag_on_comment INT default 0,
 User_id INT NOT NULL,
 foreign key(User_id) references entries(User_id)
 ON UPDATE CASCADE ON DELETE CASCADE

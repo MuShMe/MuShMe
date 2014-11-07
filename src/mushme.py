@@ -10,6 +10,7 @@ from songs import SONG
 import pymysql
 import hashlib
 from flask import g
+
 mail = Mail()
 mail.init_app(app)
 
@@ -28,7 +29,7 @@ def index():
 #For database connections.
 @app.before_request
 def before_request():
-    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe', charset='utf8') 
+    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='Internship0', db='MuShMe', charset='utf8') 
     g.database = g.conn.cursor()
 
 
@@ -49,8 +50,12 @@ def login():
                                             (loginform.email.data, hashlib.sha1(loginform.password.data).hexdigest()))
             if check_login:
                 userid= g.database.fetchone()
+                g.database.execute("UPDATE MuShMe.entries SET Last_Login=CURRENT_TIMESTAMP() WHERE User_id='%s'" % (session['userid']))
                 for uid in userid:
-                    return redirect(url_for('userProfile', userid=uid, form3=editForm(prefix='form3')))
+                    return redirect(url_for('userProfile', userid=uid))
+            else:
+                flash("Incorrect Email-Id or Password")
+
         else:
             flash("Incorrect Email-Id or Password")
         return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
@@ -76,22 +81,17 @@ def signup():
                                         (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
             user_id = g.database.fetchone()
             for uid in user_id:
-                return redirect(url_for('userProfile',userid=uid, form3=editForm(prefix='form3')))
+                return redirect(url_for('userProfile',userid=uid))
     else:
         flash("Please Enter Valid Data !")
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
 
 
-#All your profile are belong to us.
-@app.route('/artist/<aprofileid>')
-def artistProfile(aprofileid):
-    return render_template('artistpage/index.html')
 
 @app.route('/user/<userid>',methods=['POST','GET'])
 def userProfile(userid):
-    uid=userid
     if request.method != 'POST':
-        session['userid'] = uid
+        session['userid'] = userid
         g.database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
         session["UserName"]=g.database.fetchone()
         g.database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
@@ -106,50 +106,43 @@ def userProfile(userid):
             friendName = g.database.fetchone()
             return friendName
 
-        g.database.execute("SELECT Playlist_id from user_playlist WHERE User_id='%s' " % userid)
-        for playlist in g.database.fetchall():
-            g.database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
-            playlistName = g.database.fetchone()
-            return playlistName
-
         g.database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
         for song in g.database.fetchall():
             g.database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
             songName = g.database.fetchone()
             return songName
-        return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editForm(prefix='form3'))
+        return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
 
+@app.route('/user/<userid>',methods=['POST','GET'])
+def comment(userid):
     if request.method == 'POST':
-        return render_template(url_for('editName', userid=uid))
-
-
-
-@app.route('/user/edit',methods=['POST','GET'])
-def editName(userid):
-    if request.method == 'POST':
-        editform = editForm(request.form, prefix='form3')
+        commentform = CommentForm(request.form, prefix='form3')
 
         if editForm.validate_on_submit():
             check_edit = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
-            return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editform)
+            return render_template('userprofile/index.html',userid=session['userid'], form4=commentform, form3=editForm(prefix='form3'))
     else:
-        return render_template('userprofile/index.html', form5=CommentForm(prefix='form5'), form3=editForm(prefix='form3'))
+        return render_template('userprofile/index.html', userid=session['userid'], form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
 
-@app.route('/user/<userid>/report',methods=['POST','GET'])
-def reportUser(userid):
-    if request.method == POST:
-        reportform = ReportFrom(request.form, prefix='form4')
-        
-        if reportform.validate_on_submit():
-            check_report = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % 
-                                            (editform.name.data,
-                                                editform.dob.data), (userid))
-            #return render_template('userprofile/edit.html',userid)
+@app.route('/user/<userid>/edit',methods=['POST','GET'])
+def editName(userid):
+    if request.method == 'POST':
+        commentform = CommentForm(request.form, prefix='form3')
 
+        if CommentForm.validate_on_submit():
+            check_comment = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
+            return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editform)
+    else:
+        return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
 
 @app.route('/playlist/<playlistid>')
 def playlistPage(playlistid):
     return render_template('playlist/index.html')
+
+#All your profile are belong to us.
+@app.route('/artist/<aprofileid>')
+def artistProfile(aprofileid):
+    return render_template('artistpage/index.html')
 
 #To handle 404 not found errors
 @app.errorhandler(404)
