@@ -47,7 +47,7 @@
 		<div class="comm-recom">
 			<form action="{{url_for('SONG.addcomment', songid=songid)}}" method="post">
 				{{ commentform.hidden_tag() }}
-					{{commentform.comment(rows=20,class_="form-control", placeholder="Leave a comment..") | safe}}
+					{{commentform.comment(rows=4,class_="form-control", placeholder="Leave a comment..") | safe}}
 				<input type="submit" class="btn btn-default submit" value="Submit"/>
 			</form>
 		</div>

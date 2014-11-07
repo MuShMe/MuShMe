@@ -26,6 +26,7 @@ app.register_blueprint(playlist);
 def index():
     session["login"] = False
     session["signup"] = False
+    session["logged"] = False
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=ContactForm(prefix='form2'))
 
 #For database connections.
@@ -55,6 +56,7 @@ def login():
                 g.database.execute("UPDATE MuShMe.entries SET Last_Login=CURRENT_TIMESTAMP() WHERE User_id='%s'" % (userid))
                 g.conn.commit()
                 for uid in userid:
+                    session['logged']=True
                     return redirect(url_for('userProfile', userid=uid))
             else:
                 flash("Incorrect Email-Id or Password")
@@ -85,6 +87,7 @@ def signup():
             user_id = g.database.fetchone()
             for uid in user_id:
                 session['userid'] = uid
+                session['logged']=True
                 return redirect(url_for('userProfile',userid=uid))
     else:
         flash("Please Enter Valid Data !")
@@ -94,55 +97,45 @@ def signup():
 
 @app.route('/user/<userid>',methods=['POST','GET'])
 def userProfile(userid):
-    if request.method != 'POST':
-        session['userid'] = userid
-        g.database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
-        session["UserName"]=g.database.fetchone()
-        g.database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
-        session["Name"]=g.database.fetchone()
-        g.database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
-        session["dob"]=g.database.fetchone()
-        g.database.execute("SELECT Privilege FROM entries WHERE User_id=%s", (userid))
-        session['privilege'] = g.database.fetchone()[0]
-
-        g.database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
-        for user in g.database.fetchall():
-            g.database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
-            friendName = g.database.fetchone()
-            return friendName
-
-        g.database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
-        for song in g.database.fetchall():
-            g.database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
-            songName = g.database.fetchone()
-            return songName
-        return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
+    if session['logged'] == True:
+        if request.method != 'POST':
+            session['userid'] = userid
+            g.database.execute("SELECT Username from entries WHERE User_id='%s' " % userid )
+            session["UserName"]=g.database.fetchone()
+            g.database.execute("SELECT Name from entries WHERE User_id='%s' " % userid )
+            session["Name"]=g.database.fetchone()
+            g.database.execute("SELECT DOB from entries WHERE User_id='%s' " % userid )
+            session["dob"]=g.database.fetchone()
+            g.database.execute("SELECT Privilege FROM entries WHERE User_id=%s", (userid))
+            session['privilege'] = g.database.fetchone()[0]
+            
+            return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
+    else:
+        return render_template('error.html'), 404
 
 @app.route('/user/<userid>',methods=['POST','GET'])
 def comment(userid):
     if request.method == 'POST':
         commentform = CommentForm(request.form, prefix='form3')
 
-        if CommentForm.validate_on_submit():
-            check_comment = g.database.execute("INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ('%s','%s','%s') WHERE User_id='%s')" % ('U',commentform.comment.data, session['userid'], session['userid'] ))
-            if check_comment == True:
-                g.conn.commit()
-            return render_template('userprofile/index.html',userid=session['userid'], form4=commentform, form3=editForm(prefix='form3'))
+        check_comment = g.database.execute("INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ('%s','%s',%d) WHERE User_id=%d " % ('U',commentform.comment.data, session['userid'], session['userid'] ))
+        if check_comment == True:
+            g.conn.commit()
+        return render_template('userprofile/index.html',userid=session['userid'], form4=commentform, form3=editForm(prefix='form3'))
     else:
         return render_template('userprofile/index.html', userid=session['userid'], form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
 
-@app.route('/user/<userid>/edit',methods=['POST','GET'])
+@app.route('/user/<userid>',methods=['POST','GET'])
 def editName(userid):
     if request.method == 'POST':
         editform = editForm(request.form, prefix='form3')
 
-        if editForm.validate_on_submit():
-            check_edit = g.database.execute("UPDATE MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, session['userid']))
-            if check_edit == True:
-                g.conn.commit()
-            return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editform)
+        check_edit = g.database.execute("UPDATE MuShMe.entries SET Name='%s' WHERE User_id=%d " % (editform.name.data, session['userid']))
+        if check_edit:
+            g.conn.commit()
+            return render_template('userprofile/index.html', userid=session['userid'],form4=CommentForm(prefix='form4'), form3=editform)
     else:
-        return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
+        return render_template('userprofile/index.html', userid=session['userid'], form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
 
 
 #All your profile are belong to us.
@@ -172,7 +165,7 @@ def logout():
     if 'email' not in session: 
         return render_template('error.html')
     
-    session['logged_in']=False
+    session['logged']=False
     return render_template('login.html')
 
 
