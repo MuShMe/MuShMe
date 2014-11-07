@@ -7,6 +7,7 @@ from Forms import ContactForm, LoginForm, editForm, ReportForm, CommentForm
 from flask.ext.mail import Message, Mail
 from api import API
 from songs import SONG
+from playlist import playlist
 import pymysql
 import hashlib
 from flask import g
@@ -18,7 +19,8 @@ mail.init_app(app)
 app.register_blueprint(API);
 #For the songs
 app.register_blueprint(SONG);
-
+#For the playlist
+app.register_blueprint(playlist);
 
 @app.route('/')
 def index():
