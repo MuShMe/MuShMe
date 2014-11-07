@@ -58,7 +58,7 @@
 							</div>
 						</form>
 						<div class="modal-footer">
-							<input action="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
 							<input action="{{ url_for('editName', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
 						</div>
 
@@ -69,10 +69,11 @@
 
 		</div>
 		<div class="comm-recom">
-			<form >
+			<form method="POST" action="{{ url_for('comment', userid=session['userid']) }}" >
 				{{ form4.comment(placeholder="Comment....", class_="form-control") }}
+				<input href="{{ url_for('comment', userid=session['userid']) }}" class="btn btn-default submit" type='submit' name='btn' value='Submit' method="POST">
 			</form>
-			<input action="{{ url_for('comment', userid=userid) }}" class="btn btn-default submit" type='submit' name='btn' value='Submit' method="POST">
+			
 		</div>
 		<div class="comments">
 			<blockquote>

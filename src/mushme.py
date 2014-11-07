@@ -29,7 +29,7 @@ def index():
 #For database connections.
 @app.before_request
 def before_request():
-    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe', charset='utf8') 
+    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='Internship0', db='MuShMe', charset='utf8') 
     g.database = g.conn.cursor()
 
 
@@ -51,6 +51,7 @@ def login():
             if check_login:
                 userid= g.database.fetchone()
                 g.database.execute("UPDATE MuShMe.entries SET Last_Login=CURRENT_TIMESTAMP() WHERE User_id='%s'" % (userid))
+                g.conn.commit()
                 for uid in userid:
                     return redirect(url_for('userProfile', userid=uid))
             else:
@@ -81,6 +82,7 @@ def signup():
                                         (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
             user_id = g.database.fetchone()
             for uid in user_id:
+                session['userid'] = uid
                 return redirect(url_for('userProfile',userid=uid))
     else:
         flash("Please Enter Valid Data !")
@@ -100,6 +102,7 @@ def userProfile(userid):
         session["dob"]=g.database.fetchone()
         g.database.execute("SELECT Privilege FROM entries WHERE User_id=%s", (userid))
         session['privilege'] = g.database.fetchone()[0]
+
         g.database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
         for user in g.database.fetchall():
             g.database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
@@ -118,8 +121,10 @@ def comment(userid):
     if request.method == 'POST':
         commentform = CommentForm(request.form, prefix='form3')
 
-        if editForm.validate_on_submit():
-            check_edit = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
+        if CommentForm.validate_on_submit():
+            check_comment = g.database.execute("INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ('%s','%s','%s') WHERE User_id='%s')" % ('U',commentform.comment.data, session['userid'], session['userid'] ))
+            if check_comment == True:
+                g.conn.commit()
             return render_template('userprofile/index.html',userid=session['userid'], form4=commentform, form3=editForm(prefix='form3'))
     else:
         return render_template('userprofile/index.html', userid=session['userid'], form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
@@ -127,10 +132,12 @@ def comment(userid):
 @app.route('/user/<userid>/edit',methods=['POST','GET'])
 def editName(userid):
     if request.method == 'POST':
-        commentform = CommentForm(request.form, prefix='form3')
+        editform = editForm(request.form, prefix='form3')
 
-        if CommentForm.validate_on_submit():
-            check_comment = g.database.execute("UPDATE IN MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, userid))
+        if editForm.validate_on_submit():
+            check_edit = g.database.execute("UPDATE MuShMe.entries SET Name='%s',dob='%s' WHERE User_id='%s')" % (editform.name.data, editform.dob.data, session['userid']))
+            if check_edit == True:
+                g.conn.commit()
             return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editform)
     else:
         return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
