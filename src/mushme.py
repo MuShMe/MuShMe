@@ -29,7 +29,7 @@ def index():
 #For database connections.
 @app.before_request
 def before_request():
-    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='Internship0', db='MuShMe', charset='utf8') 
+    g.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='crimson', db='MuShMe', charset='utf8') 
     g.database = g.conn.cursor()
 
 
@@ -50,7 +50,7 @@ def login():
                                             (loginform.email.data, hashlib.sha1(loginform.password.data).hexdigest()))
             if check_login:
                 userid= g.database.fetchone()
-                g.database.execute("UPDATE MuShMe.entries SET Last_Login=CURRENT_TIMESTAMP() WHERE User_id='%s'" % (session['userid']))
+                g.database.execute("UPDATE MuShMe.entries SET Last_Login=CURRENT_TIMESTAMP() WHERE User_id='%s'" % (userid))
                 for uid in userid:
                     return redirect(url_for('userProfile', userid=uid))
             else:
@@ -135,9 +135,6 @@ def editName(userid):
     else:
         return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
 
-@app.route('/playlist/<playlistid>')
-def playlistPage(playlistid):
-    return render_template('playlist/index.html')
 
 #All your profile are belong to us.
 @app.route('/artist/<aprofileid>')
