@@ -152,6 +152,7 @@ drop table if exists album_artists;
 CREATE TABLE album_artists (
 Album_id INT NOT NULL,
 Artist_id INT NOT NULL,
+added_on TIMESTAMP default CURRENT_TIMESTAMP,
 foreign key(Artist_id) references artists(Artist_id),
 foreign key(Album_id) references albums(Album_id)
 ON UPDATE CASCADE ON DELETE CASCADE
