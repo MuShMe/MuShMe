@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import validators, ValidationError
-from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField, SelectField
+from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField, SelectField, TextAreaField
 from wtforms.validators import Required
 from wtforms.widgets.core import Select, HTMLString, html_params
 
@@ -60,4 +60,4 @@ class editForm(Form):
     dob = DateField(format='%d %m %y', widget=SelectDateWidget() )
 
 class CommentForm(Form):
-    comment = TextField("Add Comment ... ")
+    comment = TextAreaField("Add Comment ... ")
