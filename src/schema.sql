@@ -166,6 +166,15 @@ foreign key(Song_id) references songs(Song_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+drop table if exists song_playlist;
+CREATE TABLE song_artists (
+Song_id INT NOT NULL,
+Playlist_id INT NOT NULL,
+foreign key(Playlist_id) references playlists(Playlist_id),
+foreign key(Song_id) references songs(Song_id)
+ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 drop table if exists playlist_comments;
 CREATE TABLE playlist_comments (
 Playlist_id INT NOT NULL,

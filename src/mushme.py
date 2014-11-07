@@ -108,7 +108,25 @@ def userProfile(userid):
             session["dob"]=g.database.fetchone()
             g.database.execute("SELECT Privilege FROM entries WHERE User_id=%s", (userid))
             session['privilege'] = g.database.fetchone()[0]
-            
+
+            g.database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
+            for user in g.database.fetchall():
+                g.database.execute("SELECT Username from entries WHERE User_id='%s' " % user)
+                friendName = g.database.fetchone()
+                return friendName
+
+            g.database.execute("SELECT Playlist_id from song_playlist WHERE User_id='%s' " % userid)
+            for playlist in g.database.fetchall():
+                g.database.execute("SELECT Playlist_name from playlists WHERE Playlist_id='%s' " % playlist)
+                playlistName = g.database.fetchone()
+                return playlistName
+
+            g.database.execute("SELECT Song_id from user_song WHERE User_id='%s' " % userid)
+            for song in g.database.fetchall():
+                g.database.execute("SELECT Song_title from songs WHERE Song_id='%s' " % song)
+                songName = g.database.fetchone()
+                return songName
+
             return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'))
     else:
         return render_template('error.html'), 404
@@ -118,7 +136,7 @@ def comment(userid):
     if request.method == 'POST':
         commentform = CommentForm(request.form, prefix='form3')
 
-        check_comment = g.database.execute("INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ('%s','%s',%d) WHERE User_id=%d " % ('U',commentform.comment.data, session['userid'], session['userid'] ))
+        check_comment = g.database.execute("INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ('%s','%s','%s') WHERE User_id='%s' " % ('U',commentform.comment.data, session['userid'], session['userid'] ))
         if check_comment == True:
             g.conn.commit()
         return render_template('userprofile/index.html',userid=session['userid'], form4=commentform, form3=editForm(prefix='form3'))
@@ -130,7 +148,7 @@ def editName(userid):
     if request.method == 'POST':
         editform = editForm(request.form, prefix='form3')
 
-        check_edit = g.database.execute("UPDATE MuShMe.entries SET Name='%s' WHERE User_id=%d " % (editform.name.data, session['userid']))
+        check_edit = g.database.execute("UPDATE MuShMe.entries SET Name='%s' WHERE User_id='%s' " % (editform.name.data, session['userid']))
         if check_edit:
             g.conn.commit()
             return render_template('userprofile/index.html', userid=session['userid'],form4=CommentForm(prefix='form4'), form3=editform)
