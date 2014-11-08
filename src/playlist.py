@@ -31,10 +31,10 @@ def getUserData(playlistid):
 def getLikes(playlistid):
   g.database.execute("""SELECT count(*) FROM user_like_playlist WHERE Playlist_id='%s'""", (playlistid))
   likes = g.database.fetchone()
-  if likes=None:
+  if likes==None:
     return 0
   else:
-    return likes
+    return likes[0]
 
 
 def getComments(playlistid):
@@ -78,22 +78,22 @@ def getPlaylistSongs(playlistid):
     return retval
 
 
-@playlist.route('/playlist/<playlistid>/addcomment/', method=['POST'])
+@playlist.route('/playlist/<playlistid>/addcomment/', methods=['POST'])
 def addcommentplaylist(playlistid):
     g.database.execute("SELECT max(Comment_id) FROM comments")
-  pk = g.database.fetchone()[0]
+    pk = g.database.fetchone()[0]
 
-  if pk == None:
-    pk = 1
-  else:
-    pk = pk + 1
+    if pk == None:
+        pk = 1
+    else:
+        pk = pk + 1
 
-  comment_type = "S"
-  g.database.execute("""INSERT INTO comments VALUES (%s, "%s", "%s",%s, %s)""", (pk,comment_type, request.form['comment'],'0', session['userid']))
-  g.conn.commit()
-  g.database.execute("""INSERT INTO song_comments VALUES (%s,%s)""", (songid,pk))
-  g.conn.commit()
-  return redirect(url_for('playlist.playlistPage', songid=songid))
+    comment_type = "S"
+    g.database.execute("""INSERT INTO comments VALUES (%s, "%s", "%s",%s, %s)""", (pk,comment_type, request.form['comment'],'0', session['userid']))
+    g.conn.commit()
+    g.database.execute("""INSERT INTO playlist_comments VALUES (%s,%s)""", (songid,pk))
+    g.conn.commit()
+    return redirect(url_for('.playlistPage', songid=songid))
 
 
 @playlist.route('/playlist/<playlistid>')
