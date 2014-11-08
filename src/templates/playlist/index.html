@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <head>
 	<!-- <meta charset="utf-8"> -->
-	<title>MuShMe-Playlist Name</title>
+	<title>MuShMe-{{ pname }}</title>
     <link href="{{ url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
 	<strong><link rel="stylesheet" href="{{ url_for('static',filename='css/userplaylist.css')}}"></strong>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -12,8 +12,8 @@
 <!--Mainbody-->
 <div class="container main-body">
 	<div class="col-xs-12">
-		<h3 class="text-center"><b>Playlist's Name</b></h3>
-		<a href="#"><h4 class="text-right">Playlist of User</h4></a>
+		<h3 class="text-center"><b>{{ pname }}</b></h3>
+		<a href="{{ url_for('userProfile', userid= puserdata['userid'])}}"><h4 class="text-right">{{ puserdata['username']}}</h4></a>
 	</div>
 	<div class="col-xs-12 songs-section">
 		<h3 class="text-center songs-list"><b>Songs</b></h3>
@@ -26,105 +26,22 @@
 					<th></th>
 				</thead>
 				<tbody>
-					<div class="spacing">
-					<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
+					{% for song in songs %}
+						{% if song == songs[0] %}
+							<div class="spacing">
+						{% else %}
+							<div class="spacing1">
+						{% endif %}
+						<tr>
+							<div class="checkbox placing">
+								<label>
+									<input type="checkbox" id="blankCheckbox" value="option1">
+								</label>
 						</tr>
-						<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-						<tr><a href="#"><h3><b> Song name1</b></h3></a></tr>
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name3</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name4</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name5</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name6</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name7</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name8</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name9</b></h3></a></tr>
-							
-						</div>
-						<div class="spacing1">
-							<tr><div class="checkbox placing">
-							<label>
-								<input type="checkbox" id="blankCheckbox" value="option1">
-							</label>
-						</tr>
-							<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="../img/albumart.jpg"></a></tr>
-							<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>
-							
-						</div>
+						<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="{{ url_for('static', filename=song['albumart'] )}}"></a></tr>
+							<tr><a href="#"><h3><b> {{ song['songname'] }}</b></h3></a></tr>
+							</div>
+					{% endfor %}
 					</tbody>
 				</table>
 			</div>
@@ -135,48 +52,42 @@
 		</div>
 		<div class="col-xs-3 sector-1">
 			<div class="col-xs-12">
-				<h1>Likes on Playlist(no. of like in this bracket): </h1>
+				<h1>Likes on Playlist({{ likes }}): </h1>
 				<table class="table table-hover">
 					<thead>
 						<th></th>
 						<th></th>
 					</thead>
 					<tbody>
-						<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
-						<tr><a href="#"><h3><b> User1</b></h3></a></tr>
-						<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
-						<tr><a href="#"><h3><b> User2</b></h3></a></tr>
-						<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
-						<tr><a href="#"><h3><b> User3</b></h3></a></tr>
-						<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
-						<tr><a href="#"><h3><b> User4</b></h3></a></tr>
-						<tr><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></tr>
-						<tr><a href="#"><h3><b> User5</b></h3></a></tr>
+						{% if likes > 0 %}
+						for {% liker in likers %}
+							<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static', filename='img/profile.png')}}"></a></tr>
+							<tr><a href="{{ url_for('userProfile', userid='')}}"><h3><b> User1</b></h3></a></tr>
+						{ %endfor %}
+						{% else %}
+							<tr><h3><b> Be the first one to like this.</b></h3></tr>
+						{ %endif %}
 					</tbody>
 				</table>
 				<!-- hide it if already liked  -->
 				<button type="button" class="btn btn-primary button-center">Like</button>
 			</div>
-		</div>
+		</div>	
 		<div class="col-xs-9 sector-2">
 			<div class="comm-recom">
-				<form >
-					<textarea class="form-control" rows="4" placeholder="Comments...."></textarea>
+				<form method="POST" action="{{ url_for('playlist.addcommentplaylist', playlistid=playlistid)}}">
+					{{commentform.hidden_tag()}}
 				</form>
 				<button type="button" class="btn btn-default submit">Submit</button>
 			</div>
 			<div class="comments">
+				{ for comment in comments }
 				<blockquote>
-					<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
-					<footer><a href="#"><cite title="Username">Username</cite></a></footer>
+					<p>{{ comment['comment'] }}</p>
+					<footer><a href="{{url_for('userProfile', userid=comment['userid'])}}"><cite title="Username">{{ comment['username']}}</cite></a></footer>
 					<a href="#"><p class="text-right">Report</p></a>
 				</blockquote>
-
-				<blockquote>
-					<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
-					<footer><a href="#"><cite title="Username">Username</cite></a></footer>
-					<a href="#"><p class="text-right">Report</p></a>
-				</blockquote>
+				{ %endfor %}
 			</div>
 		</div>
 	</div>
