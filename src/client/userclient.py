@@ -19,10 +19,31 @@ from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
 from mutagen import File
 
+#for reading passwords
+import getpass
+
+
 def readtags(library):
     
     if library[-1] != '/':
         library += '/'
+
+    #Authenticate the user
+    auth = {}
+    headers = {}
+    headers['Content-Type'] = 'application/json'
+
+    auth['email'] = raw_input("Enter email-id for mushme.com: ")
+    auth['password'] = getpass.getpass("Enter password for %s: " % auth['email'])
+
+    request = urllib2.Request('http://localhost:5000/api/auth/',json.dumps(auth), headers)
+    response = urllib2.urlopen(request)
+
+    authreturn = json.load(response)
+
+    if 'token' not in authreturn:
+        print("Authentication failure.")
+        sys.exit(0)
 
     for files in os.listdir(library):
 
@@ -40,18 +61,26 @@ def readtags(library):
                 id3tags = dict(MP3(library+files, ID3= EasyID3))
 
                 id3tags['ART'] = base64.b64encode(filename.tags['APIC:'].data)
-        
+                id3tags['token']= authreturn['token']
+                id3tags['userid'] = authreturn['userid']
+                
+                if 'title' in id3tags and 'artist' in id3tags and 'album' in id3tags:
                 #encode the tags into a JSON to send to the server
-                tagjson = json.dumps(id3tags)
+                    tagjson = json.dumps(id3tags)
 
-                headers = {}
-                headers['Content-Type'] = 'application/json'
-                request = urllib2.Request('http://localhost:5000/api/addtocollection',tagjson, headers)
-                response = urllib2.urlopen(request)
-                print str(response.read())
-        
+                    request = urllib2.Request('http://localhost:5000/api/addtocollection',tagjson, headers)
+                    response = urllib2.urlopen(request)
+                    print str(response.read())
+                    
+                    if (str(response.read()) == 'Authentication failure')
+                        sys.exit(0)
+
+                else:
+                    print("Tags for %s are not complete, not added to database, or collection.", library+ files)        
         else:
             readtags(filepath)
+
+
 '''
 MAIN starts here
 '''
