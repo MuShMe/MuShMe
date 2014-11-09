@@ -51,13 +51,17 @@ class LoginForm(Form):
 #class AddSong(Form):
 
 class ReportForm(Form):
-    spam=SelectField("Spam", choices=[('It contains Vulgarity','Its a Spam','It is an inappropriate comment','Other')])
+    spam = SelectField(choices=[('It contains Vulgarity','Its a Spam','It is an inappropriate comment','Other')])
+    other = TextAreaField("Other ??")
 
 #class AddPlaylist(Form):
 
 class editForm(Form):
-    name = TextField("Full Name")
+    name = TextField("Full Name",[validators.Required()])
     dob = DateField(format='%d %m %y', widget=SelectDateWidget() )
 
 class CommentForm(Form):
     comment = TextAreaField("Add Comment ... ")
+
+class searchForm(Form):
+    entry = TextField("Search")

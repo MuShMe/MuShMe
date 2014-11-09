@@ -18,6 +18,9 @@
 					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> {{ friendName }} Friend{{ i }}</b></h3></a></tr>
+					{% if userid != session['userid'] %}
+						<button type="button" class="btn btn-primary button-center">Send Request</button>
+					{% endif %}
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> Friend2</b></h3></a></tr>
@@ -30,7 +33,6 @@
 				</tbody>
 			</table>
 			<!-- Apply some logic to check if the user is already a friend and then show this button -->
-			<button type="button" class="btn btn-primary button-center">Send Request</button>
 		</div>
 	</div>
 	<div class="col-xs-6 sector-2">
@@ -44,6 +46,7 @@
 				<dd><h3><a href="#"> Recently added song </a></h3></dd> 
 			</dl>
 			<!-- Edit modal -->
+			{% if userid == session['userid'] %}
 			<a  class="btn btn-default submit" onclick="launch_modal('useredit');">Edit</a>
 			
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -58,7 +61,7 @@
 							</div>
 							<div class="modal-footer">
 							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-							<input href="{{ url_for('userProfile', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
+							<input href="{{ url_for('editName', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
 						</div>
 						</form>
 						
@@ -66,20 +69,22 @@
 					</div>
 				</div>
 			</div>
+			{% endif %}
 
 
 		</div>
 		<div class="comm-recom">
 			<form method="POST" action="{{ url_for('comment', userid=session['userid']) }}" >
-				{{ form4.comment(placeholder="Comment....", class_="form-control",rows=4) }}
+				{{ form4.comment(placeholder="Write Something....", class_="form-control",rows=4) }}
 				<input href="{{ url_for('comment', userid=session['userid']) }}" class="btn btn-default submit" type='submit' name='btn' value='Submit' method="POST">
 			</form>
 			
 		</div>
 		<div class="comments">
+			{% for i in range(0,5) %}
 			<blockquote>
-				<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
-				<footer><a href="#"><cite title="Username">Username</cite></a></footer>
+				<p>{{ comment }}</p>
+				<footer><a href="#"><cite title="Username">{{ username }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -88,45 +93,21 @@
 							<form role="form" class="center" >
 								<div class="radio">
 									<label>
-										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-										It contains Vulgarity
-									</label>
-								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-										Its a Spam
-									</label>
-								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-										It's an inappropriate comment
-									</label>
-								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="optionsRadios" id="optionsRadios4" value="option4">
-										Other
-									</label>
-								</div>
-								<textarea class="form-control" rows="4" placeholder="Write some description for your Complaint..."></textarea>
-							</form>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Submit</button>
+										{{ form5.spam.choices }}
+										{{ form5.other }}
+										<div class="modal-footer">
+								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+								<input href="{{ url_for('userProfile', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
 							</div>
+							</form>
+							
 
 						</div>
 					</div>
 				</div>
 			</blockquote>
+			{% endfor %}
 
-			<blockquote>
-				<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
-				<footer><a href="#"><cite title="Username">Username</cite></a></footer>
-				<a href="#"><p class="text-right">Report</p></a>
-			</blockquote>
 			<blockquote>
 				<header><a href="#"><cite title="Username">Username</cite></a> Recommends :</header>
 				<table class="table table-hover">
@@ -164,7 +145,7 @@
 				<tbody>
 					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ playlistName }} Playlist Name {{ i }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ playlistName }}</b></h3></a></tr>
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Playlist name2</b></h3></a></tr>
@@ -207,7 +188,7 @@
 				<tbody>
 					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/albumart.jpg') }}"></a></tr>
-					<tr><a href="#"><h3><b>{{ songName }} Song Name{{ i }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ songName }}</b></h3></a></tr>
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
@@ -235,43 +216,16 @@
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
 						<form role="form" class="center" >
-							<div class="form-group spacing">
-								<input type="sname" class="form-control" id="Song-Name" placeholder="Song's Name"><!-- Check if it's not in the DB -->
-							</div>
 							<div class="form-group">
-								<label for="Album-art">Album art(Optional)</label>
 								<input type="file" id="album-art">
-								<p class="help-block">Upload Song's Album art</p>
+								<p class="help-block">Upload Song</p>
 							</div>
-							<div class="form-group spacing">
-								<input type="srating" class="form-control" placeholder="Song's Rating">
-							</div>
-							<div class="form-group spacing">
-								<input type="sgenre" class="form-control"  placeholder="Song's Genre">
-							</div>
-							<div class="form-group spacing">
-								<input type="stype" class="form-control"  placeholder="Song's Type">
-							</div>
-							<div class="form-group spacing">
-								<input type="slenght" class="form-control"  placeholder="Song's lenght in (min)">
-							</div>
-							<div class="form-group spacing">
-								<input type="stitle" class="form-control"  placeholder="Song's Title">
-							</div>
-							<div class="form-group spacing">
-								<input type="scountry" class="form-control"  placeholder="Song's Country">
-							</div>
-							<div class="form-group spacing">
-								<input type="syear" class="form-control"  placeholder="Song's Year">
-							</div>
-							<div class="form-group spacing">
-								<input type="salbum" class="form-control"  placeholder="Song from which Album (link from DB)">
+							<div class="modal-footer">
+								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+								<input href="{{ url_for('uploadSong', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
 							</div>
 						</form>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save changes</button>
-						</div>
+						
 
 					</div>
 				</div>

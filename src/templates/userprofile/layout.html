@@ -17,12 +17,14 @@
 			</ul>
 			<form class="navbar-form navbar-left" role="search">
 				<div class="form-group">
-					<input type="text" class="form-control input-size" placeholder="Search">
+					{{ form6.entry(placeholder='Search...', class_='form-control input-size') }}
 				</div>
-				<button type="submit" class="btn btn-default">Search</button>
+				<input href="{{ url_for('search') }}" class="btn btn-default" type='submit' name='btn' value='Search' method="POST">
 			</form>
 			<ul class="nav navbar-nav navbar-right">
+				{% if session['privilege']==1 %}
 				<li><a class="admin" href="#">Admin</a></li>
+				{% endif %}
 				<li><a class="logout" href="{{ url_for('index') }}">Logout</a></li>
 			</ul>
 		</div>

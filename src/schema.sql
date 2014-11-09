@@ -1,5 +1,5 @@
 /*initialise databse*/
-
+drop database if exists MuShMe;
 create database MuShMe;
 use MuShMe
 
@@ -218,6 +218,15 @@ Song_id INT NOT NULL,
 Recommend_id INT NOT NULL,
 foreign key(Song_id) references songs(Song_id),
 foreign key(Recommend_id) references recommend(Recommend_id)
+ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+drop table if exists user_comments;
+CREATE TABLE user_comments (
+User_id INT NOT NULL,
+Comment_id INT NOT NULL,
+foreign key(User_id) references entries(User_id),
+foreign key(Comment_id) references comments(Comment_id)
 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
