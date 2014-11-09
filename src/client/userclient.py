@@ -72,7 +72,7 @@ def readtags(library):
                     response = urllib2.urlopen(request)
                     print str(response.read())
                     
-                    if (str(response.read()) == 'Authentication failure')
+                    if (str(response.read()) == 'Authentication failure'):
                         sys.exit(0)
 
                 else:

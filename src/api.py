@@ -40,17 +40,20 @@ def getKey():
     g.database.execute(query)
     result = g.database.fetchone()
 
-    if result == None:
-        return "Invalid username or password"
-
     response = {}
+
+    if result == None:
+        response['invalid'] = "Invalid username or password"
+        return json.dumps(response)
+
     if password == result[1]:
          response['token'] = generate_auth_token(result[1])
          response['userid'] = result[1]
     else:
         response['invalid'] = "Authentication failure"
 
-    return json.dumps(response)
+    responsejson= json.dumps(response)
+    return responsejson
 
 
 def generate_auth_token(userid, expiration = 1000):

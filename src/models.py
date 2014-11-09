@@ -75,25 +75,25 @@ def artistHook(artistnames, date):
   
   #Check if the artist exists already.
   for artistname in artistnames:
-  g.database.execute("SELECT Artist_id FROM artists WHERE Artist_name='%s'" % artistname)
+    g.database.execute("SELECT Artist_id FROM artists WHERE Artist_name='%s'" % artistname)
 
-  artistid = g.database.fetchone()
+    artistid = g.database.fetchone()
 
-  if artistid == None:
-    g.database.execute("""SELECT max(Artist_id) FROM artists""")
-    Maxid = g.database.fetchone()
+    if artistid == None:
+      g.database.execute("""SELECT max(Artist_id) FROM artists""")
+      Maxid = g.database.fetchone()
 
-    if Maxid == None:
-      Maxid = 0
+      if Maxid == None:
+        Maxid = 0
+      else:
+        Maxid += 1
+
+      g.database.execute("INSERT INTO artists(Artist_id, Artist_name, Last_updated) VALUES (%s,'%s','%s')", (Maxid[0], artistname, date))
+
+      retval.append(Maxid[0])
+    
     else:
-      Maxid += 1
-
-    g.database.execute("INSERT INTO artists(Artist_id, Artist_name, Last_updated) VALUES (%s,'%s','%s')", (Maxid, artistname, date)
-
-    retval.append(Maxid)
-  
-  else:
-    retval.append(artistid[0])
+      retval.append(artistid[0])
 
   return retval
 
