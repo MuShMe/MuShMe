@@ -84,7 +84,7 @@ def signup():
                                         contactform.email.data,
                                         hashlib.sha1(contactform.password.data).hexdigest(),
                                         contactform.name.data))
-        if check_signup == True:
+        if check_signup:
             g.conn.commit()
             g.database.execute("SELECT User_id from MuShMe.entries WHERE Email_id='%s' AND Pwdhash='%s'" %
                                         (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
@@ -92,7 +92,11 @@ def signup():
             for uid in user_id:
                 session['userid'] = uid
                 session['logged'] = True
+                g.database.execute("INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ('%s','%s')" % ('Recently Added',uid))
+                g.conn.commit()
                 return redirect(url_for('userProfile',userid=uid))
+        else:
+            flash("Please Enter Valid Data !")
     else:
         flash("Please Enter Valid Data !")
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
@@ -103,7 +107,10 @@ def signup():
 def userProfile(userid):
     if session['logged'] == True:
         if request.method != 'POST':
-            friendName = {}
+            friendName = []
+            comment = []
+            username = []
+            songName = []
             g.database.execute("SELECT Username from MuShMe.entries WHERE User_id='%s' " % userid )
             session["UserName"]=g.database.fetchone()
             g.database.execute("SELECT Name from MuShMe.entries WHERE User_id='%s' " % userid )
@@ -114,37 +121,37 @@ def userProfile(userid):
             session['privilege'] = g.database.fetchone()[0]
 
             g.database.execute("SELECT User_id2 from friends WHERE User_id1='%s' " % userid)
+            i=0
             for user in g.database.fetchall():
-                i=0
                 g.database.execute("SELECT Username from MuShMe.entries WHERE User_id='%s' " % user)
-                friendName[i] = g.database.fetchone()[0]
+                friendName.append(g.database.fetchone())
                 i=i+1
                 
             g.database.execute("SELECT Playlist_name from MuShMe.playlists WHERE User_id='%s' " % userid)
-            playlist=g.database.fetchall()
+            playlist = g.database.fetchall()
 
             g.database.execute("SELECT Comment_id from MuShMe.comments WHERE User_id='%s' " % userid)
+            i=0
             for c in g.database.fetchall():
-                i=0
                 g.database.execute("SELECT Comment from MuShMe.comments WHERE Comment_id='%s' " % c)
-                comment[i] = g.database.fetchone()[0]
+                comment.append(g.database.fetchone())
                 g.database.execute("SELECT User_id from MuShMe.comments WHERE Comment_id='%s' " % c)
-                username[i] = g.database.fetchone()[0]
+                username.append(g.database.fetchone())
                 i = i+1
 
             g.database.execute("SELECT Song_id from MuShMe.user_song WHERE User_id='%s' " % userid)
+            i=0
             for song in g.database.fetchall():
-                i=0
                 g.database.execute("SELECT Song_title from MuShMe.songs WHERE Song_id='%s' " % song)
-                songName[i] = g.database.fetchone()[0]
+                songName.append(g.database.fetchone())
                 i = i+1
 
-            #return friendName
-            #return playlist
-            #return songName
-            #return userid
-            #return comment
-            #return username
+            return friendName
+            return playlist
+            return songName
+            return userid
+            return comment
+            return username
             return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'))
     else:
         return render_template('error.html'), 404
