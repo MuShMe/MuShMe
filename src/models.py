@@ -75,7 +75,9 @@ def albumHook(albumname, imagefilename, artdata, albumartist, publisher, year):
   with open('src/static/'+imagefilename, 'wb') as f:
     f.write(base64.b64decode(artdata))
 
-  return albumid
+  array = []
+  array.append(albumid)
+  return array
 
 
 #Function to check and add artist data
@@ -125,7 +127,7 @@ def dbinsert(metadata, imagefilename):
                           metadata['artist'][0],
                            publisherkey(metadata)[0],
                           metadata['date'][0].rsplit('-',2)[0])
-      insertvalues['Song_Album'] = albumid[0]
+      insertvalues['Song_Album'] = albumid
 
     elif key == 'artist':
       artistids = artistHook(metadata['artist'], metadata['date'][0].split()[0])
