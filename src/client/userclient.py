@@ -21,7 +21,8 @@ from mutagen import File
 
 #for reading passwords
 import getpass
-
+#For hashing said passwords
+import hashlib
 
 def readtags(library):
     
@@ -34,7 +35,7 @@ def readtags(library):
     headers['Content-Type'] = 'application/json'
 
     auth['email'] = raw_input("Enter email-id for mushme.com: ")
-    auth['password'] = getpass.getpass("Enter password for %s: " % auth['email'])
+    auth['password'] = hashlib.sha1(getpass.getpass("Enter password for %s: " % auth['email'])).hexdigest()
 
     request = urllib2.Request('http://localhost:5000/api/auth/',json.dumps(auth), headers)
     response = urllib2.urlopen(request)

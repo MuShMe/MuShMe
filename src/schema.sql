@@ -39,7 +39,7 @@ Publisher VARCHAR(100),
 Track_number INT,
 Song_year INT,
 Uploaded_when TIMESTAMP default CURRENT_TIMESTAMP,
-recommended INT,
+recommended INT DEFAULT 0,
 FOREIGN KEY (Song_Album) REFERENCES albums(Album_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -57,7 +57,7 @@ drop table if exists playlists;
 CREATE TABLE playlists (
 Playlist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Playlist_name VARCHAR(100) NOT NULL,
-Recommended INT,
+Recommended INT DEFAULT 0,
 User_id INT NOT NULL,
 FOREIGN KEY (User_id) REFERENCES entries(User_id) ON UPDATE CASCADE ON DELETE CASCADE
 );

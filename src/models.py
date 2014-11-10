@@ -6,28 +6,36 @@ import base64
 
 #insert references for this shiz into the user's default playlist.
 def GetPlaylistID(userid):
-  g.database.execute("""SELECT User_name FROM entries WHERE User_id=%s""", (userid))
+  g.database.execute("""SELECT Username FROM entries WHERE User_id=%s""", (userid))
+  
   playlistname= g.database.fetchone()[0]
+  
   playlistname += " default collection"
-  g.database.execute("""SELECT Playlist_id FROM playlists WHERE User_id=%s AND Playlist_name='%s'""",
+
+  query = ("""SELECT Playlist_id FROM playlists WHERE User_id=%s AND Playlist_name='%s'""" %
                     (userid, playlistname))
+  g.database.execute(query)
     
   return g.database.fetchone()[0]
 
 
 #To insert a song into the user's playlist
 def playlistInsert(songid, playlistid):
-  g.database.execute("""INSERT INTO song_playlist VALUES Song_id=%s AND Playlist_id=%s""", songid, playlistid)
-  g.conn.commit()
+  found = g.database.execute("""SELECT * FROM song_playlist WHERE Song_id=%s AND Playlist_id=%s)""", (songid, playlistid))
+  
+  if found == 0:  
+    g.database.execute("""INSERT INTO song_playlist VALUES (%s ,%s)""", (songid, playlistid))
+    g.conn.commit()
 
 
 
-def artistalbum(artistids, albumid):
+def artistalbum(albumid, artistids):
   for artistid in artistids:
-    present = g.database.execute("SELECT * FROM album_artists WHERE Artist_id=%s AND Album_id=%s" % (artistid, albumid))
+    query = ("SELECT * FROM album_artists WHERE Artist_id=%s AND Album_id=%s" % (artistid, albumid[0]))
+    present = g.database.execute(query)
 
     if not present:
-      g.database.execute("INSERT INTO album_artists(Album_id,Artist_id) VALUES (%s,%s)", (albumid,artistid))
+      g.database.execute("INSERT INTO album_artists(Album_id,Artist_id) VALUES (%s,%s)", (albumid,artistid[0]))
       g.conn.commit()
 
 
@@ -39,7 +47,7 @@ def albumHook(albumname, imagefilename, artdata, albumartist, publisher, year):
 
   for album in albums:
 
-    g.database.execute("""SELECT Artist_id FROM artist_albums WHERE Album_id=%s""", album[0])
+    g.database.execute("""SELECT Artist_id FROM album_artists WHERE Album_id=%s""", album[0])
 
     artists = g.database.fetchall()
 
@@ -54,16 +62,18 @@ def albumHook(albumname, imagefilename, artdata, albumartist, publisher, year):
 #We didn't find anything. Make an entry and return the albumid.
   g.database.execute("SELECT max(Album_id) FROM albums");
   albumid = g.database.fetchone()
-
-  if albumid==None:
+ 
+  if albumid[0] == None:
     albumid = 0
   else:
     albumid = albumid[0] + 1
 
-  g.database.execute("""INSERT INTO albums(Album_id,Album_pic,Album_name,Album_year, Publisher) VALUES(%s, '%s','%s',%s,'%s')""", (albumid, imagefilename, albumname, year, publisher))
+  query = (u"""INSERT INTO albums(Album_id,Album_pic,Album_name,Album_year, Publisher) VALUES(%s, '%s','%s',%s,'%s')""" % (albumid, unicode(imagefilename), unicode(albumname), year, unicode(publisher)))
+
+  g.database.execute(query)
   g.conn.commit()
   with open('src/static/'+imagefilename, 'wb') as f:
-    f.write(base64.b64decode(art))
+    f.write(base64.b64decode(artdata))
 
   return albumid
 
@@ -83,14 +93,14 @@ def artistHook(artistnames, date):
       g.database.execute("""SELECT max(Artist_id) FROM artists""")
       Maxid = g.database.fetchone()
 
-      if Maxid == None:
+      if Maxid[0] == None:
         Maxid = 0
       else:
-        Maxid += 1
-
-      g.database.execute("INSERT INTO artists(Artist_id, Artist_name, Last_updated) VALUES (%s,'%s','%s')", (Maxid[0], artistname, date))
-
-      retval.append(Maxid[0])
+        Maxid = Maxid[0] + 1
+      query = ("INSERT INTO artists(Artist_id, Artist_name, Last_updated) VALUES (%s,'%s','%s')"% (Maxid, artistname, date))
+      g.database.execute(query)
+      g.conn.commit()
+      retval.append(Maxid)
     
     else:
       retval.append(artistid[0])
@@ -115,7 +125,7 @@ def dbinsert(metadata, imagefilename):
                           metadata['artist'][0],
                            publisherkey(metadata)[0],
                           metadata['date'][0].rsplit('-',2)[0])
-      insertvalues['Song_Album'] = albumid
+      insertvalues['Song_Album'] = albumid[0]
 
     elif key == 'artist':
       artistids = artistHook(metadata['artist'], metadata['date'][0].split()[0])
@@ -129,11 +139,11 @@ def dbinsert(metadata, imagefilename):
       insertvalues['Song_year'] = metadata['date'][0].rsplit('-',2)[0]
 
   #Form artist album relationship
-  albumartists(albumid,artistids)
+  artistalbum(albumid,artistids)
 
   #insert this data into the main songs list
   g.database.execute("SELECT Song_id from songs WHERE Song_Title='%s' AND Song_Album='%s'" 
-                        % (metadata['title'][0], metadata['album'][0]))
+                        % (metadata['title'][0], albumid[0]))
   songid = g.database.fetchone()
   playlistid = GetPlaylistID(metadata['userid'])
 
@@ -153,15 +163,16 @@ def dbinsert(metadata, imagefilename):
         query = unicode(query) + u"'"+unicode(insertvalues[key]) +u"'"+ u','
       
       query = unicode(query[:-1]) + u') '
-     
+      
       insert(query)
       g.database.execute("SELECT Song_id FROM songs WHERE Song_Title='%s' AND Song_Album='%s'"
-                         % (metadata['title'][0], albumid))
+                         % (metadata['title'][0], albumid[0]))
       
       songid = g.database.fetchone()[0]
       playlistInsert(songid,playlistid)
 
-      g.database.execute("INSERT INTO song_artists VALUES (%s,%s)" % (songid, artistid))
+      for artistid in artistids:
+        g.database.execute("INSERT INTO song_artists VALUES (%s,%s)" % (songid, artistid))
       commit()
       return True
     else:

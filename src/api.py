@@ -47,8 +47,8 @@ def getKey():
         return json.dumps(response)
 
     if password == result[1]:
-         response['token'] = generate_auth_token(result[1])
-         response['userid'] = result[1]
+         response['token'] = generate_auth_token(result[0])
+         response['userid'] = result[0]
     else:
         response['invalid'] = "Authentication failure"
 
