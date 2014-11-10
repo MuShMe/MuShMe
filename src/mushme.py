@@ -8,6 +8,7 @@ from flask.ext.mail import Message, Mail
 from api import API
 from songs import SONG
 from playlist import playlist
+from admin import admin
 import pymysql
 import hashlib
 from flask import g
@@ -21,6 +22,9 @@ app.register_blueprint(API);
 app.register_blueprint(SONG);
 #For the playlist
 app.register_blueprint(playlist);
+#for the admin pages
+app.register_blueprint(admin);
+
 
 @app.route('/')
 def index():
@@ -99,6 +103,7 @@ def signup():
 def userProfile(userid):
     if session['logged'] == True:
         if request.method != 'POST':
+            friendName = {}
             g.database.execute("SELECT Username from MuShMe.entries WHERE User_id='%s' " % userid )
             session["UserName"]=g.database.fetchone()
             g.database.execute("SELECT Name from MuShMe.entries WHERE User_id='%s' " % userid )
@@ -121,7 +126,7 @@ def userProfile(userid):
             g.database.execute("SELECT Comment_id from MuShMe.comments WHERE User_id='%s' " % userid)
             for c in g.database.fetchall():
                 i=0
-                g.database.execute("SELECT Comment from MuShMe.user_comments WHERE Comment_id='%s' " % c)
+                g.database.execute("SELECT Comment from MuShMe.comments WHERE Comment_id='%s' " % c)
                 comment[i] = g.database.fetchone()[0]
                 g.database.execute("SELECT User_id from MuShMe.comments WHERE Comment_id='%s' " % c)
                 username[i] = g.database.fetchone()[0]
