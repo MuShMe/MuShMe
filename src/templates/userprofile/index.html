@@ -1,7 +1,6 @@
 {% extends "userprofile/layout.html" %}
 {% block content %}
 
-
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
 		<div class="profilepic-area" >
@@ -17,7 +16,7 @@
 				<tbody>
 					{% for i in range(0,5) %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> {{ friendName[i] }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b> {{ friend[i] }}</b></h3></a></tr>
 					{% if userid != session['userid'] %}
 						<button type="button" class="btn btn-primary button-center">Send Request</button>
 					{% endif %}
@@ -82,9 +81,10 @@
 		</div>
 		<div class="comments">
 			{% for i in range(0,5) %}
+			{% if comment[i]!=NULL %}
 			<blockquote>
 				<p>{{ comment[i] }}</p>
-				<footer><a href="#"><cite title="Username">{{ username[i] }}</cite></a></footer>
+				<footer><a href="#"><cite title="Username">{{ user[i] }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -106,7 +106,11 @@
 					</div>
 				</div>
 			</blockquote>
+			{% endif %}
 			{% endfor %}
+			{% if comment[i]==NULL %}
+				<p>No comments to show... Be the first to comment</p>
+			{% endif %}
 
 			<blockquote>
 				<header><a href="#"><cite title="Username">Username</cite></a> Recommends :</header>
@@ -144,8 +148,10 @@
 				</thead>
 				<tbody>
 					{% for i in range(0,5) %}
+					{% if playlist[i]!=NULL %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ playlistName[i] }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ playlist[i] }}</b></h3></a></tr>
+					{% endif %}
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Playlist name2</b></h3></a></tr>
@@ -187,8 +193,10 @@
 				</thead>
 				<tbody>
 					{% for i in range(0,5) %}
+					{% if song[i]!=NULL %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/albumart.jpg') }}"></a></tr>
-					<tr><a href="#"><h3><b>{{ songName[i] }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ song[i] }}</b></h3></a></tr>
+					{% endif %}
 					{% endfor %}
 					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
 					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
