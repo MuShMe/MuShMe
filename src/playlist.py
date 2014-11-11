@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import g, redirect, render_template
-from Forms import CommentForm
+from Forms import CommentForm, searchForm
 
 playlist = Blueprint('playlist',__name__,template_folder='templates')
 
@@ -105,4 +105,5 @@ def playlistPage(playlistid):
                             likes = getLikes(playlistid),
                             commentform= CommentForm(),
                             songs = getPlaylistSongs(playlistid),
-                            comments=getComments(playlistid))
+                            Comments=getComments(playlistid),
+                            form6= searchForm())
