@@ -9,7 +9,7 @@
 <body>
 	<div class="navbar11">
 		<nav class="navbar navbar-default" role="navigation">
-			{% if session.profilepic[0] ==NULL %}
+			{% if session.profilepic[0] == NULL %}
 			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png')}}"  ></a>
 			{% else %}
 			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='{{ session.profilepic }}')}}"  ></a>
