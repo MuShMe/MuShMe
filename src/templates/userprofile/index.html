@@ -90,7 +90,7 @@
 			{% for i in range(0,5) %}
 			{% if comment[i]!=NULL %}
 			<blockquote>
-				<p>{{ comment[i][0] }}</p>
+				<p>{{ comment[i] }}</p>
 				<footer><a href="#"><cite title="Username">{{ user[i] }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>

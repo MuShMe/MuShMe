@@ -148,15 +148,15 @@ def userProfile(userid):
                 playlist.append(p)
                 #return playlist
 
-            g.database.execute("""SELECT Comment from MuShMe.comments WHERE User_id="%s" ORDER BY Comment_id desc""" % userid)
-            for c in g.database.fetchall():
-                comment.append(c)
-            g.database.execute("""SELECT Comment_id from MuShMe.comments WHERE User_id="%s" """ % userid)
+            g.database.execute("""SELECT Comment_id from MuShMe.user_comments WHERE User_id="%s" ORDER BY Comment_id desc """ % userid)
             i=0
             for c in g.database.fetchall():
-                g.database.execute("""SELECT User_id from MuShMe.comments WHERE Comment_id="%s" ORDER BY Comment_id desc""" % c)
+            	print c
+                g.database.execute("""SELECT User_id, Comment from MuShMe.comments WHERE Comment_id="%s" """ % c)
                 uid=g.database.fetchone()[0]
                 #print uid
+                g.database.execute("""SELECT Comment from MuShMe.comments WHERE Comment_id="%s" """ % c)
+                comment.append(g.database.fetchone()[0])
                 g.database.execute("""SELECT Username from MuShMe.entries WHERE User_id="%s" """ % uid)
                 username.append(g.database.fetchone()[0])
                 #print username[i]
@@ -187,22 +187,20 @@ def editName(userid):
     else:
         return redirect(url_for('userProfile', userid=userid))
 
-@app.route('/user/<rcvrid>/comment',methods=['POST','GET'])
+@app.route('/user/<rcvrid>.<senderid>/comment',methods=['POST','GET'])
 def comment(rcvrid, senderid):
-    if request.method == 'GET':
-    	return redirect(url_for('comment', rcvrid=userid, senderid=session['userid']))
-    else:
+    if request.method == 'POST':
         commentform = CommentForm(request.form, prefix='form4')
         print senderid
         print rcvrid
         if commentform.comment.data != '' :
-            g.database.execute("""INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ("%s","%s","%s") """ % ('U',commentform.comment.data, userid))
+            g.database.execute("""INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ("%s","%s","%s") """ % ('U',commentform.comment.data, senderid))
             g.conn.commit()
         
         g.database.execute("""SELECT Comment_id from MuShMe.comments WHERE Comment="%s" """ % (commentform.comment.data))
         data = g.database.fetchone()[0]
         #print data
-        enter_comment = g.database.execute("""INSERT INTO MuShMe.user_comments (Comment_id, User_id) VALUES ("%s","%s")""" % (data,userid))
+        enter_comment = g.database.execute("""INSERT INTO MuShMe.user_comments (Comment_id, User_id) VALUES ("%s","%s")""" % (data,rcvrid))
         if enter_comment:
             g.conn.commit()
             g.database.execute("""SELECT User_id FROM MuShMe.user_comments WHERE Comment_id="%s" """ % data)
