@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<!-- <meta charset="utf-8"> -->
-	<title>MuShMe</title>
+	<title>{{ session.Name[0] }}</title>
 	<link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
 	<strong><link href="{{url_for('static',filename='css/user.css')}}" rel="stylesheet"></strong>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -9,7 +9,11 @@
 <body>
 	<div class="navbar11">
 		<nav class="navbar navbar-default" role="navigation">
-			<a class="profilepic" href="profile.html"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png')}}"  ></a>
+			{% if session.profilepic[0] ==NULL %}
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png')}}"  ></a>
+			{% else %}
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='{{ session.profilepic }}')}}"  ></a>
+			{% endif %}
 
 
 			<ul class="nav navbar-nav">
@@ -19,7 +23,7 @@
 				<div class="form-group">
 					{{ form6.entry(placeholder='Search...', class_='form-control input-size') }}
 				</div>
-				<input href="{{ url_for('search') }}" class="btn btn-default" type='submit' name='btn' value='Search' method="POST">
+				<input href="{{ url_for('search') }}" class="btn btn-default" type='submit' name='btn' value='Search' method='POST'>
 			</form>
 			<ul class="nav navbar-nav navbar-right">
 				{% if session['privilege']==1 %}

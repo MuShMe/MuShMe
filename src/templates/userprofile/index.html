@@ -15,20 +15,18 @@
 				</thead>
 				<tbody>
 					{% for i in range(0,5) %}
+					{% if friend[i]!=NULL %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> {{ friend[i] }}</b></h3></a></tr>
-					{% if userid != session['userid'] %}
+					{% if userid != session['User_id'] %}
 						<button type="button" class="btn btn-primary button-center">Send Request</button>
 					{% endif %}
+					{% endif %}
 					{% endfor %}
-					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> Friend2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> Friend3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> Friend4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> Friend5</b></h3></a></tr>-->
+					{% if friend[0] == NULL %}
+					<tr><a href="#"><h3><b>Add New Friends to view them</b></h3></a></tr>
+					{% endif %}
+					
 				</tbody>
 			</table>
 			<!-- Apply some logic to check if the user is already a friend and then show this button -->
@@ -45,7 +43,7 @@
 				<dd><h3><a href="#"> Recently added song </a></h3></dd> 
 			</dl>
 			<!-- Edit modal -->
-			{% if userid == session['userid'] %}
+			{% if userid == session['User_id'] %}
 			<a  class="btn btn-default submit" onclick="launch_modal('useredit');">Edit</a>
 			
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -57,6 +55,10 @@
 							</div>
 							<div class="form-group spacing">
 								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
+							</div>
+							<div class="form-group">
+								<input type="file" id="album-art">
+								<p class="help-block">Upload picture</p>
 							</div>
 							<div class="modal-footer">
 							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
@@ -74,6 +76,7 @@
 		</div>
 		<div class="comm-recom">
 			<form method="POST" action="{{ url_for('comment', userid=session['userid']) }}" >
+				{{ form4.hidden_tag() }}
 				{{ form4.comment(placeholder="Write Something....", class_="form-control",rows=4) }}
 				<input href="{{ url_for('comment', userid=session['userid']) }}" class="btn btn-default submit" type='submit' name='btn' value='Submit' method="POST">
 			</form>
@@ -108,7 +111,7 @@
 			</blockquote>
 			{% endif %}
 			{% endfor %}
-			{% if comment[i]==NULL %}
+			{% if comment[0]==NULL %}
 				<p>No comments to show... Be the first to comment</p>
 			{% endif %}
 
@@ -153,14 +156,6 @@
 					<tr><a href="#"><h3><b>{{ playlist[i] }}</b></h3></a></tr>
 					{% endif %}
 					{% endfor %}
-					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Playlist name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Playlist name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Playlist name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Playlist name5</b></h3></a></tr>-->
 					
 				</tbody>
 			</table>
@@ -198,24 +193,7 @@
 					<tr><a href="#"><h3><b>{{ song[i] }}</b></h3></a></tr>
 					{% endif %}
 					{% endfor %}
-					<!--<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name5</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name6</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name7</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name8</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name9</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>-->
+					
 				</tbody>
 			</table>
 			<!-- Songs Add modal -->
