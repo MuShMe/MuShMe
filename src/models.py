@@ -21,10 +21,10 @@ def GetPlaylistID(userid):
 
 #To insert a song into the user's playlist
 def playlistInsert(songid, playlistid):
-  found = g.database.execute("""SELECT * FROM song_playlist WHERE Song_id=%s AND Playlist_id=%s)""", (songid, playlistid))
+  found = g.database.execute("""SELECT * FROM song_playlist WHERE Song_id=%s AND Playlist_id=%s""" % (songid, playlistid))
   
   if found == 0:  
-    g.database.execute("""INSERT INTO song_playlist VALUES (%s ,%s)""", (songid, playlistid))
+    g.database.execute("""INSERT INTO song_playlist VALUES (%s ,%s)"""% (songid, playlistid))
     g.conn.commit()
 
 
@@ -35,7 +35,8 @@ def artistalbum(albumid, artistids):
     present = g.database.execute(query)
 
     if not present:
-      g.database.execute("INSERT INTO album_artists(Album_id,Artist_id) VALUES (%s,%s)", (albumid,artistid[0]))
+      query = ("INSERT INTO album_artists(Album_id,Artist_id) VALUES (%s,%s)"% (albumid[0],artistid))
+      g.database.execute(query)
       g.conn.commit()
 
 
@@ -127,7 +128,7 @@ def dbinsert(metadata, imagefilename):
                           metadata['artist'][0],
                            publisherkey(metadata)[0],
                           metadata['date'][0].rsplit('-',2)[0])
-      insertvalues['Song_Album'] = albumid
+      insertvalues['Song_Album'] = albumid[0]
 
     elif key == 'artist':
       artistids = artistHook(metadata['artist'], metadata['date'][0].split()[0])
@@ -165,7 +166,7 @@ def dbinsert(metadata, imagefilename):
         query = unicode(query) + u"'"+unicode(insertvalues[key]) +u"'"+ u','
       
       query = unicode(query[:-1]) + u') '
-      
+      print query
       insert(query)
       g.database.execute("SELECT Song_id FROM songs WHERE Song_Title='%s' AND Song_Album='%s'"
                          % (metadata['title'][0], albumid[0]))

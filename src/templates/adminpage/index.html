@@ -2,127 +2,118 @@
 {% block content %}
 <!DOCTYPE html>
 <head>
-	<!-- <meta charset="utf-8"> -->
-	<title>MuShMe</title>
-	<link href="{{url_for('static', filename='css/bootstrap.css')}}" rel="stylesheet">
-	<strong><link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}"></strong>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <!-- <meta charset="utf-8"> -->
+  <title>MuShMe</title>
+  <link href="{{url_for('static', filename='css/bootstrap.css')}}" rel="stylesheet">
+  <strong><link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}"></strong>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 </head>
 <div class="container main-body">
-	<div class="col-xs-3 sector-1">
-		<div class="profilepic-area" >
-			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="../img/profile.png"></a>
-		</div>
-		<div class="col-xs-12">
-			<button type="button" class="btn btn-default btn-lg btn-block">Pending Reports</button>
-			<div class="spacing"><button type="button" class="btn btn-default btn-lg btn-block">Processed Reports</button></div>
+  <div class="col-xs-3 sector-1">
+    <div class="profilepic-area" >
+      <a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="../img/profile.png"></a>
+    </div>
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-default btn-lg btn-block">Pending Reports</button>
+      <div class="spacing"><button type="button" class="btn btn-default btn-lg btn-block">Processed Reports</button></div>
 
-		</div>
-	</div>
-	<div class="col-xs-9 ">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th><h4><i>Ticket Number</i></h4></th>
-					<th><h4><i>Complainant</i></h4></th>
-					<th><h4><i>Defendant</i></h4></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for i in range (0,3) %}
-				<tr>
-					<div class="spacing">
-						<td>
-							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-								<div class="panel panel-default">
-									<div class="panel-heading" role="tab" id="id1">
-										<h4 class="panel-title">
-											<a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
-												Ticket #{{i}}
-											</a>
-										</h4>
-									</div>
-									<div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id1">
-										<div class="panel-body">
-											<table>
-												<thead>
-													<tr>
-														<th></th>
-														<th></th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td><p>Comment </p></td>
-														<td>
-															<blockquote>
-																<p>The comments or recommendations on user profile will be loaded from here onwards ....</p>
-																<footer><a href="#"><cite title="Username">User 2</cite></a></footer>
-															</blockquote>
-														</td>
-													</tr>
-													<tr>
-														<td> <p >Type </p>
-														</td>
-														<td>
-															<p >It contains Vulgarity (one of the options that complainant had choosed) </p>
-														</td>
-													</tr>
-													<tr>
-														<td><p>Complainant's Remark </p></td>
-														<td><blockquote>
-															<p>I think it's an appropriate language for minors</p>
-														</blockquote></td>
-													</tr>
-													<tr>
-														<td><b>Remove this Comment ?</b></td>
-														<td><label class="radio-inline">
-															<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Yes
-														</label>
-														<label class="radio-inline">
-															<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> No
-														</label>
-													</td>
-												</tr>
-												<tr>
-													<td><b>Remarks </b></td>
-													<td>
-														<div class="spacing">
-															<form >
-																<textarea class="form-control" rows="3" placeholder="Comments...."></textarea>
-															</form>
-															<button type="button" class="btn btn-default submit">Submit</button>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+    </div>
+  </div>
+  <div class="col-xs-9 ">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th><h4><i>Ticket Number</i></h4></th>
+          <th><h4><i>Complainant</i></h4></th>
+          <th><h4><i>Defendant</i></h4></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for complaint in complaints %}
+        <tr>
+          <div class="spacing">
+            <td>
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                  <div class="panel-heading" role="tab" id="{{ complaint['complainid'] }}">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{complaint['complainid']}}" aria-expanded="false" aria-controls="collapse{{complaint['complainid']}}">
+                        Ticket #{{complaint['complainid']}}
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapse{{i}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id{{ i }}">
+                    <div class="panel-body">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><p>Comment </p></td>
+                            <td>
+                              <blockquote>
+                                <p>{{ complaint['comment'] }}</p>
+                                <footer><a href="#"><cite title="Username">User 2</cite></a></footer>
+                              </blockquote>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> <p >Type </p>
+                            </td>
+                            <td>
+                              <p >It contains Vulgarity (one of the options that complainant had choosed) </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><p>Complainant's Remark </p></td>
+                            <td><blockquote>
+                              <p>I think it's an appropriate language for minors</p>
+                            </blockquote></td>
+                          </tr>
+                          <tr>
+                            <td><b>Remove this Comment ?</b></td>
+                            <td><label class="radio-inline">
+                              <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Yes
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> No
+                            </label>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Remarks </b></td>
+                          <td>
+                            <div class="spacing">
+                              <form >
+                                <textarea class="form-control" rows="3" placeholder="Comments...."></textarea>
+                              </form>
+                              <button type="button" class="btn btn-default submit">Submit</button>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
 
-									</div>
-								</div>
-							</div>
+                  </div>
+                </div>
+              </div>
 
-						</div>
-					</td>
-					<td><h5><b>User 1</b></h5></td>
-					<td><h5><b>User 2</b></h5></td>
-					<td></td>
-				</div>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+            </div>
+          </td>
+          <td><h5><b>User 1</b></h5></td>
+          <td><h5><b>User 2</b></h5></td>
+          <td></td>
+        </div>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 </div>
-<script>
-	function launch_modal(id) {
-     // Hide all modals using class if required.
-     $('.modal').modal('hide');
-     $('#'+id).modal('show');
- }
-</script>
-<script src="{{url_for('static', filename='js/jquery.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 {% endblock %}

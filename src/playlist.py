@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import g, redirect, render_template
-from Forms import ContactForm
+from Forms import CommentForm
 
 playlist = Blueprint('playlist',__name__,template_folder='templates')
 
@@ -9,7 +9,7 @@ def getPlaylistName(playlistid):
     g.database.execute("""SELECT Playlist_name FROM playlists WHERE Playlist_id=%s""", (playlistid))
     playlistname= g.database.fetchone()
 
-    if playlistname == None:
+    if playlistname[0] == None:
         return ""
     else:
         return playlistname[0]
@@ -18,7 +18,7 @@ def getPlaylistName(playlistid):
 def getUserData(playlistid):
     g.database.execute("""SELECT User_id FROM playlists WHERE Playlist_id=%s""", (playlistid))
     userid = g.database.fetchone()[0]
-    g.database.execute("""SELECT User_name FROM entries WHERE User_id=%s""", (userid))
+    g.database.execute("""SELECT Username FROM entries WHERE User_id=%s""", (userid))
     username = g.database.fetchone()[0]
     data = {}
     
@@ -29,16 +29,16 @@ def getUserData(playlistid):
 
 
 def getLikes(playlistid):
-  g.database.execute("""SELECT count(*) FROM user_like_playlist WHERE Playlist_id='%s'""", (playlistid))
+  g.database.execute("""SELECT count(*) FROM user_like_playlist WHERE Playlist_id=%s""", (playlistid))
   likes = g.database.fetchone()
-  if likes==None:
+  if likes[0]==None:
     return 0
   else:
     return likes[0]
 
 
 def getComments(playlistid):
-    g.database.execute("SELECT Comment_id FROM playlist_comments WHERE Playlist_id=%s ORDER BY DESC", (playlistid))
+    g.database.execute("SELECT Comment_id FROM playlist_comments WHERE Playlist_id=%s", (playlistid))
     commentids = g.database.fetchall()
     retval = []
 
@@ -65,7 +65,7 @@ def getPlaylistSongs(playlistid):
     retval = []
 
     for song in songs:
-        g.database.execute("SELECT Song_name,Album_id FROM songs WHERE Song_id=%s", (song[0]))
+        g.database.execute("SELECT Song_title,Song_Album FROM songs WHERE Song_id=%s", (song[0]))
         songdata = g.database.fetchone()
         
         data = {}
@@ -103,6 +103,6 @@ def playlistPage(playlistid):
                             pname=getPlaylistName(playlistid), 
                             puserdata=getUserData(playlistid),
                             likes = getLikes(playlistid),
-                            commentform= CommentForm(playlistid),
+                            commentform= CommentForm(),
                             songs = getPlaylistSongs(playlistid),
                             comments=getComments(playlistid))

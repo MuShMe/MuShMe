@@ -38,7 +38,7 @@
 									<input type="checkbox" id="blankCheckbox" value="option1">
 								</label>
 						</tr>
-						<tr><a href="#"><img class="img-circle profilepic-medium playlists" src="{{ url_for('static', filename=song['albumart'] )}}"></a></tr>
+						<tr><a href="#"><img class="img-circle profilepic-medium 	" src="{{ url_for('static', filename=song['albumart'] )}}"></a></tr>
 							<tr><a href="#"><h3><b> {{ song['songname'] }}</b></h3></a></tr>
 							</div>
 					{% endfor %}
@@ -46,7 +46,7 @@
 				</table>
 			</div>
 			<div class="butt">
-				<button type="button" class="btn btn-success ">Add More+</button>
+				<!--><button type="button" class="btn btn-success ">Add More+</button><!-->
 				<button type="button" class="btn btn-danger ">Delete Songs</button>
 			</div>
 		</div>
@@ -60,7 +60,7 @@
 					</thead>
 					<tbody>
 						{% if likes > 0 %}
-						for {% liker in likers %}
+						{%for liker in likers %}
 							<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static', filename='img/profile.png')}}"></a></tr>
 							<tr><a href="{{ url_for('userProfile', userid='')}}"><h3><b> User1</b></h3></a></tr>
 						{ %endfor %}
@@ -81,7 +81,7 @@
 				<button type="button" class="btn btn-default submit">Submit</button>
 			</div>
 			<div class="comments">
-				{ for comment in comments }
+				{% for comment in comments %}
 				<blockquote>
 					<p>{{ comment['comment'] }}</p>
 					<footer><a href="{{url_for('userProfile', userid=comment['userid'])}}"><cite title="Username">{{ comment['username']}}</cite></a></footer>
@@ -105,10 +105,8 @@
 					</div>
 				</div>
 				</blockquote>
-				{ %endfor %}
+				{ % endfor %}
 			</div>
 		</div>
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
 {% endblock %}

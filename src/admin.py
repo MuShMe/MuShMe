@@ -3,6 +3,7 @@ from flask import g, session
 from flask import render_template
 from Forms import searchForm
 
+
 admin = Blueprint('admin',__name__,template_folder='templates')
 
 
@@ -20,6 +21,7 @@ def getComplaintData():
 		data['type'] = complaint[1]
 		data['description'] = complaint[2]
 		data['action'] = complaint[3]
+		data['complaintee'] = complaint[4]
 
 		retval.append(data)
 
