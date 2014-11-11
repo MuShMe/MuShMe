@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import validators, ValidationError
-from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField, SelectField, TextAreaField
+from wtforms.fields import TextField, BooleanField,SubmitField, PasswordField, DateField, SelectField, TextAreaField, RadioField, FileField
 from wtforms.validators import Required
 from wtforms.widgets.core import Select, HTMLString, html_params
 
@@ -51,7 +51,7 @@ class LoginForm(Form):
 #class AddSong(Form):
 
 class ReportForm(Form):
-    spam = SelectField(choices=[('It contains Vulgarity','Its a Spam','It is an inappropriate comment','Other')])
+    report = RadioField('What do we report ?',choices=[('It contains Vulgarity'),'It`s a Spam','It is an inappropriate comment','Other'])
     other = TextAreaField("Other ??")
 
 #class AddPlaylist(Form):
@@ -59,6 +59,7 @@ class ReportForm(Form):
 class editForm(Form):
     name = TextField("Full Name",[validators.Required()])
     dob = DateField(format='%d %m %y', widget=SelectDateWidget() )
+    pic = FileField('Upload Picture')
 
 class CommentForm(Form):
     comment = TextAreaField("Add Comment ... ")

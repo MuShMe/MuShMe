@@ -43,7 +43,7 @@
 				<dd><h3><a href="#"> Recently added song </a></h3></dd> 
 			</dl>
 			<!-- Edit modal -->
-			{% if userid == session['User_id'] %}
+			{% if userid == session['userid'] %}
 			<a  class="btn btn-default submit" onclick="launch_modal('useredit');">Edit</a>
 			
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -56,10 +56,14 @@
 							<div class="form-group spacing">
 								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
 							</div>
-							<div class="form-group">
+							<div class="form-group spacing">
+								{{ form3.pic(placeholder='Upload Picture',class_='form-control') }}
+							</div>
+
+							<!--<div class="form-group">
 								<input type="file" id="album-art">
 								<p class="help-block">Upload picture</p>
-							</div>
+							</div>-->
 							<div class="modal-footer">
 							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
 							<input href="{{ url_for('editName', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
@@ -78,7 +82,7 @@
 			<form method="POST" action="{{ url_for('comment', userid=session['userid']) }}" >
 				{{ form4.hidden_tag() }}
 				{{ form4.comment(placeholder="Write Something....", class_="form-control",rows=4) }}
-				<input href="{{ url_for('comment', userid=session['userid']) }}" class="btn btn-default submit" type='submit' name='btn' value='Submit' method="POST">
+				<input class="btn btn-default submit" type='submit' name='btn' value='Submit'>
 			</form>
 			
 		</div>
@@ -86,7 +90,7 @@
 			{% for i in range(0,5) %}
 			{% if comment[i]!=NULL %}
 			<blockquote>
-				<p>{{ comment[i] }}</p>
+				<p>{{ comment[i][0] }}</p>
 				<footer><a href="#"><cite title="Username">{{ user[i] }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
@@ -96,8 +100,12 @@
 							<form role="form" class="center" >
 								<div class="radio">
 									<label>
-										{{ form5.spam.choices }}
-										{{ form5.other }}
+										{{ form5.hidden_tag() }}
+										{% for subfield in form5.report.choices %}
+											<tr>
+												<td>{{ subfield }}</td></br>
+											</tr>
+										{% endfor %}
 										<div class="modal-footer">
 								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
 								<input href="{{ url_for('userProfile', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
