@@ -169,28 +169,32 @@ def userProfile(userid):
                 songName.append(g.database.fetchone()[0])
                 i = i+1
                 #return songName[i]
+            uid = userid
 
-            return render_template('userprofile/index.html', form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'), friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
+            return render_template('userprofile/index.html', userid=uid, form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'), friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
 
 @app.route('/user/<userid>/edit',methods=['POST','GET'])
 def editName(userid):
     if request.method == 'POST':
         editform = editForm(request.form, prefix='form3')
-
+        uid = userid
         check_edit = g.database.execute("""UPDATE MuShMe.entries SET Name="%s" WHERE User_id="%s" """ % (editform.name.data, userid))
         if check_edit:
             g.conn.commit()
-            return render_template('userprofile/index.html', friend=friendName, playlist=playlist, user=username, comment=comment, song=songName, userid=session['userid'],form4=CommentForm(prefix='form4'), form3=editform, form6=searchForm(prefix='form6'),form5=ReportForm(prefix='form5'))
+            return render_template('userprofile/index.html',userid=uid,friend=friendName, playlist=playlist, user=username, comment=comment, song=songName,form4=CommentForm(prefix='form4'), form3=editform, form6=searchForm(prefix='form6'),form5=ReportForm(prefix='form5'))
         else:
             return render_template('error.html'), 404
     else:
         return redirect(url_for('userProfile', userid=userid))
 
-@app.route('/user/<userid>/comment',methods=['POST'])
-def comment(userid):
-    if request.method == 'POST':
+@app.route('/user/<rcvrid>/comment',methods=['POST','GET'])
+def comment(rcvrid, senderid):
+    if request.method == 'GET':
+    	return redirect(url_for('comment', rcvrid=userid, senderid=session['userid']))
+    else:
         commentform = CommentForm(request.form, prefix='form4')
-
+        print senderid
+        print rcvrid
         if commentform.comment.data != '' :
             g.database.execute("""INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ("%s","%s","%s") """ % ('U',commentform.comment.data, userid))
             g.conn.commit()
@@ -204,8 +208,8 @@ def comment(userid):
             g.database.execute("""SELECT User_id FROM MuShMe.user_comments WHERE Comment_id="%s" """ % data)
             #print g.database.fetchone()[0]
         else:
-            return """Nothing"""
-        return redirect(url_for('userProfile', userid=userid))
+            return "Nothing"
+        return redirect(url_for('userProfile', userid=rcvrid))
 
 @app.route('/user/<userid>',methods=['POST','GET'])
 def report(userid):
@@ -216,7 +220,7 @@ def report(userid):
         check_report = g.database.execute("""INSERT INTO MuShMe.complaints (Complain_type, Complain_description, Comment_id) VALUES ("%s","%s","%s") """ % (spamNumber, reportform.spam.data, session['comment_id'], session['userid'] ))
         if check_comment == True:
             g.conn.commit()
-        return render_template('userprofile/index.html',userid=session['userid'], form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'), form6=searchForm(prefix='form6'), form5=reportform , friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
+        return render_template('userprofile/index.html',userid=userid, form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'), form6=searchForm(prefix='form6'), form5=reportform , friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
     else:
         return redirect(url_for('userProfile', userid=userid))
 
@@ -248,7 +252,7 @@ def uploadSong(userid):
         check_report = g.database.execute("""INSERT INTO MuShMe.complaints (Complain_type, Complain_description, Comment_id) VALUES ("%s","%s","%s") """ % (spamNumber, reportform.spam.data, session['comment_id'], session['userid'] ))
         if check_comment == True:
             g.conn.commit()
-        return render_template('userprofile/index.html',userid=session['userid'], form4=commentform, form3=editForm(prefix='form3'))
+        return render_template('userprofile/index.html',userid=userid, form4=commentform, form3=editForm(prefix='form3'))
 
 
 #All your profile are belong to us.
