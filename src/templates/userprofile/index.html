@@ -79,7 +79,7 @@
 
 		</div>
 		<div class="comm-recom">
-			<form method="POST" action="{{ url_for('comment', userid=session['userid']) }}" >
+			<form method="POST" action="{{ url_for('comment', rcvrid=userid, senderid=session['userid']) }}" >
 				{{ form4.hidden_tag() }}
 				{{ form4.comment(placeholder="Write Something....", class_="form-control",rows=4) }}
 				<input class="btn btn-default submit" type='submit' name='btn' value='Submit'>
@@ -161,7 +161,7 @@
 					{% for i in range(0,5) %}
 					{% if playlist[i]!=NULL %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ playlist[i] }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ playlist[i][0] }}</b></h3></a></tr>
 					{% endif %}
 					{% endfor %}
 					
