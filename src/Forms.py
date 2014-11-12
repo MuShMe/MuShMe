@@ -45,7 +45,8 @@ class LoginForm(Form):
 	email = TextField("Email",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
 	password = PasswordField('Password', [validators.Required("Please enter a password.")])
 
-#class AddPlaylist(Form):
+class AddPlaylist(Form):
+    add = TextField()
 
 
 #class AddSong(Form):
@@ -66,3 +67,7 @@ class CommentForm(Form):
 
 class searchForm(Form):
     entry = TextField("Search")
+
+class AdminEdit(Form):
+    remarks=TextAreaField()
+    remove = RadioField(choices=[('1','Yes'),('0','No')])
