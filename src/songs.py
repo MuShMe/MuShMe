@@ -38,7 +38,6 @@ def getArtistData(songid):
     if temp:
       data['id'] = temp[0]
       data['name'] = temp[1]
-      print data
       artist.append(data)
 
   return artist
@@ -85,6 +84,22 @@ def getAlbumArt(songid):
   g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s", (albumname))
   return g.database.fetchone()[0]
 
+def getLikers(songid):
+  g.database.execute("SELECT User_id FROM user_like_song WHERE Song_id=%s" % (songid))
+  retval= []
+
+  likers = g.database.fetchall()
+
+  for liker in likers:
+    data = {}
+    data['userid'] = liker[0]
+    g.database.execute("SELECT Username FROM entries WHERE User_id=%s" % (liker[0]))
+    data['username'] = g.database.fetchone()[0]
+    retval.append(data)
+
+  return retval
+
+
 @SONG.route('/song/<songid>')
 def songPage(songid):
   if g.database.execute("SELECT * FROM songs WHERE Song_id=%s" % songid) == 0:
@@ -94,7 +109,8 @@ def songPage(songid):
       abort("You must be logged in to see this page.")
   
   return render_template('songpage/index.html', data=getSongData(songid),
-              artists=getArtistData(songid), likes=getLikes(songid), 
+              artists=getArtistData(songid), likes=getLikes(songid),
+              likers = getLikers(songid), 
               others=getOthers(songid),
               commentform=CommentForm(),
               songid=songid,
@@ -133,3 +149,15 @@ def reportsongcomment(songid,commentid):
     g.database.execute(query)
     g.conn.commit()
     return redirect(url_for('SONG.songPage', songid=songid))
+
+@SONG.route('/song/<songid>/like/')
+def user_like(songid):
+  query = (("SELECT * FROM user_like_song WHERE Song_id=%s AND User_id=%s") % (songid,session['userid']))
+
+  if (g.database.execute(query) == 0):
+    query = ("INSERT INTO user_like_song VALUES (%s,%s)" % (songid, session['userid']))
+    print query
+    g.database.execute(query)
+    g.conn.commit()
+    
+  return redirect(url_for('SONG.songPage', songid=songid))
