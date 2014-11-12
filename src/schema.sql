@@ -81,6 +81,7 @@ Complain_description VARCHAR(100) NOT NULL,
 Action_by_admin VARCHAR(100) NOT NULL,
 Comment_id INT NOT NULL,
 reported_by INT NOT NULL,
+remarks VARCHAR(200),
 foreign key(Comment_id) references comments(Comment_id)
 ON UPDATE CASCADE ON DELETE CASCADE,
 FOREIGN KEY (reported_by) REFERENCES entries(User_id)

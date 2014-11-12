@@ -155,7 +155,7 @@ def user_like(songid):
   query = (("SELECT * FROM user_like_song WHERE Song_id=%s AND User_id=%s") % (songid,session['userid']))
 
   if (g.database.execute(query) == 0):
-    query = ("INSERT INTO user_like_song VALUES (%s,%s)" % (songid, session['userid']))
+    query = ("INSERT INTO user_like_song(Song_id, User_id) VALUES (%s,%s)" % (songid, session['userid']))
     print query
     g.database.execute(query)
     g.conn.commit()

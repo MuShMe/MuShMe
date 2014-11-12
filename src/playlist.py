@@ -141,7 +141,7 @@ def user_like(playlistid):
   query = (("SELECT * FROM user_like_playlist WHERE Playlist_id=%s AND User_id=%s") % (playlistid,session['userid']))
 
   if (g.database.execute(query) == 0):
-    query = ("INSERT INTO user_like_playlist VALUES (%s,%s)" % (playlistid, session['userid']))
+    query = ("INSERT INTO user_like_playlist(Playlist_id,User_id) VALUES (%s,%s)" % (playlistid, session['userid']))
     g.database.execute(query)
     g.conn.commit()
     

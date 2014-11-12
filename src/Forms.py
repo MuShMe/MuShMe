@@ -47,6 +47,10 @@ class LoginForm(Form):
 
 class AddPlaylist(Form):
     add = TextField()
+<<<<<<< HEAD
+=======
+
+>>>>>>> bbab5dbed8ccfa9d4cffcc84067fadfebf9d9f12
 
 #class AddSong(Form):
 
@@ -66,3 +70,7 @@ class CommentForm(Form):
 
 class searchForm(Form):
     entry = TextField("Search")
+
+class AdminEdit(Form):
+    remarks=TextAreaField()
+    remove = RadioField(choices=[('1','Yes'),('0','No')])
