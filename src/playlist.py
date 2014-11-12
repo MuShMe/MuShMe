@@ -46,8 +46,15 @@ def getLikers(playlistid):
   for liker in likers:
     data = {}
     data['userid'] = liker[0]
-    g.database.execute("SELECT Username FROM entries WHERE User_id=%s" % (liker[0]))
-    data['username'] = g.database.fetchone()[0]
+    g.database.execute("SELECT Username, Profile_pic FROM entries WHERE User_id=%s" % (liker[0]))
+    userdata = g.database.fetchone()
+    data['username'] = userdata[0]
+    
+    if (userdata[1] == None):
+        data['profilepic'] = 'img/ProfilePic/default.jpg'
+    else:
+        data['profilepic'] = userdata[1]
+    
     retval.append(data)
 
   return retval
@@ -146,3 +153,15 @@ def user_like(playlistid):
     g.conn.commit()
     
   return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
+
+
+@playlist.route("/playlist/<playlistid>/deletesongs", methods=["POST"])
+def deletesongs(playlistid):
+    songlist =request.form.getlist('songselect')
+
+    for songid in songlist:
+        g.database.execute("""DELETE FROM song_playlist WHERE Song_id=%s AND Playlist_id=%s """ %
+                          (songid, playlistid))
+        g.conn.commit()
+
+    return redirect(url_for('playlist.playlistPage', playlistid=playlistid)) 
