@@ -48,7 +48,6 @@ class LoginForm(Form):
 class AddPlaylist(Form):
     add = TextField()
 
-
 #class AddSong(Form):
 
 class ReportForm(Form):
