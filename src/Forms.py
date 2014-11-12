@@ -47,10 +47,6 @@ class LoginForm(Form):
 
 class AddPlaylist(Form):
     add = TextField()
-<<<<<<< HEAD
-=======
-
->>>>>>> bbab5dbed8ccfa9d4cffcc84067fadfebf9d9f12
 
 #class AddSong(Form):
 
