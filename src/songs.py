@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask import g, abort
 from flask import session
 from Forms import CommentForm
-from Forms import searchForm
+from Forms import searchForm, ReportForm
 
 SONG = Blueprint('SONG',__name__,template_folder='templates')
 
@@ -100,7 +100,8 @@ def songPage(songid):
               songid=songid,
               comments= getComments(songid),
               art=getAlbumArt(songid),
-              form6 = searchForm())
+              form6 = searchForm(),
+              reportform= ReportForm())
 
 @SONG.route("/song/<userid>/addtoplaylist")
 def playlistAdd(userid):
@@ -125,8 +126,8 @@ def addcomment(songid):
   return redirect(url_for('.songPage', songid=songid))
 
 
-@SONG.route('/playlist/report/<songid>/<commentid>/', methods=['POST'])
-def reportcomment(songid,commentid):
+@SONG.route('/song/report/<songid>/<commentid>/', methods=['POST'])
+def reportsongcomment(songid,commentid):
     query = ("""INSERT INTO complaints(Complain_type, Complain_description, Comment_id, reported_by) VALUES ("%s", "%s", %s, %s)
         """ % (request.form['report'], request.form['other'], commentid, session['userid']))
     g.database.execute(query)
