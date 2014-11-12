@@ -43,7 +43,7 @@
                       </a>
                     </h4>
                   </div>
-                  <div id="collapse{{i}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="id{{ i }}">
+                  <div id="collapse{{complaint['complainid']}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="idcomplaint{{['complainid']}}">
                     <div class="panel-body">
                       <table>
                         <thead>
@@ -58,7 +58,7 @@
                             <td>
                               <blockquote>
                                 <p>{{ complaint['comment'] }}</p>
-                                <footer><a href="#"><cite title="Username">User 2</cite></a></footer>
+                                <footer><a href="#"><cite title="Username">{{ complaint['defendantname']}}</cite></a></footer>
                               </blockquote>
                             </td>
                           </tr>
@@ -66,13 +66,13 @@
                             <td> <p >Type </p>
                             </td>
                             <td>
-                              <p >It contains Vulgarity (one of the options that complainant had choosed) </p>
+                              <p >{{ complaint['type']}}</p>
                             </td>
                           </tr>
                           <tr>
                             <td><p>Complainant's Remark </p></td>
                             <td><blockquote>
-                              <p>I think it's an appropriate language for minors</p>
+                              <p>{{ complaint['description'] }}</p>
                             </blockquote></td>
                           </tr>
                           <tr>
@@ -105,8 +105,8 @@
 
             </div>
           </td>
-          <td><h5><b>User 1</b></h5></td>
-          <td><h5><b>User 2</b></h5></td>
+          <td><h5><b>{{ complaint['complaintee'] }}</b></h5></td>
+          <td><h5><b>{{ complaint['defendant'] }}</b></h5></td>
           <td></td>
         </div>
       </tr>
