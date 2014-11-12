@@ -106,24 +106,26 @@
 						<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 							<div class="modal-dialog modal-lg">
 								<div class="modal-content edit-modal">
-									<form role="form" class="center" >
+									<form role="form" class="center" method="POST" action="{{ url_for('SONG.reportcomment', songid=songid,commentid=comment['commentid']) }}">
 										<div class="radio">
 											<label>
-												{{ form5.spam.choices }}
-												{{ form5.other }}
-												<div class="modal-footer">
-													<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-													<input href="{{ url_for('userProfile', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
-												</div>
-											</form>
-
-
-										</div>
+												{{ reportform.report() }}
+											</label>
+											</div>
+												{{ reportform.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
+										<div class="modal-footer">
+										<input href="{{ url_for('SONG.songPage', songid=songid) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+										<input class="btn btn-primary" type='submit' name='btn' value='Submit'/>
 									</div>
+									</form>
+									
+
 								</div>
-							</blockquote>
-							{% endfor %}
+							</div>
 						</div>
+					</blockquote>
+					{% endfor %}
+					</div>
 					</div>
 					<div class="col-xs-3 sector-3">
 						<div class="playlist-section">

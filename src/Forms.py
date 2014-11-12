@@ -51,7 +51,7 @@ class LoginForm(Form):
 #class AddSong(Form):
 
 class ReportForm(Form):
-    report = RadioField('What do we report ?',choices=[('It contains Vulgarity'),'It`s a Spam','It is an inappropriate comment','Other'])
+    report = RadioField('What do we report ?',choices=[('Vulgarity','It contains Vulgarity'),('spam',"It's Spam"),('Other','Other')])
     other = TextAreaField("Other ??")
 
 #class AddPlaylist(Form):

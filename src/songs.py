@@ -104,8 +104,8 @@ def songPage(songid):
 
 @SONG.route("/song/<userid>/addtoplaylist")
 def playlistAdd(userid):
-  x=1
-  return x
+  pass
+
 
 @SONG.route('/song/addcomment/<int:songid>', methods=["POST"])
 def addcomment(songid):
@@ -123,3 +123,8 @@ def addcomment(songid):
   g.database.execute("""INSERT INTO song_comments VALUES (%s,%s)""", (songid,pk))
   g.conn.commit()
   return redirect(url_for('.songPage', songid=songid))
+
+
+@SONG.route('/song/<commentid>/')
+def reportcomment():
+  pass

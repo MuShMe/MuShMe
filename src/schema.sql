@@ -76,7 +76,7 @@ ON UPDATE CASCADE ON DELETE CASCADE
 drop table if exists complaints;
 CREATE TABLE complaints (
 Complain_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-Complain_type INT,
+Complain_type VARCHAR(40),
 Complain_description VARCHAR(100) NOT NULL,
 Action_by_admin VARCHAR(100) NOT NULL,
 Comment_id INT NOT NULL,

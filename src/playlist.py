@@ -1,6 +1,6 @@
 from flask import Blueprint
-from flask import g, redirect, render_template
-from Forms import CommentForm, searchForm
+from flask import g, redirect, render_template, request, session, url_for
+from Forms import CommentForm, searchForm, ReportForm
 
 playlist = Blueprint('playlist',__name__,template_folder='templates')
 
@@ -38,19 +38,19 @@ def getLikes(playlistid):
 
 
 def getComments(playlistid):
-    g.database.execute("SELECT Comment_id FROM playlist_comments WHERE Playlist_id=%s", (playlistid))
+    g.database.execute("SELECT Comment_id FROM playlist_comments WHERE Playlist_id=%s ORDER BY Comment_id DESC" % (playlistid))
     commentids = g.database.fetchall()
     retval = []
 
     for commentid in commentids:
-        g.database.execute("SELECT Comment, User_id FROM comments WHERE Commment_id=%s", (commentid[0]))
+        g.database.execute("SELECT Comment, User_id FROM comments WHERE Comment_id=%s", (commentid[0]))
         commentdata = g.database.fetchone()
 
         data = {}
         data['comment'] = commentdata[0]
         data['userid'] = commentdata[1]
-
-        g.database.execute("SELECT User_name FROM entries WHERE User_id=%s", (data['userid']))
+        data['commentid'] = commentid[0]
+        g.database.execute("SELECT Username FROM entries WHERE User_id=%s", (data['userid']))
         data['username'] = g.database.fetchone()[0]
         retval.append(data)
 
@@ -78,6 +78,12 @@ def getPlaylistSongs(playlistid):
     return retval
 
 
+@playlist.route('/playlist/report/<commentid>/', methods=['POST'])
+def reportcomment(commentid):
+    g.database.execute("INSERT INTO complaints VALUES ")
+    return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
+
+
 @playlist.route('/playlist/<playlistid>/addcomment/', methods=['POST'])
 def addcommentplaylist(playlistid):
     g.database.execute("SELECT max(Comment_id) FROM comments")
@@ -91,9 +97,9 @@ def addcommentplaylist(playlistid):
     comment_type = "S"
     g.database.execute("""INSERT INTO comments VALUES (%s, "%s", "%s",%s, %s)""", (pk,comment_type, request.form['comment'],'0', session['userid']))
     g.conn.commit()
-    g.database.execute("""INSERT INTO playlist_comments VALUES (%s,%s)""", (songid,pk))
+    g.database.execute("""INSERT INTO playlist_comments VALUES (%s,%s)""", (playlistid,pk))
     g.conn.commit()
-    return redirect(url_for('.playlistPage', songid=songid))
+    return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
 
 
 @playlist.route('/playlist/<playlistid>')
@@ -104,6 +110,7 @@ def playlistPage(playlistid):
                             puserdata=getUserData(playlistid),
                             likes = getLikes(playlistid),
                             commentform= CommentForm(),
+                            reportform= ReportForm(),
                             songs = getPlaylistSongs(playlistid),
                             Comments=getComments(playlistid),
                             form6= searchForm())

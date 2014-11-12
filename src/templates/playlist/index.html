@@ -75,9 +75,10 @@
 		<div class="col-xs-9 sector-2">
 			<div class="comm-recom">
 				<form method="POST" action="{{ url_for('playlist.addcommentplaylist', playlistid=playlistid)}}">
-					<!-- {{commentform.hidden_tag()}} -->
+					{{commentform.hidden_tag()}}
+					{{commentform.comment(rows=4,class_="form-control", placeholder="Leave a comment..") | safe}}
+					<input type="Submit" value="Submit" class="btn btn-default submit"/>
 				</form>
-				<button type="button" class="btn btn-default submit">Submit</button>
 			</div>
 
 			<div class="comments">
@@ -89,14 +90,16 @@
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content edit-modal">
-							<form role="form" class="center" >
+							<form role="form" class="center" method="POST" action="{{ url_for('playlist.reportcomment',commentid=comment['commentid']) }}">
 								<div class="radio">
 									<label>
-										{{ form5.spam.choices }}
-										{{ form5.other }}
-										<div class="modal-footer">
-								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-								<input href="{{ url_for('userProfile', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
+										{{ reportform.report() }}
+									</label>
+									</div>
+										{{ reportform.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
+								<div class="modal-footer">
+								<input href="{{ url_for('playlist.playlistPage', playlistid=playlistid) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+								<input class="btn btn-primary" type='submit' name='btn' value='Submit'/>
 							</div>
 							</form>
 							
