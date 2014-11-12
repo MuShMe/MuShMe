@@ -41,7 +41,7 @@ def getComplaintData(status):
 
 
 @admin.route('/admin/<userid>/<status>/')
-def adminPage(userid, status):
+def adminPage(userid, status="all"):
 	complaints = getComplaintData(status)
 	return render_template('adminpage/index.html',
 							complaints=complaints, 

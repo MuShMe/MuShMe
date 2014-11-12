@@ -11,17 +11,17 @@
 <div class="container main-body">
   <div class="col-xs-3 sector-1">
     <div class="profilepic-area" >
-      <div class="profilepic-large"><img class="img-rounded profilepic-large" src="{{url_for()}}"></div>
+      <div class="profilepic-large"><img class="img-rounded profilepic-large" src="{{url_for('static', filename='ProfilePic/session.jpg')}}"></div>
     </div>
     <div class="col-xs-12">
       <div class="spacing">
-      <form action="{{ url_for('static', filename='img/') }}">
+      <form action="{{ url_for('admin.adminPage',userid=session['userid'], status='pending') }}">
       <input type="submit" class="btn btn-default btn-lg btn-block" value="Pending reports">
       </form>
       </div>
       <div class="spacing">
-      <form action="{{ url_for('static', filename='') }}">
-      <input type="submit" class="btn btn-default btn-lg btn-block" value="Pending reports">
+      <form action="{{ url_for('admin.adminPage',userid=session['userid'], status='processed') }}">
+      <input type="submit" class="btn btn-default btn-lg btn-block" value="Processed reports">
       </form>
       </div>
     </div>
