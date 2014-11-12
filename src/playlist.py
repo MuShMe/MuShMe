@@ -57,7 +57,6 @@ def getComments(playlistid):
     return retval
 
 
-
 def getPlaylistSongs(playlistid):
     g.database.execute("SELECT Song_id from song_playlist WHERE Song_id=%s", (playlistid))
     songs = g.database.fetchall()
@@ -78,9 +77,13 @@ def getPlaylistSongs(playlistid):
     return retval
 
 
-@playlist.route('/playlist/report/<commentid>/', methods=['POST'])
-def reportcomment(commentid):
-    g.database.execute("INSERT INTO complaints VALUES ")
+@playlist.route('/playlist/report/<playlistid>/<commentid>/', methods=['POST'])
+def reportcomment(playlistid,commentid):
+    query = ("""INSERT INTO complaints(Complain_type, Complain_description, Comment_id, reported_by) VALUES ("%s", "%s", %s, %s)
+        """ % (request.form['report'], request.form['other'], commentid, session['userid']))
+    print query
+    g.database.execute(query)
+    g.conn.commit()
     return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
 
 
@@ -94,7 +97,7 @@ def addcommentplaylist(playlistid):
     else:
         pk = pk + 1
 
-    comment_type = "S"
+    comment_type = 'P'
     g.database.execute("""INSERT INTO comments VALUES (%s, "%s", "%s",%s, %s)""", (pk,comment_type, request.form['comment'],'0', session['userid']))
     g.conn.commit()
     g.database.execute("""INSERT INTO playlist_comments VALUES (%s,%s)""", (playlistid,pk))

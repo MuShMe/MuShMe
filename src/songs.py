@@ -58,16 +58,16 @@ def getOthers(songid):
   return others
 
 def getComments(songid):
-  g.database.execute("SELECT Comment_id from song_comments WHERE Song_id=%s", (songid))
+  g.database.execute("SELECT Comment_id from song_comments WHERE Song_id=%s  ORDER BY Comment_id DESC", (songid))
   comments = g.database.fetchall()
 
   commentlist = []
 
   for comment in comments:
     data = {}
-    g.database.execute("SELECT User_id, Comment FROM comments WHERE Comment_id=%s ORDER BY Comment_id DESC", (comment[0]))
+    g.database.execute("SELECT User_id, Comment FROM comments WHERE Comment_id=%s", (comment[0]))
     row = g.database.fetchone()
-
+    data['commentid'] = comment[0]
     data['userid'] = row[0]
     data['comment_text'] = row[1]
 
@@ -125,6 +125,10 @@ def addcomment(songid):
   return redirect(url_for('.songPage', songid=songid))
 
 
-@SONG.route('/song/<commentid>/')
-def reportcomment():
-  pass
+@SONG.route('/playlist/report/<songid>/<commentid>/', methods=['POST'])
+def reportcomment(songid,commentid):
+    query = ("""INSERT INTO complaints(Complain_type, Complain_description, Comment_id, reported_by) VALUES ("%s", "%s", %s, %s)
+        """ % (request.form['report'], request.form['other'], commentid, session['userid']))
+    g.database.execute(query)
+    g.conn.commit()
+    return redirect(url_for('SONG.songPage', songid=songid))
