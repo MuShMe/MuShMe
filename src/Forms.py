@@ -45,7 +45,8 @@ class LoginForm(Form):
 	email = TextField("Email",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
 	password = PasswordField('Password', [validators.Required("Please enter a password.")])
 
-#class AddPlaylist(Form):
+class AddPlaylist(Form):
+    add = TextField()
 
 
 #class AddSong(Form):
