@@ -15,7 +15,7 @@
 		
 	</div>
 	<div class="col-xs-10 sector-2">
-		<h3 class="text-left"> Search for XYZ :</h3>
+		<h3 class="text-left"> Search for "{{entry}}" :</h3>
 		<p class="text-right"> <i>returns {{ length }} results : </i> </p>
 		<div class="result">
 			<table class="table table-hover">
@@ -24,47 +24,44 @@
 					<th></th>
 					<th></th>
 				</thead>
-				{% if clear == 0 %}
 				<tbody>
 					<div class="top-margin">
-					{% for i in range(0,10) %}
-					{% if song[i]!=NULL %}
+					{% for song in search_song %}
 					<tr><a href="#"><img class="img-circle profilepic-medium " src="../img/albumart.jpg"></a></tr>
-					<tr><a href="#"><h4><b>{{ song[i] }}</b></h4></a></tr>
+					<tr><a href="#"><h4><b>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}} </b></h4></a></tr>
 					<tr><h4>Song</h4></tr>
-					{% endif %}
 					{% endfor %}
 					</div>
-					{% for i in range(0,10) %}
-					{% if friends[i]!=NULL %}
+					{% for friend in search_friend %}
 					<div class="spacing">
-					<tr><a href="#"><img class="img-circle profilepic-medium" src="../img/artist.jpg"></a></tr>
-					<tr><a href="#"><h4><b>{{ friends[i] }}</b></h4></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{friend['profilepic']}}"></a></tr>
+					<tr><a href="{{ url_for('userProfile',userid=friend['userid']) }}"><h4><b>{{ friend['username'] }} - {{friend['name']}} </b></h4></a></tr>
 					<tr><h4>User</h4></tr>
-					{% endif %}
+					{% endfor %}
+					{% for friend in search_fname %}
+					<div class="spacing">
+					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{friend['profilepic']}}"></a></tr>
+					<tr><a href="{{ url_for('userProfile',userid=friend['userid']) }}"><h4><b>{{ friend['name'] }} - {{friend['username']}} </b></h4></a></tr>
+					<tr><h4>User</h4></tr>
 					{% endfor %}
 					</div>
-					{% for i in range(0,10) %}
-					{% if artists[i]!=NULL %}
+					{% for artists in search_artist %}
 					<div class="spacing">
 					<tr><a href="#"><img class="img-circle profilepic-medium" src="../img/profile.png"></a></tr>
-					<tr><a href="#"><h4><b>{{ artists[i] }}</b></h4></a></tr>
+					<tr><a href="{{ url_for('artistProfile',artistid=artists['artistid']) }}"><h4><b>{{ artists['artistname'] }}</b></h4></a></tr>
 					<tr><h4>Artist</h4></tr>
-					{% endif %}
 					{% endfor %}
 					</div>
-					{% for i in range(0,10) %}
-					{% if playlists[i]!=NULL %}
+					{% for playlists in search_playlist %}
 					<div class="spacing">
 					<tr><a href="#"><img class="img-circle profilepic-medium" src="../img/playlist.jpg"></a></tr>
-					<tr><a href="#"><h4><b>{{ playlists[i][0] }}</b></h4></a></tr>
+					<tr><a href="#"><h4><b>{{ playlists['pname'] }} - {{playlists['username']}}, {{playlists['uname']}} </b></h4></a></tr>
 					<tr><h4>Playlist</h4></tr>
-					{% endif %}
 					{% endfor %}
 					</div>
 				</tbody>
-				{% else %}
-				<tr><a href="#"><h4><b>Search did not produce any results !</b></h4></a></tr>
+				{% if length == 0 %}
+				<tr><h4><b>Search did not produce any results !</b></h4></tr>
 				{% endif %}
 
 			</table>

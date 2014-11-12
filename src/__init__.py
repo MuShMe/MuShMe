@@ -1,6 +1,6 @@
 from flask import Flask
 import os
-from werkzeug import secure_filename
+from werkzeug import secure_filename, FileStorage
  
 app = Flask(__name__)
 

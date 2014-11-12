@@ -14,13 +14,11 @@
 					<th></th>
 				</thead>
 				<tbody>
-					{% for i in range(0,5) %}
-					{% if friend[i]!=NULL %}
+					{% for f in friend %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> {{ friend[i] }}</b></h3></a></tr>
+					<tr><a href="#"><h3><b> {{ f['friendname'] }}</b></h3></a></tr>
 					{% if userid != session['userid'][0] %}
 						<button type="button" class="btn btn-primary button-center">Send Request</button>
-					{% endif %}
 					{% endif %}
 					{% endfor %}
 					{% if friend[0] == NULL %}
@@ -30,6 +28,51 @@
 				</tbody>
 			</table>
 			<!-- Apply some logic to check if the user is already a friend and then show this button -->
+				
+
+    <!-- Modal for the pending Request -->
+                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('pending_req');" onclick="launch_modal('pending_req');">Pending Request</a>
+                            <div class="modal fade bs-example-modal-lg" id="pending_req" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                            <div class="modal-content edit-modal">
+                                                    <div class="middle">
+                                                            <table>
+                                                                    <thead>
+                                                                            <tr>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                            </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                            <div class="space">
+                                                                                    <tr>
+                                                                                            <td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></td>
+                                                                                            <td><a href="#">User1</a></td>
+                                                                                            <td><button type="button" class="btn btn-success button-center">Accept</button></td>
+                                                                                            <td><button type="button" class="btn btn-danger button-center">Reject</button></td>
+                                                                                    </tr>
+                                                                            </div>
+                                                                            <div class="space">
+                                                                                    <tr>
+                                                                                            <td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></td>
+                                                                                            <td><a href="#">User2</a></td>
+                                                                                            <td><button type="button" class="btn btn-success button-center">Accept</button></td>
+                                                                                            <td><button type="button" class="btn btn-danger button-center">Reject</button></td>
+                                                                                    </tr>
+                                                                            </div>
+                                                                    </tbody>
+                                                            </table>
+                                                            <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div>
+
+
 		</div>
 	</div>
 	<div class="col-xs-6 sector-2">
@@ -87,24 +130,22 @@
 			
 		</div>
 		<div class="comments">
-			{% for c in comment %}
+			{% for c in Comments %}
 			<blockquote>
-				<p>{{ c[i] }}</p>
-				<footer><a href="{{url_for('userProfile', userid=userids[i])}}"><cite title="Username">{{ user[i] }}</cite></a></footer>
+				<p>{{ c['comment'] }}</p>
+				<footer><a href="{{url_for('userProfile', userid=userids[i])}}"><cite title="Username">{{ c['username'] }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content edit-modal">
-							<form role="form" class="center" >
+							<form role="form" class="center" action="{{ url_for('report',commentid=c['comment'], userid=c['userid']) }}" method='POST'>
 								<div class="radio">
 									<label>
-										{{ form5.hidden_tag() }}
-										{% for subfield in form5.report.choices %}
-											<tr>
-												<td>{{ subfield }}</td></br>
-											</tr>
-										{% endfor %}
+										{{ form5.report() }}
+									</label>
+									</div>
+										{{ form5.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
 										<div class="modal-footer">
 								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
 								<input href="{{ url_for('userProfile', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
@@ -153,11 +194,9 @@
 					<th></th>
 				</thead>
 				<tbody>
-					{% for i in range(0,5) %}
-					{% if playlist[i]!=NULL %}
+					{% for p in playlist %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ playlist[i][0] }}</b></h3></a></tr>
-					{% endif %}
+					<tr><a href="#"><h3><b>{{ p['pname'] }}</b></h3></a></tr>
 					{% endfor %}
 					
 				</tbody>
@@ -191,11 +230,9 @@
 					<th></th>
 				</thead>
 				<tbody>
-					{% for i in range(0,5) %}
-					{% if song[i]!=NULL %}
+					{% for s in song %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/albumart.jpg') }}"></a></tr>
-					<tr><a href="#"><h3><b>{{ song[i] }}</b></h3></a></tr>
-					{% endif %}
+					<tr><a href="#"><h3><b>{{ s['songname'] }}</b></h3></a></tr>
 					{% endfor %}
 					
 				</tbody>

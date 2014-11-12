@@ -8,102 +8,43 @@
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename='img/artist.jpg')}}"></a>
 		</div>
 		<div class="col-xs-12">
-			<h1>Likes on Songs(no. of like in this bracket): </h1>
+			<h1></h1>
 			<table class="table table-hover">
 				<thead>
 					<th></th>
 					<th></th>
 				</thead>
-				<tbody>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> User5</b></h3></a></tr>
-				</tbody>
 			</table>
-			<!-- hide it if already liked  -->
-			<button type="button" class="btn btn-primary button-center">Like</button>
 		</div>
 	</div>
 	<div class="col-xs-6 sector-2">
 		<div class="About-us">
 			<h2 class="text-center"> About : </h2>
 			<dl class="dl-horizontal">
+				{% for a in artists %}
 				<dt> <h3> <b>Artist Name:</b></h3></dt>
-				<dd><h3> Artist's Name</h3></dd> 
-				<dt> <h3> <b>Last Updated:</b></h3></dt>
-				<dd><h3> Last Updated</h3></dd> 
-				<dt> <h3> <b>Last updated:</b></h3></dt>
-				<dd><h3> Begin date</h3></dd> 
+				<dd><h3> {{a['name']}}</h3></dd> 
+				
 				<dt> <h3> <b>Begin date:</b></h3></dt>
-				<dd><h3> begin date</h3></dd> 
+				<dd><h3> {{a['begin']}}</h3></dd> 
 				<dt> <h3> <b>end date:</b></h3></dt>
-				<dd><h3> end date</h3></dd> 
-				<dt> <h3> <b>Country:</b></h3></dt>
-				<dd><h3>Country</h3></dd>
-				<dt> <h3> <b>Recent:</b></h3></dt>
-				<dd><h3><a href="#"> Recently added Album </a></h3></dd> 
+				<dd><h3> {{a['end']}}</h3></dd> 
+				{% endfor %}
 			</dl>
 		</div>
 	</div>
-	<div class="col-xs-3 sector-3">
-		<div class="playlist-section">
-			<h2>Albums:</h2>
-			<p>Recent 5</p>
-			<table class="table table-hover">
-				<thead>
-					<th></th>
-					<th></th>
-				</thead>
-				<tbody>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Album name1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Album name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Album name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Album name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Album name5</b></h3></a></tr>
-				</tbody>
-			</table>
-		</div>
 		<div class="songs-section">
 			<h2>Songs:</h2>
-			<p>Recent 10</p>
 			<table class="table table-hover">
 				<thead>
 					<th></th>
 					<th></th>
 				</thead>
 				<tbody>
+					{% for song in songs %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name1</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name2</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name3</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name4</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name5</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name6</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name7</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name8</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name9</b></h3></a></tr>
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b> Song name10</b></h3></a></tr>
+					<tr><a href="#"><h3><b>{{ song['songname'] }}</b></h3></a></tr>
+					{%endfor%}
 				</tbody>
 			</table>
 		</div>

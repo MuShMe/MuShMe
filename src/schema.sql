@@ -245,3 +245,4 @@ ALTER TABLE `MuShMe`.`songs` CHANGE COLUMN `Publisher` `Publisher` VARCHAR(100) 
 ALTER TABLE `MuShMe`.`albums` CHARACTER SET = utf8 ;
 ALTER TABLE `MuShMe`.`albums` CHANGE COLUMN `Album_pic` `Album_pic` VARCHAR(100) CHARACTER SET 'utf8' NULL DEFAULT NULL  ;
 ALTER TABLE `MuShMe`.`albums` CHANGE COLUMN `Publisher` `Publisher` VARCHAR(100) CHARACTER SET 'utf8' NOT NULL  ;
+
