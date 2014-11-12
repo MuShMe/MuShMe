@@ -18,7 +18,7 @@
 					{% if friend[i]!=NULL %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="#"><h3><b> {{ friend[i] }}</b></h3></a></tr>
-					{% if userid != session['User_id'] %}
+					{% if userid != session['userid'][0] %}
 						<button type="button" class="btn btn-primary button-center">Send Request</button>
 					{% endif %}
 					{% endif %}
@@ -87,11 +87,10 @@
 			
 		</div>
 		<div class="comments">
-			{% for i in range(0,5) %}
-			{% if comment[i]!=NULL %}
+			{% for c in comment %}
 			<blockquote>
-				<p>{{ comment[i] }}</p>
-				<footer><a href="#"><cite title="Username">{{ user[i] }}</cite></a></footer>
+				<p>{{ c[i] }}</p>
+				<footer><a href="{{url_for('userProfile', userid=userids[i])}}"><cite title="Username">{{ user[i] }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -117,11 +116,7 @@
 					</div>
 				</div>
 			</blockquote>
-			{% endif %}
 			{% endfor %}
-			{% if comment[0]==NULL %}
-				<p>No comments to show... Be the first to comment</p>
-			{% endif %}
 
 			<blockquote>
 				<header><a href="#"><cite title="Username">Username</cite></a> Recommends :</header>
@@ -172,21 +167,22 @@
 			<div class="modal fade bs-example-modal-lg" id="addplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
-						<form role="form" class="center" >
+						<form action="{{ url_for('addplaylist', userid=session['userid']) }}" role="form" class="center" >
 							<div class="form-group spacing">
-								<input type="pname" class="form-control" id="Plalist-Name" placeholder="Playlist Name">
+								{{ form7.add(placeholder='Add Playlist..',class_='form-control') }}
 							</div>
-							<h5> Select Song from DB, for this first we need to connect the db to the server</h5>
+							<div class="modal-footer">
+								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+								<input class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
+							</div>
 						</form>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save changes</button>
-						</div>
+						
 
 					</div>
 				</div>
 			</div>
 		</div>
+
 		<div class="songs-section">
 			<h2>Songs:</h2>
 			<table class="table table-hover">

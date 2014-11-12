@@ -19,11 +19,11 @@
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="{{ url_for('userProfile', userid=session['userid']) }}">{{ session.UserName[0] }}</a></li>
 			</ul>
-			<form class="navbar-form navbar-left" role="search">
+			<form class="navbar-form navbar-left" role="search" action="{{ url_for('search',userid=session['userid']) }}" method='POST'>
 				<div class="form-group">
 					{{ form6.entry(placeholder='Search...', class_='form-control input-size') }}
 				</div>
-				<input href="{{ url_for('search') }}" class="btn btn-default" type='submit' name='btn' value='Search' method='POST'>
+				<input class="btn btn-default" type='submit' name='btn' value='Search' >
 			</form>
 			<ul class="nav navbar-nav navbar-right">
 				{% if session['privilege']==1 %}
