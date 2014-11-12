@@ -37,6 +37,22 @@ def getLikes(playlistid):
     return likes[0]
 
 
+def getLikers(playlistid):
+  g.database.execute("SELECT User_id FROM user_like_playlist WHERE playlist_id=%s" % (playlistid))
+  retval= []
+
+  likers = g.database.fetchall()
+
+  for liker in likers:
+    data = {}
+    data['userid'] = liker[0]
+    g.database.execute("SELECT Username FROM entries WHERE User_id=%s" % (liker[0]))
+    data['username'] = g.database.fetchone()[0]
+    retval.append(data)
+
+  return retval
+
+
 def getComments(playlistid):
     g.database.execute("SELECT Comment_id FROM playlist_comments WHERE Playlist_id=%s ORDER BY Comment_id DESC" % (playlistid))
     commentids = g.database.fetchall()
@@ -116,4 +132,17 @@ def playlistPage(playlistid):
                             reportform= ReportForm(),
                             songs = getPlaylistSongs(playlistid),
                             Comments=getComments(playlistid),
-                            form6= searchForm())
+                            form6= searchForm(),
+                            likers= getLikers(playlistid))
+
+
+@playlist.route('/playlist/<playlistid>/like/')
+def user_like(playlistid):
+  query = (("SELECT * FROM user_like_playlist WHERE Playlist_id=%s AND User_id=%s") % (playlistid,session['userid']))
+
+  if (g.database.execute(query) == 0):
+    query = ("INSERT INTO user_like_playlist VALUES (%s,%s)" % (playlistid, session['userid']))
+    g.database.execute(query)
+    g.conn.commit()
+    
+  return redirect(url_for('playlist.playlistPage', playlistid=playlistid))

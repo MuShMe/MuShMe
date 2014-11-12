@@ -60,8 +60,8 @@
 					<tbody>
 						{% if likes > 0 %}
 						{% for liker in likers %}
-							<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static', filename='img/profile.png')}}"></a></tr>
-							<tr><a href="{{ url_for('userProfile', userid='')}}"><h3><b> User1</b></h3></a></tr>
+							<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static', filename="img/ProfilePic/liker['userid'].png")}}"></a></tr>
+							<tr><a href="{{ url_for('userProfile', userid=liker['userid'])}}"><h3><b> {{ liker['username']}}</b></h3></a></tr>
 						{% endfor %}
 						{% else %}
 							<tr><h3><b> Be the first one to like this.</b></h3></tr>
@@ -69,7 +69,9 @@
 					</tbody>
 				</table>
 				<!-- hide it if already liked  -->
-				<button type="button" class="btn btn-primary button-center">Like</button>
+				<form action="{{url_for('playlist.user_like', playlistid=playlistid)}}">
+				<input type="submit" class="btn btn-primary button-center" value="Like">
+				</form>
 			</div>
 		</div>	
 		<div class="col-xs-9 sector-2">
