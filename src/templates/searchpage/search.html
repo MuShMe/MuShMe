@@ -32,16 +32,10 @@
 					<tr><h4>Song</h4></tr>
 					{% endfor %}
 					</div>
-					{% for friend in search_friend %}
+					{% for friend in friends %}
 					<div class="spacing">
 					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{friend['profilepic']}}"></a></tr>
 					<tr><a href="{{ url_for('userProfile',userid=friend['userid']) }}"><h4><b>{{ friend['username'] }} - {{friend['name']}} </b></h4></a></tr>
-					<tr><h4>User</h4></tr>
-					{% endfor %}
-					{% for friend in search_fname %}
-					<div class="spacing">
-					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{friend['profilepic']}}"></a></tr>
-					<tr><a href="{{ url_for('userProfile',userid=friend['userid']) }}"><h4><b>{{ friend['name'] }} - {{friend['username']}} </b></h4></a></tr>
 					<tr><h4>User</h4></tr>
 					{% endfor %}
 					</div>

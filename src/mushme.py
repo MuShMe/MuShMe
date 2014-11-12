@@ -92,7 +92,7 @@ def signup():
     session["login"] = False
     contactform = ContactForm(request.form, prefix='form2')
 
-    if contactform.validate_on_submit():
+    if validate(contactform.email.data,contactform.username.data):
         check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ("%s","%s","%s","%s")""" % 
                                         (contactform.username.data,
                                         contactform.email.data,
@@ -112,43 +112,39 @@ def signup():
                 g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                 session['profilepic'] = g.database.fetchone()[0]
                 session['logged_in'] = True
+                g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % userid )
+                session["Name"]=g.database.fetchone()
+                g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % userid )
+                session["dob"]=g.database.fetchone()
                 newPlaylist = session['UserName'] + ' default collection'
                 g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (newPlaylist,uid))
                 g.conn.commit()
                 return redirect(url_for('userProfile',userid=uid))
         else:
-            flash("""Please Enter Valid Data !""")
+            flash("Username or Email has been taken")
     else:
         flash("""Please Enter Valid Data !""")
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
 
-@app.route('/user/<userid>',methods=['POST','GET'])
+def validate(email,username):
+    email = g.database.execute(""" SELECT * from MuShMe.entries where Email_id="%s" """ % email)
+    name = g.database.execute(""" SELECT * from MuShMe.entries where Username="%s" """ % username)
+    if email or name:
+        return False
+    else:
+        return True
+
+@app.route('/user/<userid>',methods=['GET'])
 def userProfile(userid):
     if session['logged_in'] == False:
         return render_template('error.html'), 404
     else:
-        if request.method != 'POST':
-            friendName = []
-            comment = []
-            username = []
-            u = []
-            songName = []
-            playlist = []
-            g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % userid )
-            session["Name"]=g.database.fetchone()
-            g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % userid )
-            session["dob"]=g.database.fetchone()
-
-            
-                #return songName[i]
-            uid = userid
-            print userid
-            print session['userid']
-
-            return render_template('userprofile/index.html', checkid=userid,userid=userid,
-                form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),userids=u,
+        if request.method == 'GET':
+            return render_template('userprofile/index.html', userid=userid,
+                form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),
                 form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'),form7=AddPlaylist(prefix='form7'),
-                friend=getFriend(userid), playlist=getPlaylist(userid), user=username, Comments=getComments(userid), song=getSong(userid))
+                friend=getFriend(userid), playlist=getPlaylist(userid), User=getUserData(userid), Comments=getComments(userid),
+                song=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid))
 
 def getComments(userid):
     g.database.execute("SELECT Comment_id FROM user_comments WHERE User_id=%s ORDER BY Comment_id DESC" % (userid))
@@ -170,8 +166,16 @@ def getComments(userid):
     return retval
 
 def getFriend(userid):
-    g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" """ % userid)
     friendName =[]
+    g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" """ % userid)
+    for user in g.database.fetchall():
+        data = {}
+        g.database.execute("""SELECT Username, User_id from MuShMe.entries WHERE User_id="%s" """ % user[0])
+        for a in g.database.fetchall():
+            data['friendname']=a[0]
+            data['friendid']=a[1]
+        friendName.append(data)
+    g.database.execute("""SELECT User_id1 from friends WHERE User_id2="%s" """ % userid)
     for user in g.database.fetchall():
         data = {}
         g.database.execute("""SELECT Username, User_id from MuShMe.entries WHERE User_id="%s" """ % user[0])
@@ -183,10 +187,11 @@ def getFriend(userid):
 
 def getPlaylist(userid):
     playlist = []
-    g.database.execute("""SELECT Playlist_name from MuShMe.playlists WHERE User_id="%s" """ % userid)
+    g.database.execute("""SELECT Playlist_name,Playlist_id from MuShMe.playlists WHERE User_id="%s" """ % userid)
     for p in g.database.fetchall():
         data = {}
         data['pname']=p[0]
+        data['pid']=p[1]
         playlist.append(data)
     return playlist
 
@@ -198,24 +203,96 @@ def getSong(userid):
         g.database.execute("""SELECT Song_title,Song_id from MuShMe.songs WHERE Song_id="%s" """ % song)
         for a in g.database.fetchall():
             data['songname']=a[0]
-            data['sondid']=a[1]
+            data['songid']=a[1]
         songName.append(data)
     return songName
+
+def getUserData(userid):
+    User = []
+    g.database.execute(""" SELECT Username,User_id,Profile_pic,Privilege,Email_id,Name,DOB from entries where User_id="%s" """ % userid)
+    for a in g.database.fetchall():
+        data={}
+        data['username']=a[0]
+        data['userid']=a[1]
+        data['profilepic'] = a[2]
+        data['privilege']=a[3]
+        data['email']=a[4]
+        data['name']=a[5]
+        data['dob']=a[6]
+        User.append(data)
+    return User
+
+def getRecommend(userid):
+    recommend =[]
+    g.database.execute(""" SELECT Recommend_id,User_id_from,User_id_to from recommend where User_id_to="%s" """ % userid)
+    for a in g.database.fetchall():
+        data={}
+        data['rid']=a[0]
+        data['userfrom'] = a[1]
+        data['userto']=a[2]
+        g.database.execute(""" SELECT Song_id from recommend_songs where Recommend_id="%s" """ % a[0])
+        songid = g.database.fetchone()[0]
+        data['song'] = []
+        g.database.execute(""" SELECT Song_title,Song_Album,Genre,Publisher from songs where Song_id="%s" """ % songid)
+        for song in g.database.fetchall():
+            d = {}
+            d['title']=song[0]
+            d['album'] = song[1]
+            d['genre'] = song[2]
+            d['publisher'] = song[3]
+            d['songid'] = songid
+            data['song'].append(d)
+
+        g.database.execute(""" SELECT Playlists_id from recommend_playlists where Recommend_id="%s" """ % a[0])
+        playlistid = g.database.fetchone()[0]
+        data['playlist'] = []
+        g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
+        for p in g.database.fetchall():
+            d= {}
+            d['pname']=p[0]
+            d['pid']=p[1]
+            g.database.execute(""" SELECT Username, Name,User_id from MuShMe.entries WHERE User_id="%s" """ % p[2])
+            for k in g.database.fetchall():
+                d['username']=k[0]
+                d['uname']=k[1]
+                d['userid']=k[2]
+            data['playlist'].append(d)
+
+        recommend.append(data)
+    return recommend
+
+def getRequest(userid):
+    request =[]
+    g.database.execute(""" SELECT Request_id,Request_from,Request_to,Status from requests where Request_to="%s" """ % userid)
+    for a in g.database.fetchall():
+        data={}
+        data['reqid']=a[0]
+        data['reqfrom'] = a[1]
+        data['reqto']=a[2]
+        data['status']=a[3]
+
+        data['reqfromuser'] = []
+        g.database.execute(""" SELECT User_id,Username,Name from entries where User_id='%s' """ % a[1])
+        for i in g.database.fetchall():
+            d={}
+            d['userid'] = i[0]
+            d['username'] = i[1]
+            d['name'] = i[2]
+            data['reqfromuser'].append(d)
+        print data
+
+        request.append(data)
+    return request
+
 
 @app.route('/user/<userid>/edit',methods=['POST','GET'])
 def editName(userid):
     if request.method == 'POST':
         editform = editForm(request.form, prefix='form3')
         uid = userid
-        check_edit = g.database.execute("""UPDATE MuShMe.entries SET Name="%s" WHERE User_id="%s" """ % (editform.name.data, userid))
-        if check_edit:
-            g.conn.commit()
-            return render_template('userprofile/index.html', checkid=userid,userid=userid,
-                form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),userids=u,
-                form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'),form7=AddPlaylist(prefix='form7'),
-                friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
-        else:
-            return render_template('error.html'), 404
+        g.database.execute("""UPDATE MuShMe.entries SET Name="%s" WHERE User_id="%s" """ % (editform.name.data, userid))
+        g.conn.commit()
+        return redirect(url_for('userProfile',userid=userid))
     else:
         return redirect(url_for('userProfile', userid=userid))
 
@@ -240,23 +317,56 @@ def comment(rcvrid, senderid):
         
         return redirect(url_for('userProfile', userid=rcvrid))
 
-@app.route('/user/<userid>',methods=['POST','GET'])
-def report(userid):
+@app.route('/user/<userid>/<commentid>/report',methods=['POST','GET'])
+def report(userid,commentid):
     if request.method == 'POST':
         reportform = ReportForm(request.form, prefix='form5')
 
         print reportform.report.data
-        check_report = g.database.execute("""INSERT INTO MuShMe.complaints (Complain_type, Complain_description, Comment_id) VALUES ("%s","%s","%s") """ % (spamNumber, reportform.spam.data, session['comment_id'], session['userid'] ))
-        if check_comment == True:
+        check_report = g.database.execute("""INSERT INTO MuShMe.complaints (Complain_type, Complain_description, Comment_id,reported_by) VALUES ("%s","%s","%s","%s") """ % (reportform.report.data, reportform.other.data, commentid, session['userid'] ))
+        if check_report == True:
             g.conn.commit()
-        return render_template('userprofile/index.html', checkid=userid,userid=userid,
-            form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),userids=u,
-            form6=searchForm(prefix='form6'), form5=reportform,form7=AddPlaylist(prefix='form7'),
-            friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
+        return redirect(url_for('userProfile', userid=userid))
     else:
         return redirect(url_for('userProfile', userid=userid))
 
-@app.route('/search',methods=['POST'])
+@app.route('/user/<uidto>.<uidfrom>/request',methods=['POST'])
+def sendrequest(uidto,uidfrom):
+    if request.method == 'POST':
+        if requestvalidate(uidfrom,uidto):
+            query=(""" INSERT INTO requests (Request_from,Request_to,Status) VALUES ("%s","%s","%s") """ % (uidfrom,uidto,1))
+            g.database.execute(query)
+            g.conn.commit()
+        return redirect(url_for('userProfile', userid=uidto))
+
+@app.route('/user/<userto>.<userfrom>/accept',methods=['POST'])
+def acceptrequest(userto,userfrom):
+    if request.method == 'POST':
+        query=(""" UPDATE requests SET Status="%s" WHERE Request_from="%s" and Request_to="%s" """ % (0,userfrom,userto))
+        g.database.execute(query)
+        g.conn.commit()
+
+        query = (""" INSERT INTO friends Values ("%s","%s") """ % (userfrom,userto))
+        g.database.execute(query)
+        g.conn.commit()
+        return redirect(url_for('userProfile', userid=userto))
+
+@app.route('/user/<userto>.<userfrom>/reject',methods=['POST'])
+def rejectrequest(userto,userfrom):
+    if request.method == 'POST':
+        query=(""" UPDATE requests SET Status="%s" WHERE Request_from="%s" and Request_to="%s" """ % (-1,userfrom,userto))
+        g.database.execute(query)
+        g.conn.commit()
+        return redirect(url_for('userProfile', userid=userto))
+
+def requestvalidate(userfrom,userto):
+    check = g.database.execute(""" SELECT Status from requests where Request_to="%s" and Request_from="%s" """ % (userfrom,userto))
+    if check and g.database.fetchone()[0]=='-1' and userfrom!=userto:
+        return False
+    else:
+        return True
+
+@app.route('/search',methods=['POST','GET'])
 def search():
     if request.method == 'POST':
         searchform = searchForm(prefix='form6')
@@ -266,13 +376,14 @@ def search():
         search_friend = []
         search_playlist =[]
         search_artist = []
-        check_song = g.database.execute("""SELECT Song_title,Song_Album,Genre,Publisher from MuShMe.songs WHERE Song_title="%s" """ % ( searchform.entry.data ))
+        check_song = g.database.execute("""SELECT Song_title,Song_Album,Genre,Publisher,Song_id from MuShMe.songs WHERE Song_title="%s" """ % ( searchform.entry.data ))
         for a in g.database.fetchall():
             data={}
             data['title']=a[0]
             data['album']=a[1]
             data['genre']=a[2]
             data['publisher']=a[3]
+            data['songid']=a[4]
             search_song.append(data)
         check_artist = g.database.execute("""SELECT Artist_name, Artist_id from MuShMe.artists WHERE Artist_name="%s" """ % ( searchform.entry.data ))
         for a in g.database.fetchall():
@@ -280,7 +391,7 @@ def search():
             data['artistname']=a[0]
             data['artistid']=a[1]
             search_artist.append(data)
-        check_friend = g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Username="%s" """ % ( searchform.entry.data ))
+        check_friend = g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Username="%s" or Name="%s" """ % ( searchform.entry.data, searchform.entry.data ))
         for a in g.database.fetchall():
             data = {}
             data['username']=a[0]
@@ -289,19 +400,11 @@ def search():
             data['userid']=a[3]
             print data
             search_friend.append('data')
-        g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Name="%s" """ % ( searchform.entry.data ))
-        for a in g.database.fetchall():
-            data = {}
-            data['username']=a[0]
-            data['name']=a[1]
-            data['profilepic']=a[2]
-            data['userid']=a[3]
-            print data
-            search_fname.append('data')
-        check_playlist = g.database.execute("""SELECT Playlist_name,User_id from MuShMe.playlists WHERE Playlist_name="%s" """ % ( searchform.entry.data ))
+        check_playlist = g.database.execute("""SELECT Playlist_name,User_id, Playlist_id from MuShMe.playlists WHERE Playlist_name="%s" """ % ( searchform.entry.data ))
         for a in g.database.fetchall():
             data = {}
             data['pname']=a[0]
+            data['pid']=a[2]
             g.database.execute(""" SELECT Username, Name from MuShMe.entries WHERE User_id="%s" """ % a[1])
             for k in g.database.fetchall():
                 data['username']=k[0]
@@ -310,8 +413,10 @@ def search():
         length = len(search_playlist) + len(search_song) + len(search_friend) + len(search_artist) + len(search_fname)
 
         return render_template('searchpage/search.html', entry=searchform.entry.data,form6=searchForm(prefix='form6'),
-             search_song=search_song, search_artist=search_artist,search_friend=search_friend,
-             search_playlist=search_playlist,length = length, search_fname = search_fname)
+             search_song=search_song, search_artist=search_artist,friends=search_friend,
+             search_playlist=search_playlist,length = length)
+    else:
+        return render_template('searchpage/search.html',form6=searchForm(prefix='form6'))
 
 @app.route('/user/<userid>',methods=['POST','GET'])
 def uploadSong(userid):
@@ -321,7 +426,7 @@ def uploadSong(userid):
         check_report = g.database.execute("""INSERT INTO MuShMe.complaints (Complain_type, Complain_description, Comment_id) VALUES ("%s","%s","%s") """ % (spamNumber, reportform.spam.data, session['comment_id'], session['userid'] ))
         if check_comment == True:
             g.conn.commit()
-        return render_template('userprofile/index.html', form4=commentform, form3=editForm(prefix='form3'))
+        return redirect(url_for('userProfile',userid=userid))
     else:
         return redirect(url_for('userProfile',userid=userid))
 
@@ -340,15 +445,12 @@ def upload_file():
             return redirect(url_for('userProfile',userid=session['userid']))
 
 @app.route('/user/<userid>/addplaylist',methods=['POST'])
-def addplaylist():
+def addplaylist(userid):
     if request.method=='POST':
         addplaylistform = AddPlaylist(prefix='form7')
         g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (addplaylistform.add.data,userid))
         g.conn.commit()
-        return render_template('userprofile/index.html', checkid=userid,userid=userid,
-            form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),userids=u,
-            form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'), form7=addplaylistform,
-            friend=friendName, playlist=playlist, user=username, comment=comment, song=songName)
+        return redirect(url_for('userProfile',userid=userid))
 
 #All your profile are belong to us.
 @app.route('/artist/<artistid>')

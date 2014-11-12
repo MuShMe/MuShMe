@@ -1,6 +1,6 @@
 {% extends "userprofile/layout.html" %}
 {% block content %}
-
+{%for u in User%}
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
 		<div class="profilepic-area" >
@@ -16,13 +16,15 @@
 				<tbody>
 					{% for f in friend %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					<tr><a href="#"><h3><b> {{ f['friendname'] }}</b></h3></a></tr>
-					{% if userid != session['userid'][0] %}
-						<button type="button" class="btn btn-primary button-center">Send Request</button>
+					<tr><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h3><b> {{ f['friendname'] }}</b></h3></a></tr>
+					{% if u['userid'] != session['userid'] %}
+						<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
+							<input class="btn btn-primary" type='submit' name='btn' value='Send Friend Request'>
+						</form>
 					{% endif %}
 					{% endfor %}
-					{% if friend[0] == NULL %}
-					<tr><a href="#"><h3><b>Add New Friends to view them</b></h3></a></tr>
+					{% if friend[0] == NULL and u['userid'] == session['userid'] %}
+					<tr><a href="{{ url_for('search') }}"><h3><b>Search friends to add them</b></h3></a></tr>
 					{% endif %}
 					
 				</tbody>
@@ -31,7 +33,8 @@
 				
 
     <!-- Modal for the pending Request -->
-                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('pending_req');" onclick="launch_modal('pending_req');">Pending Request</a>
+    {% if u['userid'] == session['userid'] %}
+                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('pending_req');" onclick="launch_modal('pending_req');">Pending Request(s)</a>
                             <div class="modal fade bs-example-modal-lg" id="pending_req" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                             <div class="modal-content edit-modal">
@@ -45,24 +48,27 @@
                                                                                     <td></td>
                                                                             </tr>
                                                                     </thead>
+                                                                    {% for req in Requests %}
+                                                                    {% if req['reqto']==u['userid'] and req['status']==1 %}
                                                                     <tbody>
                                                                             <div class="space">
-                                                                                    <tr>
+                                                                            	{% for requ in req['reqfromuser'] %}
+                                                                                    <tr>	
                                                                                             <td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></td>
-                                                                                            <td><a href="#">User1</a></td>
-                                                                                            <td><button type="button" class="btn btn-success button-center">Accept</button></td>
-                                                                                            <td><button type="button" class="btn btn-danger button-center">Reject</button></td>
+                                                                                            <td><a href="{{ url_for('userProfile', userid=req['userto']) }}">{{ requ['username'] }}</a></td>
+                                                                                            <form action="{{url_for('acceptrequest',userto=req['reqto'],userfrom=req['reqfrom'])}}" method='POST'>
+                                                                                            	<td><input class="btn btn-success button-center" type='submit' name='btn' value='Accept' method="POST"></td>
+                                                                                        	</form>
+                                                                                            <form action="{{url_for('rejectrequest',userto=req['reqto'],userfrom=req['reqfrom'])}}" method='POST'>
+                                                                                            	<td><input class="btn btn-danger button-center" type='submit' name='btn' value='Reject' method="POST"></td>
+                                                                                        	</form>
                                                                                     </tr>
+                                                                                {% endfor %}
                                                                             </div>
-                                                                            <div class="space">
-                                                                                    <tr>
-                                                                                            <td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></td>
-                                                                                            <td><a href="#">User2</a></td>
-                                                                                            <td><button type="button" class="btn btn-success button-center">Accept</button></td>
-                                                                                            <td><button type="button" class="btn btn-danger button-center">Reject</button></td>
-                                                                                    </tr>
-                                                                            </div>
+                                                                            
                                                                     </tbody>
+                                                                    {% endif %}
+                                                                    {% endfor %}
                                                             </table>
                                                             <div class="modal-footer">
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -72,21 +78,22 @@
                                     </div>
                             </div>
 
-
+            {%endif%}
 		</div>
 	</div>
 	<div class="col-xs-6 sector-2">
 		<div class="About-us">
 			<h2 class="text-center"> About : </h2>
 			<dl class="dl-horizontal">
+				<dt> <h3> <b>Username:</b></h3></dt>
+				<dd> <h3>{{u['username']}}</h3></dd>
 				<dt> <h3> <b>Name:</b></h3></dt>
-				<dd><h3>{{ session.Name[0] }}</h3></dd> 
+				<dd><h3>{{ u['name'] }}</h3></dd> 
 				<dt> <h3> <b>Date of Birth:</b></h3></dt>
-				<dd><h3>{{ session.dob[0] }}</h3></dd>
-				<dd><h3><a href="#"> Recently added song </a></h3></dd> 
+				<dd><h3>{{ u['dob'] }}</h3></dd>
 			</dl>
 			<!-- Edit modal -->
-			{% if userid == session['userid'] %}
+			{% if u['userid'] == session['userid'] %}
 			<a  class="btn btn-default submit" onclick="launch_modal('useredit');">Edit</a>
 			
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -100,7 +107,7 @@
 								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
 							</div>
 							<div class="form-group spacing">
-								{{ form3.pic(placeholder='Upload Picture',class_='form-control') }}
+								{{ form3.pic(placeholder='Upload Picture') }}
 							</div>
 
 							<!--<div class="form-group">
@@ -109,7 +116,7 @@
 							</div>-->
 							<div class="modal-footer">
 							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-							<input href="{{ url_for('editName', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
+							<input class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
 						</div>
 						</form>
 						
@@ -117,6 +124,10 @@
 					</div>
 				</div>
 			</div>
+			{% else %}
+			<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
+				<input class="btn btn-primary" type='submit' name='btn' value='Send Friend Request'>
+			</form>
 			{% endif %}
 
 
@@ -133,13 +144,13 @@
 			{% for c in Comments %}
 			<blockquote>
 				<p>{{ c['comment'] }}</p>
-				<footer><a href="{{url_for('userProfile', userid=userids[i])}}"><cite title="Username">{{ c['username'] }}</cite></a></footer>
+				<footer><a href="{{url_for('userProfile', userid=c['userid'])}}"><cite title="Username">{{ c['username'] }}</cite></a></footer>
 				<!-- Report Add modal -->
 				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content edit-modal">
-							<form role="form" class="center" action="{{ url_for('report',commentid=c['comment'], userid=c['userid']) }}" method='POST'>
+							<form role="form" class="center" action="{{ url_for('report',commentid=c['commentid'], userid=c['userid']) }}" method='POST'>
 								<div class="radio">
 									<label>
 										{{ form5.report() }}
@@ -158,9 +169,10 @@
 				</div>
 			</blockquote>
 			{% endfor %}
-
+			{% for r in Recommends %}
+			{% if r['userto']==session['userid'] %}
 			<blockquote>
-				<header><a href="#"><cite title="Username">Username</cite></a> Recommends :</header>
+				<header><a href="{{ url_for('userProfile', userid=r['userto']) }}"><cite title="Username">{{r['userfrom']}}</cite></a> Recommends :</header>
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -169,20 +181,41 @@
 						<th></th>
 						</tr>
 					</thead>
+					{%for song in r['song']%}
 					<tbody>
 						<tr>
 						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
-						<td><a href="#"><h4><b> Song name1</b></h4></a></td>
-						<td><a href="#"><h4>Artist Name</h4></a></td>
-						</tr>
-						<tr>
-						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
-						<td><a href="#"><h4><b> Song name1</b></h4></a></td>
-						<td><a href="#"><h4>Artist Name</h4></a></td>
+						<td><a href="#"><h4><b>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}}</b></h4></a></td>
 						</tr>
 					</tbody>
+					{% endfor %}
+					{%for p in r['playlist']%}
+					<tbody>
+						<tr>
+						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
+						<td><a href="#"><h4><b>{{ p['pname'] }} - {{p['username']}}, {{p['uname']}}  </b></h4></a></td>
+						</tr>
+					</tbody>
+					{% endfor %}
 				</table>
 			</blockquote>
+		
+			{% else %}
+				<table class="table table-hover">
+							<thead>
+								<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+								<td><h4><b>No recommendations yet ! </b></h4></td>
+								</tr>
+							</tbody>
+			{%endif%}
+			{%endfor%}
 		</div>
 	</div>
 	<div class="col-xs-3 sector-3">
@@ -202,11 +235,12 @@
 				</tbody>
 			</table>
 			<!-- Playlist Add modal -->
+			{% if u['userid'] == session['userid'] %}
 			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addplaylist');">Add New+</a>
 			<div class="modal fade bs-example-modal-lg" id="addplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
-						<form action="{{ url_for('addplaylist', userid=session['userid']) }}" role="form" class="center" >
+						<form action="{{ url_for('addplaylist', userid=session['userid']) }}" role="form" class="center" method='POST' >
 							<div class="form-group spacing">
 								{{ form7.add(placeholder='Add Playlist..',class_='form-control') }}
 							</div>
@@ -220,6 +254,7 @@
 					</div>
 				</div>
 			</div>
+			{%endif%}
 		</div>
 
 		<div class="songs-section">
@@ -238,6 +273,7 @@
 				</tbody>
 			</table>
 			<!-- Songs Add modal -->
+			{% if u['userid'] == session['userid'] %}
 			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
 			<div class="modal fade bs-example-modal-lg" id="addsong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
@@ -257,7 +293,9 @@
 					</div>
 				</div>
 			</div>
+			{%endif%}
 		</div>
 	</div>
 </div>
+{%endfor%}
 {% endblock %}
