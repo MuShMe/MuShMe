@@ -11,7 +11,7 @@ import json
 API = Blueprint('API',__name__,template_folder='templates')
 
 def addtodatabase(metadata):
-    if (dbinsert(metadata, imagefilename) == True):
+    if (dbinsert(metadata) == True):
         return True
     else:
         return False

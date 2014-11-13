@@ -81,7 +81,7 @@ def getComments(playlistid):
 
 
 def getPlaylistSongs(playlistid):
-    g.database.execute("SELECT Song_id from song_playlist WHERE Song_id=%s", (playlistid))
+    g.database.execute("SELECT Song_id from song_playlist WHERE Playlist_id=%s", (playlistid))
     songs = g.database.fetchall()
 
     retval = []
@@ -104,7 +104,6 @@ def getPlaylistSongs(playlistid):
 def reportcomment(playlistid,commentid):
     query = ("""INSERT INTO complaints(Complain_type, Complain_description, Comment_id, reported_by) VALUES ("%s", "%s", %s, %s)
         """ % (request.form['report'], request.form['other'], commentid, session['userid']))
-    print query
     g.database.execute(query)
     g.conn.commit()
     return redirect(url_for('playlist.playlistPage', playlistid=playlistid))

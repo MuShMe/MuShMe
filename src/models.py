@@ -18,6 +18,12 @@ def GetPlaylistID(userid):
     
   return g.database.fetchone()[0]
 
+def userSongInsert(userid, songid):
+  found=g.database.execute("SELECT * FROM user_song WHERE User_id=%s AND Song_id=%s" % (userid,songid))
+  if found== 0 :
+    g.database.execute("""INSERT INTO user_song(User_id, Song_id) VALUES(%s,%s)""" % (userid,songid))
+    g.conn.commit()
+
 
 #To insert a song into the user's playlist
 def playlistInsert(songid, playlistid):
@@ -66,11 +72,11 @@ def albumHook(albumname, artdata, albumartist, publisher, year):
   albumid = g.database.fetchone()
  
   if albumid[0] == None:
-    albumid = 0
+    albumid = 1
   else:
     albumid = albumid[0] + 1
-  imagfilename = 'src/static/AlbumArt/'+ str(albumid[0])
-  query = (u"""INSERT INTO albums(Album_id,Album_pic,Album_name,Album_year, Publisher) VALUES(%s, '%s','%s',%s,'%s')""" % (albumid, unicode(imagefilename), unicode(albumname), year, unicode(publisher)))
+  imagefilename = 'src/static/AlbumArt/'+ str(albumid) + '.png'
+  query = (u"""INSERT INTO albums(Album_id,Album_pic,Album_name,Album_year, Publisher) VALUES(%s, '%s','%s',%s,'%s')""" % (albumid,(u'AlbumArt/'+ unicode(str(albumid)) + u'.png'), unicode(albumname), year, unicode(publisher)))
 
   g.database.execute(query)
   g.conn.commit()
@@ -98,7 +104,7 @@ def artistHook(artistnames, date):
       Maxid = g.database.fetchone()
 
       if Maxid[0] == None:
-        Maxid = 0
+        Maxid = 1
       else:
         Maxid = Maxid[0] + 1
       query = ("INSERT INTO artists(Artist_id, Artist_name, Last_updated) VALUES (%s,'%s','%s')"% (Maxid, artistname, date))
@@ -173,11 +179,13 @@ def dbinsert(metadata):
       
       songid = g.database.fetchone()[0]
       playlistInsert(songid,playlistid)
+      userSongInsert(metadata['userid'],songid)
 
       for artistid in artistids:
         g.database.execute("INSERT INTO song_artists VALUES (%s,%s)" % (songid, artistid))
-      commit()
-      return True
+        commit()
+        return True
+
     else:
       return False    
 

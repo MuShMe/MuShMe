@@ -61,26 +61,24 @@ def readtags(library):
                 filename = File(library+files)
                 id3tags = dict(MP3(library+files, ID3= EasyID3))
 
-                if 'APIC:' not in id3tags or 'artist' not in id3tags or 'album':
-                    continue
-                 
-                id3tags['ART'] = base64.b64encode(filename.tags['APIC:'].data)
-                id3tags['token']= authreturn['token']
-                id3tags['userid'] = authreturn['userid']
-                
-                if 'title' in id3tags and 'artist' in id3tags and 'album' in id3tags:
-                #encode the tags into a JSON to send to the server
-                    tagjson = json.dumps(id3tags)
-
-                    request = urllib2.Request('http://localhost:5000/api/addtocollection',tagjson, headers)
-                    response = urllib2.urlopen(request)
-                    print str(response.read())
+                if 'APIC:' in filename.tags and 'artist' in id3tags and 'album' in id3tags: 
+                    id3tags['ART'] = base64.b64encode(filename.tags['APIC:'].data)
+                    id3tags['token']= authreturn['token']
+                    id3tags['userid'] = authreturn['userid']
                     
-                    if (str(response.read()) == 'Authentication failure'):
-                        sys.exit(0)
+                    if 'title' in id3tags and 'artist' in id3tags and 'album' in id3tags:
+                    #encode the tags into a JSON to send to the server
+                        tagjson = json.dumps(id3tags)
 
-                else:
-                    print("Tags for %s are not complete, not added to database, or collection.", library+ files)        
+                        request = urllib2.Request('http://localhost:5000/api/addtocollection',tagjson, headers)
+                        response = urllib2.urlopen(request)
+                        print str(response.read())
+                        
+                        if (str(response.read()) == 'Authentication failure'):
+                            sys.exit(0)
+
+                    else:
+                        print("Tags for %s are not complete, not added to database, or collection.", library+ files)        
         else:
             readtags(filepath)
 
