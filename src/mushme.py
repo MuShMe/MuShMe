@@ -66,7 +66,7 @@ def login():
                 for uid in userid:
                     session['userid'] = uid
                     g.database.execute("""SELECT Username from MuShMe.entries WHERE User_id="%s" """ % uid )
-                    session['UserName']=g.database.fetchone()
+                    session['UserName']=g.database.fetchone()[0]
                     g.database.execute("""SELECT Privilege FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                     session['privilege'] = g.database.fetchone()[0]
                     g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)

@@ -17,7 +17,7 @@
 
 
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="{{ url_for('userProfile', userid=session['userid']) }}">{{ session.UserName[0] }}</a></li>
+				<li class="active"><a href="{{ url_for('userProfile', userid=session['userid']) }}">{{ session.UserName }}</a></li>
 			</ul>
 			<form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}" method='POST'>
 				<div class="form-group">
