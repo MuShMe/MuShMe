@@ -34,7 +34,11 @@
 					</div>
 					{% for f in friends %}
 					<div class="spacing">
-					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{url_for('static',filename=f['friendpic'])}}"></a></tr>
+					{%if f['profilepic']%}
+					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><img class="img-circle profilepic-small" src="{{url_for('static',filename=f['profilepic'])}}"></a></tr>
+					{% else %}
+					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><img class="img-circle profilepic-small" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
+					{% endif %}
 					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><h4><b>{{ f['username'] }} - {{ f['name'] }} </b></h4></a></tr>
 					<tr><h4>User</h4></tr>
 					{% endfor %}

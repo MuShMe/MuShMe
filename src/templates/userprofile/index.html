@@ -302,25 +302,7 @@
 			</table>
 			<!-- Songs Add modal -->
 			{% if u['userid'] == session['userid'] %}
-			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
-			<div class="modal fade bs-example-modal-lg" id="addsong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content edit-modal">
-						<form role="form" class="center" >
-							<div class="form-group">
-								<input type="file" id="album-art">
-								<a href="https://www.dropbox.com/sd10st2ud6e72n26/client.zip?dl=1" ><p class="help-block">Upload Song</p></a>
-							</div>
-							<div class="modal-footer">
-								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-								<input href="#" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
-							</div>
-						</form>
-						
-
-					</div>
-				</div>
-			</div>
+			<a href="https://www.dropbox.com/sd10st2ud6e72n26/client.zip?dl=1" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
 			{%endif%}
 		</div>
 	</div>
