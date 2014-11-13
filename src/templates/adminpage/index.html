@@ -4,14 +4,18 @@
 <head>
   <!-- <meta charset="utf-8"> -->
   <title>MuShMe</title>
-  <link href="{{url_for('static', filename='css/bootstrap.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename=profilepic)}}" rel="stylesheet">
   <strong><link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}"></strong>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> -->
 </head>
 <div class="container main-body">
   <div class="col-xs-3 sector-1">
     <div class="profilepic-area" >
-      <div class="profilepic-large"><img class="img-rounded profilepic-large" src="{{url_for('static', filename='ProfilePic/session.jpg')}}"></div>
+    {% if profilepic[0] != NULL %}
+      <div class="profilepic-large"><img class="img-rounded profilepic-large" src="{{url_for('static', filename=profilepic)}}"></div>
+    {% else %}
+      <div class="profilepic-large"><img class="img-rounded profilepic-large" src="{{url_for('static', filename='img/profile.png')}}"></div>
+    {% endif %}
     </div>
     <div class="col-xs-12">
       <div class="spacing">

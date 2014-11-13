@@ -51,7 +51,7 @@ def getLikers(playlistid):
     data['username'] = userdata[0]
     
     if (userdata[1] == None):
-        data['profilepic'] = 'img/ProfilePic/default.jpg'
+        data['profilepic'] = ""
     else:
         data['profilepic'] = userdata[1]
     

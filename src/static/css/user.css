@@ -24,17 +24,15 @@ img.profilepic{
 	overflow: auto;
 }
 .sector-1{
-	border:2px solid grey;
 	height: 100%;
 }
 .sector-2{
 	height: 100%;
-	border:2px solid grey;
+	border:1px solid grey;
 
 }
 .sector-3{
 	height: 100%;
-	border:2px solid grey;
 
 }
 .profilepic-area{

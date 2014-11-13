@@ -63,13 +63,17 @@ def getOthers(songid):
 
   g.database.execute("SELECT Song_Album FROM songs WHERE Song_id=%s" % songid)
   album = g.database.fetchone()[0]
-  g.database.execute("SELECT Song_title FROM songs WHERE Song_Album='%s' LIMIT 5" % album)
+  g.database.execute("SELECT Song_id,Song_title FROM songs WHERE Song_Album='%s' LIMIT 5" % album)
   result = g.database.fetchall()
 
   for res in result:
-    others.append(res[0])
+    data = {}
+    data['songid'] = res[0]
+    data['title'] = res[1]
+    others.append(data)
 
   return others
+
 
 def getComments(songid):
   g.database.execute("SELECT Comment_id from song_comments WHERE Song_id=%s  ORDER BY Comment_id DESC", (songid))
@@ -108,9 +112,15 @@ def getLikers(songid):
 
   for liker in likers:
     data = {}
-    data['userid'] = liker[0]
-    g.database.execute("SELECT Username FROM entries WHERE User_id=%s" % (liker[0]))
-    data['username'] = g.database.fetchone()[0]
+    data['userid'] = str(liker[0])
+    g.database.execute("SELECT Username, Profile_pic FROM entries WHERE User_id=%s" % (liker[0]))
+    userdata = g.database.fetchone()
+    data['username'] = userdata[0]
+    if userdata[1] != None:
+      data['profilepic'] = userdata[1]
+    else:
+      data['profilepic'] = ""
+    
     retval.append(data)
 
   return retval
@@ -140,6 +150,7 @@ def songPage(songid):
 @SONG.route("/song/<songid>/<userid>/addtoplaylist", methods=["POST"])
 def playlistAdd(songid, userid):
   playname = request.form['btn']
+  print playname
   query = ("""SELECT Playlist_id FROM playlists WHERE User_id=%s AND Playlist_name='%s' """ % 
                       (userid, playname))
   g.database.execute(query)
@@ -158,7 +169,7 @@ def playlistAdd(songid, userid):
 
     if add==0:
       query = ("INSERT INTO song_playlist(Song_id,Playlist_id) VALUES (%s,%s)" 
-                          %(playlistid[0], songid))
+                          %(songid,playlistid[0]))
       print query
       g.database.execute(query)
       g.conn.commit()

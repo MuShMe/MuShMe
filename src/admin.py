@@ -6,6 +6,13 @@ from Forms import searchForm, AdminEdit
 
 admin = Blueprint('admin',__name__,template_folder='templates')
 
+def getprofilepicture():
+	g.database.execute("SELECT Profile_pic FROM entries WHERE User_id=%s" % session['userid'])
+	profilepic = g.database.fetchone()
+	print profilepic
+	if profilepic[0] is None:
+		return ""
+	return profilepic[0]
 
 def getComplaintData(status):
 	if status == "all":
@@ -46,7 +53,8 @@ def adminPage(userid, status="all"):
 	return render_template('adminpage/index.html',
 							complaints=complaints, 
 							form6 = searchForm(prefix='form6'),
-							adminform = AdminEdit())
+							adminform = AdminEdit(),
+							profilepic=getprofilepicture())
 
 
 @admin.route('/admin/addremark/<complaintid>', methods=["POST"])

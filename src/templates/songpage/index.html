@@ -16,7 +16,11 @@
 				<tbody>
 					{% if likes > 0 %}
 					{% for liker in likers %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename="img/ProfilePic/liker['userid'].png")}}"></a></tr>
+					{% if liker['profilepic'][0]  != NULL %}
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=liker['profilepic'])}}"></a></tr>
+					{% else %}
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
+					{% endif %}
 					<tr><a href="{{url_for('userProfile',userid=liker['userid']) }}"><h3><b>{{ liker['username']}} </b></h3></a></tr>
 					{% endfor %}
 					{%else%}
@@ -159,7 +163,7 @@
 								<tbody>
 									{% for other in others %}
 									<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=art)}}"></a></tr>
-									<tr><a href="#"><h3><b> {{ other }}</b></h3></a></tr>
+									<tr><a href="{{ url_for('SONG.songPage', songid=other['songid'])}}"><h3><b> {{ other['title'] }}</b></h3></a></tr>
 									{% endfor %}
 								</tbody>
 							</table>

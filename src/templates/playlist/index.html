@@ -6,7 +6,7 @@
 	<title>MuShMe-{{ pname }}</title>
     <link href="{{ url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
 	<strong><link rel="stylesheet" href="{{ url_for('static',filename='css/userplaylist.css')}}"></strong>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> -->
 </head>
 <!--Navbar-->
 <!--Mainbody-->
@@ -40,7 +40,7 @@
 								</label>
 						</tr>
 						<tr><a href="#"><img class="img-circle profilepic-medium" src='{{ url_for("static", filename=song["albumart"] )}}'></a></tr>
-							<tr><a href="#"><h3><b> {{ song['songname'] }}</b></h3></a></tr>
+							<tr><a href="{{url_for('SONG.songPage', songid=song['songid'])}}"><h3><b> {{ song['songname'] }}</b></h3></a></tr>
 						</div>
 					{% endfor %}
 					</tbody>
@@ -62,7 +62,11 @@
 					<tbody>
 						{% if likes > 0 %}
 						{% for liker in likers %}
+						{% if liker['profilepic'][0] != NULL %}
 							<tr><img class="img-circle profilepic-small playlists" src=" {{ url_for('static',filename=liker['profilepic']) }}"></tr>
+							{% else %}
+							<tr><img class="img-circle profilepic-small playlists" src=" {{ url_for('static',filename='img/profile.png') }}"></tr>
+							{%endif %}
 							<tr><a href="{{ url_for('userProfile', userid=liker['userid'])}}"><h3><b> {{ liker['username']}}</b></h3></a></tr>
 						{% endfor %}
 						{% else %}
