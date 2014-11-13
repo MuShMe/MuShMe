@@ -151,8 +151,12 @@ def dbinsert(metadata):
   artistalbum(albumid,artistids)
 
   #insert this data into the main songs list
-  g.database.execute("SELECT Song_id from songs WHERE Song_Title='%s' AND Song_Album='%s'" 
+  query = ("SELECT Song_id from songs WHERE Song_Title=\"%s\" AND Song_Album=\"%s\"" 
                         % (metadata['title'][0], albumid[0]))
+
+  print query
+
+  g.database.execute(query)
   songid = g.database.fetchone()
   playlistid = GetPlaylistID(metadata['userid'])
 
@@ -169,12 +173,12 @@ def dbinsert(metadata):
       query += u' VALUES ('
       
       for key in insertvalues:
-        query = unicode(query) + u"'"+unicode(insertvalues[key]) +u"'"+ u','
+        query = unicode(query) + u"\""+unicode(insertvalues[key]) +u"\""+ u','
       
       query = unicode(query[:-1]) + u') '
       print query
       insert(query)
-      g.database.execute("SELECT Song_id FROM songs WHERE Song_Title='%s' AND Song_Album='%s'"
+      g.database.execute("SELECT Song_id FROM songs WHERE Song_Title=\"%s\" AND Song_Album=\"%s\""
                          % (metadata['title'][0], albumid[0]))
       
       songid = g.database.fetchone()[0]
