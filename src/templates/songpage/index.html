@@ -55,18 +55,18 @@
 							<div class="modal fade bs-example-modal-lg" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 								<div class="modal-dialog modal-lg">
 									<div class="modal-content edit-modal">
+										<h3 class="text-center">Add to Playlist</h3>
 										<form role="form" class="center" method='POST' name="addtoplaylist" action="{{ url_for('SONG.playlistAdd', songid=songid, userid=session['userid']) }}">
 											<table>
 												<thead>
 													<tr>
-														<td></td>
 														<td></td>
 													</tr>
 												</thead>
 												<tbody>
 													{% for play in playlists %}
 													<tr>
-															<input class="btn btn-primary" type='submit' name='btn' value='{{ play["playname"]}}'></td>
+															<td><input class="btn btn-primary middle1" type='submit' name='btn' value='{{ play["playname"]}}'></td>
 													</tr>
 													{% endfor %}
 													</tbody>
@@ -144,7 +144,7 @@
 								<tbody>
 									{% for artist in artists %}
 									<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-									<tr><a href="{{ url_for('artistProfile', aprofileid=artist['id']) }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
+									<tr><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
 									{% endfor %}
 								</tbody>
 							</table>

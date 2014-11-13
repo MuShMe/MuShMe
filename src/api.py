@@ -11,8 +11,6 @@ import json
 API = Blueprint('API',__name__,template_folder='templates')
 
 def addtodatabase(metadata):
-    imagefilename = metadata['artist'][0] + metadata['album'][0] + '.png'
-
     if (dbinsert(metadata, imagefilename) == True):
         return True
     else:

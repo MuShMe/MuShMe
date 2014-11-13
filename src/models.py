@@ -36,12 +36,13 @@ def artistalbum(albumid, artistids):
 
     if not present:
       query = ("INSERT INTO album_artists(Album_id,Artist_id) VALUES (%s,%s)"% (albumid[0],artistid))
+      print query
       g.database.execute(query)
       g.conn.commit()
 
 
 #function to check and add album data
-def albumHook(albumname, imagefilename, artdata, albumartist, publisher, year):
+def albumHook(albumname, artdata, albumartist, publisher, year):
   g.database.execute("""SELECT Album_id FROM albums WHERE Album_name='%s'""" % (albumname))
 
   albums = g.database.fetchall()
@@ -68,12 +69,12 @@ def albumHook(albumname, imagefilename, artdata, albumartist, publisher, year):
     albumid = 0
   else:
     albumid = albumid[0] + 1
-
+  imagfilename = 'src/static/AlbumArt/'+ str(albumid[0])
   query = (u"""INSERT INTO albums(Album_id,Album_pic,Album_name,Album_year, Publisher) VALUES(%s, '%s','%s',%s,'%s')""" % (albumid, unicode(imagefilename), unicode(albumname), year, unicode(publisher)))
 
   g.database.execute(query)
   g.conn.commit()
-  with open('src/static/'+imagefilename, 'wb') as f:
+  with open(imagefilename, 'wb') as f:
     f.write(base64.b64decode(artdata))
 
   array = []
@@ -112,7 +113,7 @@ def artistHook(artistnames, date):
 
 
 #Main insert function
-def dbinsert(metadata, imagefilename):
+def dbinsert(metadata):
   insert = g.database.execute
   commit = g.conn.commit
 
@@ -123,7 +124,6 @@ def dbinsert(metadata, imagefilename):
       insertvalues['Song_Title'] = metadata['title'][0]
     elif key == 'album':
       albumid = albumHook(metadata['album'][0],
-                          'AlbumArt/'+ imagefilename,
                           metadata['ART'],
                           metadata['artist'][0],
                            publisherkey(metadata)[0],

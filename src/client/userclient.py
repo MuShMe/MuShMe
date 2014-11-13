@@ -61,6 +61,9 @@ def readtags(library):
                 filename = File(library+files)
                 id3tags = dict(MP3(library+files, ID3= EasyID3))
 
+                if 'APIC:' not in id3tags or 'artist' not in id3tags or 'album':
+                    continue
+                 
                 id3tags['ART'] = base64.b64encode(filename.tags['APIC:'].data)
                 id3tags['token']= authreturn['token']
                 id3tags['userid'] = authreturn['userid']
