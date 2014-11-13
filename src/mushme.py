@@ -65,16 +65,20 @@ def login():
                 g.conn.commit()
                 for uid in userid:
                     session['userid'] = uid
-                    g.database.execute("""SELECT Username from MuShMe.entries WHERE User_id="%s" """ % userid )
+                    g.database.execute("""SELECT Username from MuShMe.entries WHERE User_id="%s" """ % uid )
                     session['UserName']=g.database.fetchone()
-                    g.database.execute("""SELECT Privilege FROM MuShMe.entries WHERE User_id="%s" """ % userid)
+                    g.database.execute("""SELECT Privilege FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                     session['privilege'] = g.database.fetchone()[0]
-                    g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % userid)
+                    g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                     session['profilepic'] = g.database.fetchone()[0]
+                    g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
+                    session["Name"]=g.database.fetchone()
+                    g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % uid )
+                    session["dob"]=g.database.fetchone()
                     session['logged_in'] = True
                     session['logged_in']=True
-                    print uid
-                    print userid
+                    #print uid
+                    #print userid
                     return redirect(url_for('userProfile', userid=uid))
             else:
                 flash("""Incorrect Email-Id or Password""")
@@ -112,18 +116,18 @@ def signup():
                 g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                 session['profilepic'] = g.database.fetchone()[0]
                 session['logged_in'] = True
-                g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % userid )
+                g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
                 session["Name"]=g.database.fetchone()
-                g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % userid )
+                g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % uid )
                 session["dob"]=g.database.fetchone()
                 newPlaylist = session['UserName'] + ' default collection'
                 g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (newPlaylist,uid))
                 g.conn.commit()
                 return redirect(url_for('userProfile',userid=uid))
         else:
-            flash("Username or Email has been taken")
+            flash("Please enter valid data !")
     else:
-        flash("""Please Enter Valid Data !""")
+        flash("Username or Email has been taken")
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
 
 def validate(email,username):
@@ -140,11 +144,51 @@ def userProfile(userid):
         return render_template('error.html'), 404
     else:
         if request.method == 'GET':
+            User=getUserData(userid)
             return render_template('userprofile/index.html', userid=userid,
                 form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),
                 form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'),form7=AddPlaylist(prefix='form7'),
                 friend=getFriend(userid), playlist=getPlaylist(userid), User=getUserData(userid), Comments=getComments(userid),
-                song=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid))
+                song=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid),frnd=checkFriend(userid,User))
+
+def checkFriend(userid,User):
+    friendName =[]
+    g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" """ % (userid))
+    for user in g.database.fetchall():
+        data = {}
+        g.database.execute("""SELECT Username, User_id from MuShMe.entries WHERE User_id="%s" """ % user[0])
+        for a in g.database.fetchall():
+            data['friendname']=a[0]
+            data['friendid']=a[1]
+        friendName.append(data)
+    for f in friendName:
+        a=g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" and User_id2="%s" """ % (userid,f['friendid']))
+        b=g.database.execute("""SELECT User_id2 from friends WHERE User_id2="%s" and User_id1="%s" """ % (userid,f['friendid']))
+        if a or b:
+            return True
+        elif userid == f['friendid']:
+            return True
+        else:
+            return False
+
+    g.database.execute("""SELECT User_id1 from friends WHERE User_id2="%s" """ % userid)
+    for user in g.database.fetchall():
+        data = {}
+        g.database.execute("""SELECT Username, User_id from MuShMe.entries WHERE User_id="%s" """ % user[0])
+        for a in g.database.fetchall():
+            data['friendname']=a[0]
+            data['friendid']=a[1]
+        friendName.append(data)
+    for f in friendName:
+        a=g.database.execute("""SELECT User_id2 from friends WHERE User_id2="%s" and User_id1="%s" """ % (userid,f['friendid']))
+        b=g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" and User_id2="%s" """ % (userid,f['friendid']))
+        if a or b:
+            return True
+        elif userid == f['friendid']:
+            return True
+        else:
+            return False
+
 
 def getComments(userid):
     g.database.execute("SELECT Comment_id FROM user_comments WHERE User_id=%s ORDER BY Comment_id DESC" % (userid))
@@ -292,9 +336,35 @@ def editName(userid):
         uid = userid
         g.database.execute("""UPDATE MuShMe.entries SET Name="%s" WHERE User_id="%s" """ % (editform.name.data, userid))
         g.conn.commit()
+        if upload_file(userid,editform):
+            g.database.execute("""UPDATE MuShMe.entries SET Profile_pic="%s" WHERE User_id="%s" """ % (app.config['UPLOAD_FOLDER'], userid))
+        g.conn.commit()
         return redirect(url_for('userProfile',userid=userid))
     else:
         return redirect(url_for('userProfile', userid=userid))
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/user/<userid>/file', methods=['GET', 'POST'])
+def upload_file(userid,editform):
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file', userid=userid))
+
+
+@app.route('/user/<userid>/show/<filename>')
+def uploaded_file(userid,filename):
+    filename = 'http://127.0.0.1:5000/uploads/' + filename
+    return redirect(url_for('editName',filename = filename,userid=userid))
+
+@app.route('/uploads/<filename>')
+def send_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 @app.route('/user/<rcvrid>.<senderid>/comment',methods=['POST','GET'])
 def comment(rcvrid, senderid):
@@ -303,7 +373,9 @@ def comment(rcvrid, senderid):
         #print senderid
         #print rcvrid
         if commentform.comment.data:
-            g.database.execute("""INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ("%s","%s","%s") """ % ('U',commentform.comment.data, senderid))
+            query = ("""INSERT INTO MuShMe.comments (comment_type, Comment, User_id) VALUES ("%s","%s","%s") """ % ('U',commentform.comment.data, senderid))
+            print query
+            g.database.execute(query)
             g.conn.commit()
         
             g.database.execute("""SELECT Comment_id from MuShMe.comments WHERE Comment="%s" """ % (commentform.comment.data))
@@ -430,19 +502,7 @@ def uploadSong(userid):
     else:
         return redirect(url_for('userProfile',userid=userid))
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-@app.route('/user/<userid>/upload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            print file.filename
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('userProfile',userid=session['userid']))
 
 @app.route('/user/<userid>/addplaylist',methods=['POST'])
 def addplaylist(userid):

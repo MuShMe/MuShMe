@@ -38,7 +38,7 @@ img.profilepic{
 
 }
 .profilepic-area{
-	height: 400px;
+	height: 300px;
 }
 img.profilepic-large{
 	width: 150px;
@@ -110,4 +110,7 @@ margin-left: 200px;
 }
 .space{
 margin-top: 50px;
+}
+.middle1{
+margin-left: 150px;
 }

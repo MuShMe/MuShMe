@@ -3,9 +3,41 @@
 {%for u in User%}
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
+		<div class="col-xs-12">
 		<div class="profilepic-area" >
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename='img/profile.png')}}"></a>
 		</div>
+		<!-- Upload Profile Pic -->
+			{% if u['userid'] == session['userid'] %}
+			<a  class="btn btn-default middle1" onclick="launch_modal('uploadpic');">Edit</a>
+			
+			<div class="modal fade bs-example-modal-lg" id="uploadpic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content edit-modal">
+						<form role="form" class="center" method='post' name="editForm" action="{{ url_for('editName', userid=session['userid']) }}" enctype="multipart/form-data">
+							<div class="form-group spacing">
+								{{ form3.name(placeholder='Name',class_='form-control') }}
+							</div>
+							<div class="form-group spacing">
+								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
+							</div>
+
+							<!--<div class="form-group">
+								<input type="file" id="album-art">
+								<p class="help-block">Upload picture</p>
+							</div>-->
+							<div class="modal-footer">
+							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+							<input class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
+						</div>
+						</form>
+						
+
+					</div>
+				</div>
+			</div>
+			{%endif%}
+	</div>
 		<div class="col-xs-12">
 			<h1>Friends: </h1>
 			<table class="table table-hover">
@@ -17,18 +49,20 @@
 					{% for f in friend %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					<tr><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h3><b> {{ f['friendname'] }}</b></h3></a></tr>
-					{% if u['userid'] != session['userid'] %}
-						<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
-							<input class="btn btn-primary" type='submit' name='btn' value='Send Friend Request'>
-						</form>
-					{% endif %}
+					
 					{% endfor %}
+
 					{% if friend[0] == NULL and u['userid'] == session['userid'] %}
 					<tr><a href="{{ url_for('search') }}"><h3><b>Search friends to add them</b></h3></a></tr>
 					{% endif %}
 					
 				</tbody>
 			</table>
+			{% if u['userid'] != session['userid'] %}
+						<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
+							<input class="btn btn-primary" type='submit' name='btn' value='Send Friend Request'>
+						</form>
+					{% endif %}
 			<!-- Apply some logic to check if the user is already a friend and then show this button -->
 				
 
@@ -99,15 +133,12 @@
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
-						<form role="form" class="center" method='post' name="editForm" action="{{ url_for('editName', userid=session['userid']) }}">
+						<form role="form" class="center" method='post' name="editForm" action="{{ url_for('editName', userid=session['userid']) }}" enctype="multipart/form-data">
 							<div class="form-group spacing">
 								{{ form3.name(placeholder='Name',class_='form-control') }}
 							</div>
 							<div class="form-group spacing">
 								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
-							</div>
-							<div class="form-group spacing">
-								{{ form3.pic(placeholder='Upload Picture') }}
 							</div>
 
 							<!--<div class="form-group">
@@ -124,10 +155,6 @@
 					</div>
 				</div>
 			</div>
-			{% else %}
-			<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
-				<input class="btn btn-primary" type='submit' name='btn' value='Send Friend Request'>
-			</form>
 			{% endif %}
 
 

@@ -4,10 +4,8 @@ from werkzeug import secure_filename, FileStorage
  
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "{{ url_for('static','img/ProfilePic') }}"
+UPLOAD_FOLDER = "src/static/img/ProfilePic/"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-
-
 
 app.secret_key = 'maximumdamage'
 
