@@ -5,7 +5,11 @@
 	<div class="col-xs-3 sector-1">
 		<div class="col-xs-12">
 		<div class="profilepic-area" >
-			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename='img/profile.png')}}"></a>
+			{% if u['profilepic'] %}
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-rounded profilepic-large" src="{{url_for('static',filename=session['profilepic'])}}"  ></a>
+			{% else %}
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-rounded profilepic-large" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
+			{% endif %}
 		</div>
 		<!-- Upload Profile Pic -->
 			{% if u['userid'] == session['userid'] %}
@@ -14,25 +18,18 @@
 			<div class="modal fade bs-example-modal-lg" id="uploadpic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
-						<form role="form" class="center" method='post' name="editForm" action="{{ url_for('editName', userid=session['userid']) }}" enctype="multipart/form-data">
-							<div class="form-group spacing">
-								{{ form3.name(placeholder='Name',class_='form-control') }}
-							</div>
-							<div class="form-group spacing">
-								{{ form3.dob(placeholder='Date Of Birth',class_='form-control') }}
-							</div>
 
+								<form action="{{url_for('upload_file',userid=u['userid'])}}" method=post enctype=multipart/form-data>
+							      <p><input type="file" name="file" role="form" class="center">
+							      	<div class="modal-footer">
+										<input type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+										<input class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
+									</div>
+							    </form>
 							<!--<div class="form-group">
 								<input type="file" id="album-art">
 								<p class="help-block">Upload picture</p>
 							</div>-->
-							<div class="modal-footer">
-							<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-							<input class="btn btn-primary" type='submit' name='btn' value='Save Changes' method="POST">
-						</div>
-						</form>
-						
-
 					</div>
 				</div>
 			</div>
@@ -47,7 +44,11 @@
 				</thead>
 				<tbody>
 					{% for f in friend %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
+					<tr>{% if f['profilepic'] %}
+						<a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=f['friendpic'])}}"  ></a>
+						{% else %}
+						<a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
+						{% endif %}</tr>
 					<tr><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h3><b> {{ f['friendname'] }}</b></h3></a></tr>
 					
 					{% endfor %}
@@ -88,7 +89,7 @@
                                                                             <div class="space">
                                                                             	{% for requ in req['reqfromuser'] %}
                                                                                     <tr>	
-                                                                                            <td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/profile.png"></a></td>
+                                                                                            <td><a href="#"><img class="img-circle profilepic-small playlists" src="src/static/img/profile.png"></a></td>
                                                                                             <td><a href="{{ url_for('userProfile', userid=req['userto']) }}">{{ requ['username'] }}</a></td>
                                                                                             <form action="{{url_for('acceptrequest',userto=req['reqto'],userfrom=req['reqfrom'])}}" method='POST'>
                                                                                             	<td><input class="btn btn-success button-center" type='submit' name='btn' value='Accept' method="POST"></td>
@@ -133,7 +134,7 @@
 			<div class="modal fade bs-example-modal-lg" id="useredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
-						<form role="form" class="center" method='post' name="editForm" action="{{ url_for('editName', userid=session['userid']) }}" enctype="multipart/form-data">
+						<form role="form" class="center" method='post' name="editForm" action="{{ url_for('editName', userid=u['userid']) }}">
 							<div class="form-group spacing">
 								{{ form3.name(placeholder='Name',class_='form-control') }}
 							</div>
@@ -256,7 +257,7 @@
 				<tbody>
 					{% for p in playlist %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ p['pname'] }}</b></h3></a></tr>
+					<tr><a href="{{url_for('playlist.playlistPage',playlistid=p['pid'])}}"><h3><b>{{ p['pname'] }}</b></h3></a></tr>
 					{% endfor %}
 					
 				</tbody>
@@ -294,7 +295,7 @@
 				<tbody>
 					{% for s in song %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/albumart.jpg') }}"></a></tr>
-					<tr><a href="#"><h3><b>{{ s['songname'] }}</b></h3></a></tr>
+					<tr><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h3><b>{{ s['songname'] }}</b></h3></a></tr>
 					{% endfor %}
 					
 				</tbody>
@@ -308,11 +309,11 @@
 						<form role="form" class="center" >
 							<div class="form-group">
 								<input type="file" id="album-art">
-								<p class="help-block">Upload Song</p>
+								<a href="https://www.dropbox.com/sd10st2ud6e72n26/client.zip?dl=1" ><p class="help-block">Upload Song</p></a>
 							</div>
 							<div class="modal-footer">
 								<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-								<input href="{{ url_for('uploadSong', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
+								<input href="#" class="btn btn-primary" type='submit' name='btn' value='Submit' method="POST">
 							</div>
 						</form>
 						

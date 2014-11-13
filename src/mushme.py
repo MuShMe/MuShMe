@@ -6,6 +6,8 @@ import shutil
 from flask import Flask, render_template, session, request, flash, url_for, redirect
 from Forms import ContactForm, LoginForm, editForm, ReportForm, CommentForm, searchForm, AddPlaylist
 from flask.ext.mail import Message, Mail
+from werkzeug import secure_filename
+from werkzeug import SharedDataMiddleware
 from api import API
 from songs import SONG
 from playlist import playlist
@@ -30,6 +32,12 @@ app.register_blueprint(admin);
 app.register_blueprint(artist);
 
 
+UPLOAD_FOLDER = "img/ProfilePic/"
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+app.config['UPLOAD_FOLDER'] = 'src/static/' + UPLOAD_FOLDER
+
+
 @app.route('/')
 def index():
     session["login"] = False
@@ -51,8 +59,8 @@ def teardown_request(exception):
 
 @app.route('/login', methods=['POST'])
 def login():
-    session["""login"""] = True
-    session["""signup"""] = False
+    session["login"] = True
+    session["signup"] = False
     if request.method == 'POST':
         loginform = LoginForm(request.form, prefix='form1')
 
@@ -69,7 +77,7 @@ def login():
                     session['UserName']=g.database.fetchone()[0]
                     g.database.execute("""SELECT Privilege FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                     session['privilege'] = g.database.fetchone()[0]
-                    g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
+                    g.database.execute("""SELECT Profile_pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
                     session['profilepic'] = g.database.fetchone()[0]
                     g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
                     session["Name"]=g.database.fetchone()
@@ -81,10 +89,9 @@ def login():
                     #print userid
                     return redirect(url_for('userProfile', userid=uid))
             else:
-                flash("""Incorrect Email-Id or Password""")
-
+                flash("Incorrect Email-Id or Password")
         else:
-            flash("""Incorrect Email-Id or Password""")
+            flash("Incorrect Email-Id or Password")
         return render_template('homepage/index.html', form1=loginform, form2=ContactForm(prefix='form2'))
     else:
         return redirect(url_for(('index')))
@@ -97,11 +104,12 @@ def signup():
     contactform = ContactForm(request.form, prefix='form2')
 
     if validate(contactform.email.data,contactform.username.data):
-        check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ("%s","%s","%s","%s")""" % 
+        check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Profile_pic,Name) VALUES ("%s","%s","%s","%s")""" % 
                                         (contactform.username.data,
                                         contactform.email.data,
                                         hashlib.sha1(contactform.password.data).hexdigest(),
-                                        contactform.name.data))
+                                        contactform.name.data,
+                                        'img/profile.png'))
         if check_signup:
             g.conn.commit()
             g.database.execute("""SELECT User_id from MuShMe.entries WHERE Email_id="%s" AND Pwdhash="%s" """ %
@@ -214,19 +222,22 @@ def getFriend(userid):
     g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" """ % userid)
     for user in g.database.fetchall():
         data = {}
-        g.database.execute("""SELECT Username, User_id from MuShMe.entries WHERE User_id="%s" """ % user[0])
+        g.database.execute("""SELECT Username, User_id, Profile_pic from MuShMe.entries WHERE User_id="%s" """ % user[0])
         for a in g.database.fetchall():
             data['friendname']=a[0]
             data['friendid']=a[1]
-        friendName.append(data)
+            data['friendpic']=a[2]
+            friendName.append(data)
     g.database.execute("""SELECT User_id1 from friends WHERE User_id2="%s" """ % userid)
     for user in g.database.fetchall():
         data = {}
-        g.database.execute("""SELECT Username, User_id from MuShMe.entries WHERE User_id="%s" """ % user[0])
+        g.database.execute("""SELECT Username, User_id, Profile_pic from MuShMe.entries WHERE User_id="%s" """ % user[0])
         for a in g.database.fetchall():
             data['friendname']=a[0]
             data['friendid']=a[1]
-        friendName.append(data)
+            data['friendpic']=a[2]
+            friendName.append(data)
+        print friendName
     return friendName
 
 def getPlaylist(userid):
@@ -336,9 +347,6 @@ def editName(userid):
         uid = userid
         g.database.execute("""UPDATE MuShMe.entries SET Name="%s" WHERE User_id="%s" """ % (editform.name.data, userid))
         g.conn.commit()
-        if upload_file(userid,editform):
-            g.database.execute("""UPDATE MuShMe.entries SET Profile_pic="%s" WHERE User_id="%s" """ % (app.config['UPLOAD_FOLDER'], userid))
-        g.conn.commit()
         return redirect(url_for('userProfile',userid=userid))
     else:
         return redirect(url_for('userProfile', userid=userid))
@@ -348,23 +356,20 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/user/<userid>/file', methods=['GET', 'POST'])
-def upload_file(userid,editform):
+def upload_file(userid):
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', userid=userid))
+            filepath = UPLOAD_FOLDER + filename
+            session['profilepic'] = filepath
+        g.database.execute("""UPDATE MuShMe.entries SET Profile_pic="%s" WHERE User_id="%s" """ % (filepath, userid))
+        g.conn.commit()
+        return redirect(url_for('userProfile', userid=userid))
 
-
-@app.route('/user/<userid>/show/<filename>')
-def uploaded_file(userid,filename):
-    filename = 'http://127.0.0.1:5000/uploads/' + filename
-    return redirect(url_for('editName',filename = filename,userid=userid))
-
-@app.route('/uploads/<filename>')
-def send_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+app.add_url_rule('/user/uploads/<filename>', 'uploaded_file',build_only=True)
+app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {'/user/uploads':  'src/static' + app.config['UPLOAD_FOLDER']   })
 
 @app.route('/user/<rcvrid>.<senderid>/comment',methods=['POST','GET'])
 def comment(rcvrid, senderid):
@@ -443,12 +448,13 @@ def search():
     if request.method == 'POST':
         searchform = searchForm(prefix='form6')
         #print 'f'
+        value = searchform.entry.data
         search_fname = []
         search_song= []
         search_friend = []
         search_playlist =[]
         search_artist = []
-        check_song = g.database.execute("""SELECT Song_title,Song_Album,Genre,Publisher,Song_id from MuShMe.songs WHERE Song_title="%s" """ % ( searchform.entry.data ))
+        check_song = g.database.execute("""SELECT Song_title,Song_Album,Genre,Publisher,Song_id from MuShMe.songs WHERE Song_title="%s" """ % ( value ))
         for a in g.database.fetchall():
             data={}
             data['title']=a[0]
@@ -457,22 +463,21 @@ def search():
             data['publisher']=a[3]
             data['songid']=a[4]
             search_song.append(data)
-        check_artist = g.database.execute("""SELECT Artist_name, Artist_id from MuShMe.artists WHERE Artist_name="%s" """ % ( searchform.entry.data ))
+        check_artist = g.database.execute("""SELECT Artist_name, Artist_id from MuShMe.artists WHERE Artist_name="%s" """ % ( value ))
         for a in g.database.fetchall():
             data = {}
             data['artistname']=a[0]
             data['artistid']=a[1]
             search_artist.append(data)
-        check_friend = g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Username="%s" or Name="%s" """ % ( searchform.entry.data, searchform.entry.data ))
+        check_friend = g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Username="%s" or Name="%s" """ % ( value, value ))
         for a in g.database.fetchall():
             data = {}
             data['username']=a[0]
             data['name']=a[1]
             data['profilepic']=a[2]
             data['userid']=a[3]
-            print data
-            search_friend.append('data')
-        check_playlist = g.database.execute("""SELECT Playlist_name,User_id, Playlist_id from MuShMe.playlists WHERE Playlist_name="%s" """ % ( searchform.entry.data ))
+            search_friend.append(data)
+        check_playlist = g.database.execute("""SELECT Playlist_name,User_id, Playlist_id from MuShMe.playlists WHERE Playlist_name="%s" """ % ( value ))
         for a in g.database.fetchall():
             data = {}
             data['pname']=a[0]
@@ -489,20 +494,6 @@ def search():
              search_playlist=search_playlist,length = length)
     else:
         return render_template('searchpage/search.html',form6=searchForm(prefix='form6'))
-
-@app.route('/user/<userid>',methods=['POST','GET'])
-def uploadSong(userid):
-    if request.method == 'POST':
-        reportform = ReportForm(request.form, prefix='form5')
-
-        check_report = g.database.execute("""INSERT INTO MuShMe.complaints (Complain_type, Complain_description, Comment_id) VALUES ("%s","%s","%s") """ % (spamNumber, reportform.spam.data, session['comment_id'], session['userid'] ))
-        if check_comment == True:
-            g.conn.commit()
-        return redirect(url_for('userProfile',userid=userid))
-    else:
-        return redirect(url_for('userProfile',userid=userid))
-
-
 
 @app.route('/user/<userid>/addplaylist',methods=['POST'])
 def addplaylist(userid):
@@ -567,6 +558,8 @@ mail_handler.setFormatter(Formatter('''
 
     %(message)s
     '''))
+
+
 
 if __name__ == """__main__""":
     # To allow aptana to receive errors, set use_debugger=False

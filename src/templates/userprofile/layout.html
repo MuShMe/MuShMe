@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
-	<!-- <meta charset="utf-8"> -->
+	<!--<meta charset="utf-8">-->
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<title>{{ session.Name[0] }}</title>
 	<link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
 	<strong><link href="{{url_for('static',filename='css/user.css')}}" rel="stylesheet"></strong>
@@ -9,10 +10,10 @@
 <body>
 	<div class="navbar11">
 		<nav class="navbar navbar-default" role="navigation">
-			{% if session.profilepic[0] == NULL %}
-			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png')}}"  ></a>
+			{% if session['profilepic'] %}
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename=session['profilepic'])}}"  ></a>
 			{% else %}
-			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='{{ session.profilepic }}')}}"  ></a>
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
 			{% endif %}
 
 
@@ -27,7 +28,7 @@
 			</form>
 			<ul class="nav navbar-nav navbar-right">
 				{% if session['privilege']==1 %}
-				<li><a class="admin" href="#">Admin</a></li>
+				<li><a class="admin" href="url_for('admin.adminPage',userid=session['userid'],status='all')">Admin</a></li>
 				{% endif %}
 				<li><a class="logout" href="{{ url_for('index') }}">Logout</a></li>
 			</ul>

@@ -4,12 +4,9 @@ from werkzeug import secure_filename, FileStorage
  
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "src/static/img/ProfilePic/"
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.secret_key = 'maximumdamage'
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USE_SSL"] = True

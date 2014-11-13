@@ -28,14 +28,14 @@
 					<div class="top-margin">
 					{% for song in search_song %}
 					<tr><a href="#"><img class="img-circle profilepic-medium " src="../img/albumart.jpg"></a></tr>
-					<tr><a href="#"><h4><b>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}} </b></h4></a></tr>
+					<tr><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><h4><b>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}} </b></h4></a></tr>
 					<tr><h4>Song</h4></tr>
 					{% endfor %}
 					</div>
-					{% for friend in friends %}
+					{% for f in friends %}
 					<div class="spacing">
-					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{friend['profilepic']}}"></a></tr>
-					<tr><a href="{{ url_for('userProfile',userid=friend['userid']) }}"><h4><b>{{ friend['username'] }} - {{friend['name']}} </b></h4></a></tr>
+					<tr><a href="#"><img class="img-circle profilepic-medium" src="{{url_for('static',filename=f['friendpic'])}}"></a></tr>
+					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><h4><b>{{ f['username'] }} - {{ f['name'] }} </b></h4></a></tr>
 					<tr><h4>User</h4></tr>
 					{% endfor %}
 					</div>
@@ -49,7 +49,7 @@
 					{% for playlists in search_playlist %}
 					<div class="spacing">
 					<tr><a href="#"><img class="img-circle profilepic-medium" src="../img/playlist.jpg"></a></tr>
-					<tr><a href="#"><h4><b>{{ playlists['pname'] }} - {{playlists['username']}}, {{playlists['uname']}} </b></h4></a></tr>
+					<tr><a href="{{url_for('playlist.playlistPage',playlistid=playlists['pid'])}}"><h4><b>{{ playlists['pname'] }} - {{playlists['username']}}, {{playlists['uname']}} </b></h4></a></tr>
 					<tr><h4>Playlist</h4></tr>
 					{% endfor %}
 					</div>
