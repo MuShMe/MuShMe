@@ -25,6 +25,21 @@ def getLikes(songid):
   return g.database.fetchone()[0]
 
 
+def getplaylists():
+  g.database.execute("SELECT Playlist_id FROM playlists WHERE User_id=%s" % (session['userid']))
+  playlists = g.database.fetchall()
+  retval = []
+
+  for playlist in playlists:
+    data = {}
+    g.database.execute("SELECT Playlist_name FROM playlists WHERE Playlist_id=%s" % (playlist[0]))
+    data['playname'] = g.database.fetchone()[0]
+    data['playid'] = playlist[0]
+    retval.append(data)
+
+  return retval
+
+
 def getArtistData(songid):
   data = {}
   g.database.execute("SELECT Artist_id FROM song_artists WHERE Song_id='%s'" % songid)
@@ -84,6 +99,7 @@ def getAlbumArt(songid):
   g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s", (albumname))
   return g.database.fetchone()[0]
 
+
 def getLikers(songid):
   g.database.execute("SELECT User_id FROM user_like_song WHERE Song_id=%s" % (songid))
   retval= []
@@ -117,11 +133,37 @@ def songPage(songid):
               comments= getComments(songid),
               art=getAlbumArt(songid),
               form6 = searchForm(),
-              reportform= ReportForm())
+              reportform= ReportForm(),
+              playlists=getplaylists())
 
-@SONG.route("/song/<userid>/addtoplaylist")
-def playlistAdd(userid):
-  pass
+
+@SONG.route("/song/<songid>/<userid>/addtoplaylist", methods=["POST"])
+def playlistAdd(songid, userid):
+  playname = request.form['btn']
+  query = ("""SELECT Playlist_id FROM playlists WHERE User_id=%s AND Playlist_name='%s' """ % 
+                      (userid, playname))
+  g.database.execute(query)
+
+  playlistid = g.database.fetchone()
+
+  if playlistid != None:
+    g.database.execute("""SELECT Song_id FROM song_playlist WHERE Playlist_id=%s""" % (playlistid[0]))
+    presentsongids = g.database.fetchall()
+
+    add=0
+
+    for presentsongid in presentsongids:
+      if songid == presentsongid[0]:
+        add=1
+
+    if add==0:
+      query = ("INSERT INTO song_playlist(Song_id,Playlist_id) VALUES (%s,%s)" 
+                          %(playlistid[0], songid))
+      print query
+      g.database.execute(query)
+      g.conn.commit()
+
+  return redirect(url_for('SONG.songPage', songid=songid))
 
 
 @SONG.route('/song/addcomment/<int:songid>', methods=["POST"])
@@ -149,6 +191,7 @@ def reportsongcomment(songid,commentid):
     g.database.execute(query)
     g.conn.commit()
     return redirect(url_for('SONG.songPage', songid=songid))
+
 
 @SONG.route('/song/<songid>/like/')
 def user_like(songid):

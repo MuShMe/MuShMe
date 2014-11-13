@@ -55,7 +55,7 @@
 							<div class="modal fade bs-example-modal-lg" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 								<div class="modal-dialog modal-lg">
 									<div class="modal-content edit-modal">
-										<form role="form" class="center" method='POST' name="addtoplaylist" action="{{ url_for('SONG.playlistAdd', userid=session['userid']) }}">
+										<form role="form" class="center" method='POST' name="addtoplaylist" action="{{ url_for('SONG.playlistAdd', songid=songid, userid=session['userid']) }}">
 											<table>
 												<thead>
 													<tr>
@@ -64,19 +64,18 @@
 													</tr>
 												</thead>
 												<tbody>
+													{% for play in playlists %}
 													<tr>
-														<td><a href="#">Playlist1</a></td>
-														<td>
-															<input href="{{ url_for('editName', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Add' method="POST"></td>
-														</tr>
+															<input class="btn btn-primary" type='submit' name='btn' value='{{ play["playname"]}}'></td>
+													</tr>
+													{% endfor %}
 													</tbody>
 												</table>
 												<div class="form-group spacing">
 													
 												</div>
 												<div class="modal-footer">
-													<input href="{{ url_for('userProfile', userid=session['userid']) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-													<input href="{{ url_for('editName', userid=session['userid']) }}" class="btn btn-primary" type='submit' name='btn' value='Add' method="POST">
+													<input type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
 												</div>
 											</form>
 
