@@ -252,7 +252,7 @@ def getPlaylist(userid):
 
 def getSong(userid):
     songName = []
-    g.database.execute("""SELECT Song_id from MuShMe.user_song WHERE User_id=%s """ % userid)
+    g.database.execute("""SELECT Song_id from MuShMe.user_song WHERE User_id=%s LIMIT 5""" % userid)
     for song in g.database.fetchall():
         data = {}
         g.database.execute("""SELECT Song_title,Song_id from MuShMe.songs WHERE Song_id="%s" """ % song)
