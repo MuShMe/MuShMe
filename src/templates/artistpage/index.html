@@ -43,7 +43,7 @@
 				<tbody>
 					{% for song in songs %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="#"><h3><b>{{ song['songname'] }}</b></h3></a></tr>
+					<tr><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><h3><b>{{ song['songname'] }}</b></h3></a></tr>
 					{%endfor%}
 				</tbody>
 			</table>
