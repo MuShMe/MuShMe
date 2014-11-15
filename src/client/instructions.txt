@@ -1,0 +1,10 @@
+Open a command line window and run the following commands to install mutagen. Make sure you have Python 2.X installed.
+
+Now navigate to the mutagen folder in the userclient folder and run:-
+$./setup.py build
+$./setup.py install
+Then navigate back to the userclient root and run
+
+$./userclient.py [directory arg]
+
+Where directory arg is the name of the directory from where you will upload your MP3's.

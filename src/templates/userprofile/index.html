@@ -268,8 +268,7 @@
 				</thead>
 				<tbody>
 					{% for p in playlist %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a></tr>
-					<tr><a href="{{url_for('playlist.playlistPage',playlistid=p['pid'])}}"><h3><b>{{ p['pname'] }}</b></h3></a></tr>
+					<tr><a href="{{url_for('playlist.playlistPage',playlistid=p['pid'])}}"><h4>{{ p['pname'] }}</h4></a></tr>
 					{% endfor %}
 					
 				</tbody>
@@ -306,15 +305,15 @@
 				</thead>
 				<tbody>
 					{% for s in song %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/albumart.jpg') }}"></a></tr>
-					<tr><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h3><b>{{ s['songname'] }}</b></h3></a></tr>
+					<tr><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename=s['art']) }}"></a></tr>
+					<tr><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h3>{{ s['songname'] }}</h3></a></tr>
 					{% endfor %}
 					
 				</tbody>
 			</table>
 			<!-- Songs Add modal -->
 			{% if u['userid'] == session['userid'] %}
-			<a href="https://www.dropbox.com/sd10st2ud6e72n26/client.zip?dl=1" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
+			<a href="https://www.dropbox.com/s/d10st2ud6e72n26/client.zip?dl=1" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
 			{%endif%}
 		</div>
 	</div>

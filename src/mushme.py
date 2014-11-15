@@ -216,6 +216,7 @@ def getComments(userid):
 
     return retval
 
+
 def getFriend(userid):
     friendName =[]
     g.database.execute("""SELECT User_id2 from friends WHERE User_id1="%s" """ % userid)
@@ -239,6 +240,7 @@ def getFriend(userid):
         print friendName
     return friendName
 
+
 def getPlaylist(userid):
     playlist = []
     g.database.execute("""SELECT Playlist_name,Playlist_id from MuShMe.playlists WHERE User_id="%s" """ % userid)
@@ -249,17 +251,24 @@ def getPlaylist(userid):
         playlist.append(data)
     return playlist
 
+
 def getSong(userid):
     songName = []
     g.database.execute("""SELECT Song_id from MuShMe.user_song WHERE User_id=%s LIMIT 5""" % userid)
     for song in g.database.fetchall():
         data = {}
-        g.database.execute("""SELECT Song_title,Song_id from MuShMe.songs WHERE Song_id="%s" """ % song)
+        g.database.execute("""SELECT Song_title,Song_id,Song_Album from MuShMe.songs WHERE Song_id="%s" """ % song)
         for a in g.database.fetchall():
             data['songname']=a[0]
             data['songid']=a[1]
+
+            g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s " % (a[2]))
+            g.conn.commit()
+            data['art'] = g.database.fetchone()[0]
+
         songName.append(data)
     return songName
+
 
 def getUserData(userid):
     User = []
