@@ -104,12 +104,11 @@ def signup():
     contactform = ContactForm(request.form, prefix='form2')
 
     if validate(contactform.email.data,contactform.username.data):
-        check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Profile_pic,Name) VALUES ("%s","%s","%s","%s")""" % 
+        check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ("%s","%s","%s","%s")""" % 
                                         (contactform.username.data,
                                         contactform.email.data,
-                                        hashlib.sha1(contactform.password.data).hexdigest(),
-                                        contactform.name.data,
-                                        'img/profile.png'))
+                                        hashlib.sha1(contactform.password.data).hexdigest(),contactform.name.data,
+                                        ))
         if check_signup:
             g.conn.commit()
             g.database.execute("""SELECT User_id from MuShMe.entries WHERE Email_id="%s" AND Pwdhash="%s" """ %
@@ -343,9 +342,9 @@ def getRequest(userid):
 @app.route('/user/<userid>/edit',methods=['POST','GET'])
 def editName(userid):
     if request.method == 'POST':
-        editform = editForm(request.form, prefix='form3')
         uid = userid
-        g.database.execute("""UPDATE MuShMe.entries SET Name="%s" WHERE User_id="%s" """ % (editform.name.data, userid))
+        g.database.execute("""UPDATE MuShMe.entries SET Name="%s", DOB="%s-%s-%s" WHERE User_id="%s" """ % (request.form['editname'],
+             request.form['birthday_year'],request.form['birthday_month'],request.form['birthday_day'], userid))
         g.conn.commit()
         return redirect(url_for('userProfile',userid=userid))
     else:
@@ -448,13 +447,13 @@ def search():
     if request.method == 'POST':
         searchform = searchForm(prefix='form6')
         #print 'f'
-        value = searchform.entry.data
+        value = searchform.entry.data + '%'
         search_fname = []
         search_song= []
         search_friend = []
         search_playlist =[]
         search_artist = []
-        check_song = g.database.execute("""SELECT Song_title,Song_Album,Genre,Publisher,Song_id from MuShMe.songs WHERE Song_title="%s" """ % ( value ))
+        check_song = g.database.execute("""SELECT Song_title,Song_Album,Genre,Publisher,Song_id from MuShMe.songs WHERE Song_title LIKE "%s" """ % ( value ))
         for a in g.database.fetchall():
             data={}
             data['title']=a[0]
@@ -463,13 +462,13 @@ def search():
             data['publisher']=a[3]
             data['songid']=a[4]
             search_song.append(data)
-        check_artist = g.database.execute("""SELECT Artist_name, Artist_id from MuShMe.artists WHERE Artist_name="%s" """ % ( value ))
+        check_artist = g.database.execute("""SELECT Artist_name, Artist_id from MuShMe.artists WHERE Artist_name LIKE "%s" """ % ( value ))
         for a in g.database.fetchall():
             data = {}
             data['artistname']=a[0]
             data['artistid']=a[1]
             search_artist.append(data)
-        check_friend = g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Username="%s" or Name="%s" """ % ( value, value ))
+        check_friend = g.database.execute("""SELECT Username, Name, Profile_pic, User_id from MuShMe.entries WHERE Username LIKE "%s" or Name LIKE "%s" """ % ( value, value ))
         for a in g.database.fetchall():
             data = {}
             data['username']=a[0]
@@ -477,7 +476,7 @@ def search():
             data['profilepic']=a[2]
             data['userid']=a[3]
             search_friend.append(data)
-        check_playlist = g.database.execute("""SELECT Playlist_name,User_id, Playlist_id from MuShMe.playlists WHERE Playlist_name="%s" """ % ( value ))
+        check_playlist = g.database.execute("""SELECT Playlist_name,User_id, Playlist_id from MuShMe.playlists WHERE Playlist_name LIKE "%s" """ % ( value ))
         for a in g.database.fetchall():
             data = {}
             data['pname']=a[0]
@@ -571,5 +570,5 @@ if __name__ == """__main__""":
         use_debugger = not(app.config.get('DEBUG_WITH_APTANA'))
     except:
         pass
-    app.run(use_debugger=use_debugger, debug=app.debug,
+    app.run(use_debugger=use_debugger, 
             use_reloader=use_debugger, threaded=True, port=8080)
