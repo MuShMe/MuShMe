@@ -352,9 +352,15 @@ def getRequest(userid):
 def editName(userid):
     if request.method == 'POST':
         uid = userid
-        g.database.execute("""UPDATE MuShMe.entries SET Name="%s", DOB="%s-%s-%s" WHERE User_id="%s" """ % (request.form['editname'],
-             request.form['birthday_year'],request.form['birthday_month'],request.form['birthday_day'], userid))
-        g.conn.commit()
+        print request.form
+        if request.form['editname'] != '':
+            g.database.execute("""UPDATE MuShMe.entries SET Name=%s WHERE User_id=%s """, ([request.form['editname']], userid))
+            g.conn.commit()
+        
+        if request.form['birthday_year'] != '0' and request.form['birthday_month'] != '0' and request.form['birthday_day'] != '0':
+            g.database.execute("""UPDATE MuShMe.entries SET DOB="%s-%s-%s" WHERE User_id="%s" """ % (request.form['birthday_year'],request.form['birthday_month'],request.form['birthday_day'], userid))
+            g.conn.commit()
+        
         return redirect(url_for('userProfile',userid=userid))
     else:
         return redirect(url_for('userProfile', userid=userid))
