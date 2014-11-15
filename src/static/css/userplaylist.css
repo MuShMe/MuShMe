@@ -83,7 +83,7 @@ tr{
 	margin-right: 10px;
 }
 .button-center{
-	margin-left: 45px;
+	margin-left: 25px;
 }
 .submit{
 	margin-left: 400px;
@@ -113,12 +113,12 @@ tr{
 	border-top: 1px solid grey;
 	border-bottom: 1px solid grey;
 	margin-top: 20px;
-	height: 800px;
+	/*height: 800px;*/
 }
 .songs-listing{
 	float:left;
 	overflow-y: auto;
-	height: 700px;
+	/*height: 700px;*/
 }
 .songs-list{
 	border-bottom: 1px solid grey;
@@ -130,4 +130,7 @@ tr{
 .placing{
 	float: right;
 	margin-right: 250px;
+}
+.button-like{
+	margin-left: 65px;
 }

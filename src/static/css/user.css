@@ -76,7 +76,7 @@ tr{
 	margin-right: 10px;
 }
 .button-center{
-	margin-left: 45px;
+	margin-left: 25px;
 }
 .submit{
 	margin-left: 400px;
@@ -113,4 +113,19 @@ margin-top: 50px;
 	margin-left: 125px;
 }.middle1{
 margin-left: 150px;
+}
+.shift-right{
+	margin-left: 80px;
+}
+.button-like{
+	margin-left: 65px;
+}
+.button-recommend{
+	margin-left: 45px;
+}
+.recommend-modal{
+	margin-left: 40px;
+}
+.small-margin{
+	margin-top: 10px;
 }

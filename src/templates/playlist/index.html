@@ -15,6 +15,7 @@
 		<h3 class="text-center"><b>{{ pname }}</b></h3>
 		<a href="{{ url_for('userProfile', userid= puserdata['userid'])}}"><h4 class="text-right">{{ puserdata['username']}}</h4></a>
 	</div>
+	<!-- Songs Section -->
 	<form action="{{url_for('playlist.deletesongs', playlistid=playlistid)}}" method="POST">
 	<div class="col-xs-12 songs-section">
 		<h3 class="text-center songs-list"><b>Songs</b></h3>
@@ -76,11 +77,11 @@
 				</table>
 				<!-- hide it if already liked  -->
 				<form action="{{url_for('playlist.user_like', playlistid=playlistid)}}">
-				<input type="submit" class="btn btn-primary button-center" value="Like">
+				<input type="submit" class="btn btn-primary button-like" value="Like">
 				</form>
 			</div>
-			    <!-- Modal for the pending Request -->
-                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
+			    <!-- Modal for the Recommend -->
+                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Playlist</a>
                             <div class="modal fade bs-example-modal-lg" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                             <div class="modal-content edit-modal">

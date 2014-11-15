@@ -12,8 +12,58 @@
 	<div class="col-xs-3 sector-1">
 		<div class="profilepic-area" >
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename=art)}}"></a>
+			<!-- Modal for the Recommending Songs -->
+			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
+			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content ">
+						<div class="recommend-modal">
+							<h3>Select Your Friend: </h3>
+							<table>
+								<thead>
+									<tr>
+										<td></td>
+										<td></td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+										</td>
+										<td><a href="#"><h3><b> User1</b></h3></a></td>
+									</tr>
+									<tr>
+										<td>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+										</td>
+										<td><a href="#"><h3><b> User1</b></h3></a></td>
+									</tr>
+									<tr>
+										<td>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+										</td>
+										<td><a href="#"><h3><b> User1</b></h3></a></td>
+									</tr>
+									<tr>
+										<td>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+										</td>
+										<td><a href="#"><h3><b> User1</b></h3></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
-		<div class="col-xs-12">
+		<div class="col-xs-12 spacing">
 			<h1>Likes({{likes}}): </h1>
 			<table class="table table-hover">
 				<thead>
@@ -37,144 +87,138 @@
 			</table>
 			<!-- if(already_liked)!=True -->
 			<form action="{{url_for('SONG.user_like', songid=songid)}}">
-			<input type="submit" class="btn btn-primary button-center" value="Like">
+				<input type="submit" class="btn btn-primary button-like" value="Like">
 			</form>
 		</div>
-		    <!-- Modal for the pending Request -->
-                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
-                            <div class="modal fade bs-example-modal-lg" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                            <div class="modal-content edit-modal">
-                                                    <div class="middle">
-                                                            <p>USE WTF FORM TO SELECT ANY FRIEND TO RECOMMEND</p>
-                                                    </div>
-                                            </div>
-                                    </div>
-                            </div>
-
 	</div>
-		
+
 
 
 
 	<div class="col-xs-6 sector-2">
 		<div class="About-us">
-				<dl class="dl-horizontal">
-						<dt><h2 class="text-right"> About </h2></dt>
-						<dd><a  class="btn btn-default position1" onclick="launch_modal('addtoplaylist');">Add to Playlist</a>
+			<dl class="dl-horizontal">
+				<dt class="shift-right">
+					<h2 class="text-right"> About </h2>
+				</dt>
+				<dd><a  class="btn btn-default position1" onclick="launch_modal('addtoplaylist');">Add to Playlist</a>
 
-							<div class="modal fade bs-example-modal-lg" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-								<div class="modal-dialog modal-lg">
-									<div class="modal-content edit-modal">
-										<h3 class="text-center">Add to Playlist</h3>
-										<form role="form" class="center" method='POST' name="addtoplaylist" action="{{ url_for('SONG.playlistAdd', songid=songid, userid=session['userid']) }}">
-											<table>
-												<thead>
-													<tr>
-														<td></td>
-													</tr>
-												</thead>
-												<tbody>
-													{% for play in playlists %}
-													<tr>
-															<td><input class="btn btn-primary middle1" type='submit' name='btn' value='{{ play["playname"]}}'></td>
-													</tr>
-													{% endfor %}
-													</tbody>
-												</table>
-												<div class="form-group spacing">
-													
-												</div>
-												<div class="modal-footer">
-													<input type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-												</div>
-											</form>
+					<div class="modal fade bs-example-modal-lg" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content edit-modal">
+								<h3 class="text-center">Add to Playlist</h3>
+								<form role="form" class="center" method='POST' name="addtoplaylist" action="{{ url_for('SONG.playlistAdd', songid=songid, userid=session['userid']) }}">
+									<table>
+										<thead>
+											<tr>
+												<td></td>
+											</tr>
+										</thead>
+										<tbody>
+											{% for play in playlists %}
+											<tr>
+												<td><input class="btn btn-primary middle1" type='submit' name='btn' value='{{ play["playname"]}}'></td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+									<div class="form-group spacing">
 
-
-										</div>
 									</div>
-								</div>
-						</dd>
-						<dt> <h3> <b>Song's Name:</b></h3></dt>
-						<dd><h3> {{data['song_name']}}</h3></dd> 
-						<dt> <h3> <b>Genre:</b></h3></dt>
-						<dd><h3>{{data['genre']}}</h3></dd>
-						<dt> <h3> <b>Publisher:</b></h3></dt>
-						<dd><h3>{{data['publisher']}}</h3></dd>	
-						<dt> <h3> <b>Year:</b></h3></dt>
-						<dd><h3>{{ data['year'] }}</h3></dd> 			
-						<dt> <h3> <b>Album:</b></h3></dt>
-						<dd><h3><a href="#"> {{ data['song_album']}}  </a></h3></dd> 
-					</dl>
-				</div>
-				<div class="comm-recom">
-					<form action="{{url_for('SONG.addcomment', songid=songid)}}" method="post">
-						{{ commentform.hidden_tag() }}
-						{{commentform.comment(rows=4,class_="form-control", placeholder="Leave a comment..") | safe}}
-						<input type="submit" class="btn btn-default submit" value="Submit"/>
-					</form>
-				</div>
-				<div class="comments">
-					{% for comment in comments %}
-					<blockquote>
-						<p>{{ comment['comment_text']}}</p>
-						<footer><a href="{{url_for('userProfile', userid=comment['userid'])}}"><cite title="Username">{{ comment['username']}}</cite></a></footer>
-						<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
-						<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-							<div class="modal-dialog modal-lg">
-								<div class="modal-content edit-modal">
-									<form role="form" class="center" method="POST" action="{{ url_for('SONG.reportsongcomment', songid=songid,commentid=comment['commentid']) }}">
-										<div class="radio">
-											<label>
-												{{ reportform.report() }}
-											</label>
-											</div>
-												{{ reportform.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
-										<div class="modal-footer">
-										<input href="{{ url_for('SONG.songPage', songid=songid) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
-										<input class="btn btn-primary" type='submit' name='btn' value='Submit'/>
+									<div class="modal-footer">
+										<input type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
 									</div>
-									</form>
-									
+								</form>
 
-								</div>
+
 							</div>
 						</div>
-					</blockquote>
-					{% endfor %}
 					</div>
-					</div>
-					<div class="col-xs-3 sector-3">
-						<div class="playlist-section">
-							<h2>Artists:</h2>
-							<table class="table table-hover">
-								<thead>
-									<th></th>
-									<th></th>
-								</thead>
-								<tbody>
-									{% for artist in artists %}
-									<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-									<tr><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-						<div class="songs-section">
-							<h2>Songs in this Album:</h2>
-							<table class="table table-hover">
-								<thead>
-									<th></th>
-									<th></th>
-								</thead>
-								<tbody>
-									{% for other in others %}
-									<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=art)}}"></a></tr>
-									<tr><a href="{{ url_for('SONG.songPage', songid=other['songid'])}}"><h3><b> {{ other['title'] }}</b></h3></a></tr>
-									{% endfor %}
-								</tbody>
-							</table>
+				</dd>
+				<dt> <h3> <b>Song's Name:</b></h3></dt>
+				<dd><h3> {{data['song_name']}}</h3></dd> 
+				<dt> <h3> <b>Genre:</b></h3></dt>
+				<dd><h3>{{data['genre']}}</h3></dd>
+				<dt> <h3> <b>Publisher:</b></h3></dt>
+				<dd><h3>{{data['publisher']}}</h3></dd>	
+				<dt> <h3> <b>Year:</b></h3></dt>
+				<dd><h3>{{ data['year'] }}</h3></dd> 			
+				<dt> <h3> <b>Album:</b></h3></dt>
+				<dd><h3><a href="#"> {{ data['song_album']}}  </a></h3></dd> 
+			</dl>
+		</div>
+		<div class="comm-recom">
+			<form action="{{url_for('SONG.addcomment', songid=songid)}}" method="post">
+				{{ commentform.hidden_tag() }}
+				{{commentform.comment(rows=4,class_="form-control", placeholder="Leave a comment..") | safe}}
+				<input type="submit" class="btn btn-default submit" value="Submit"/>
+			</form>
+		</div>
+		<div class="comments">
+			{% for comment in comments %}
+			<blockquote>
+				<p>{{ comment['comment_text']}}</p>
+				<footer><a href="{{url_for('userProfile', userid=comment['userid'])}}"><cite title="Username">{{ comment['username']}}</cite></a></footer>
+				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
+				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content edit-modal">
+							<form role="form" class="center" method="POST" action="{{ url_for('SONG.reportsongcomment', songid=songid,commentid=comment['commentid']) }}">
+								<div class="radio">
+									<label>
+										{{ reportform.report() }}
+									</label>
+								</div>
+								{{ reportform.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
+								<div class="modal-footer">
+									<input href="{{ url_for('SONG.songPage', songid=songid) }}" type="submit" class="btn btn-default" data-dismiss="modal" value='Close'>
+									<input class="btn btn-primary" type='submit' name='btn' value='Submit'/>
+								</div>
+							</form>
+
+
 						</div>
 					</div>
 				</div>
-				{% endblock %}
+			</blockquote>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="col-xs-3 sector-3">
+		<div class="playlist-section">
+			<h2>Artists:</h2>
+			<table class="table table-hover">
+				<thead>
+					<th></th>
+					<th></th>
+				</thead>
+				<tbody>
+					{% for artist in artists %}
+					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
+					<tr><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="songs-section">
+			<h2>Songs in this Album:</h2>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for other in others %}
+					<tr>
+						<td><a href="#"><img class="img-circle profilepic-small playlists small-margin" src="{{url_for('static',filename=art)}}"></a></td>
+						<td><a href="{{ url_for('SONG.songPage', songid=other['songid'])}}"><h3><b> {{ other['title'] }}</b></h3></a></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -47,17 +47,20 @@
 			<h1>Friends: </h1>
 			<table class="table table-hover">
 				<thead>
-					<th></th>
-					<th></th>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
 				</thead>
 				<tbody>
 					{% for f in friend %}
 					<tr>{% if f['profilepic'] %}
-						<a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=f['friendpic'])}}"  ></a>
+						<td><a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=f['friendpic'])}}"  ></a></td>
 						{% else %}
-						<a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
-						{% endif %}</tr>
-					<tr><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h3><b> {{ f['friendname'] }}</b></h3></a></tr>
+						<td><a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png' )}}"  ></a></td>
+						{% endif %}
+					<td><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h3><b> {{ f['friendname'] }}</b></h3></a></td>
+					</tr>
 					
 					{% endfor %}
 
@@ -69,7 +72,7 @@
 			</table>
 			{% if u['userid'] != session['userid'] %}
 						<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
-							<input class="btn btn-primary" type='submit' name='btn' value='Send Friend Request'>
+							<input class="btn btn-primary button-center" type='submit' name='btn' value='Send Friend Request'>
 						</form>
 					{% endif %}
 			<!-- Apply some logic to check if the user is already a friend and then show this button -->
@@ -300,13 +303,17 @@
 			<h2>Songs:</h2>
 			<table class="table table-hover">
 				<thead>
-					<th></th>
-					<th></th>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
 				</thead>
 				<tbody>
 					{% for s in song %}
-					<tr><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename=s['art']) }}"></a></tr>
-					<tr><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h3>{{ s['songname'] }}</h3></a></tr>
+					<tr>
+						<td><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><img class="img-circle profilepic-small playlists small-margin" src="{{ url_for('static',filename=s['art']) }}"></a></td>
+						<td><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h3>{{ s['songname'] }}</h3></a></td>
+					</tr>
 					{% endfor %}
 					
 				</tbody>
