@@ -215,3 +215,8 @@ def user_like(songid):
     g.conn.commit()
     
   return redirect(url_for('SONG.songPage', songid=songid))
+
+  @SONG.route('/song/<songid>/recommend/', methods=['POST'])
+  def recommendSong(songid):
+    print request.form
+    pass
