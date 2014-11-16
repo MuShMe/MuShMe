@@ -82,7 +82,7 @@ def login():
                     g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
                     session["Name"]=g.database.fetchone()
                     g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % uid )
-                    session["dob"]=g.database.fetchone()
+                    session["dob"]=str(g.database.fetchone())
                     session['logged_in'] = True
                     session['logged_in']=True
                     #print uid
@@ -126,7 +126,7 @@ def signup():
                 g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
                 session["Name"]=g.database.fetchone()
                 g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % uid )
-                session["dob"]=g.database.fetchone()
+                session["dob"]=str(g.database.fetchone())
                 newPlaylist = session['UserName'] + ' default collection'
                 g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (newPlaylist,uid))
                 g.conn.commit()
@@ -281,7 +281,7 @@ def getUserData(userid):
         data['privilege']=a[3]
         data['email']=a[4]
         data['name']=a[5]
-        data['dob']=a[6]
+        data['dob']=str(a[6])
         User.append(data)
     return User
 
