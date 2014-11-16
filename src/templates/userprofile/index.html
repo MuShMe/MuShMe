@@ -2,12 +2,7 @@
 {% block content %}
 {%for u in User%}
 <head>
-	<!--<meta charset="utf-8">-->
-	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<title>MuShMe - {{ u['name'] }}</title>
-	<link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
-	<strong><link href="{{url_for('static',filename='css/user.css')}}" rel="stylesheet"></strong>
-	<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> -->
 </head>
 <div class="container main-body">
 	<div class="col-xs-3 sector-1">
@@ -18,10 +13,8 @@
 			{% else %}
 			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-rounded profilepic-large" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
 			{% endif %}
-		</div>
-		<!-- Upload Profile Pic -->
 			{% if u['userid'] == session['userid'] %}
-			<a  class="btn btn-default middle1" onclick="launch_modal('uploadpic');">Edit</a>
+			<a  class="btn-text" onclick="launch_modal('uploadpic');">Edit</a>
 			
 			<div class="modal fade bs-example-modal-lg" id="uploadpic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
@@ -42,33 +35,32 @@
 				</div>
 			</div>
 			{%endif%}
+		</div>
+		<!-- Upload Profile Pic -->
+			
 	</div>
 		<div class="col-xs-12">
 			<h1>Friends: </h1>
 			<table class="table table-hover">
 				<thead>
-					<tr>
-						<td></td>
-						<td></td>
-					</tr>
-				</thead>
-				<tbody>
+					
 					{% for f in friend %}
-					<tr>{% if f['profilepic'] %}
+					<tr style="height:20px">
+						{% if f['profilepic'] %}
 						<td><a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=f['friendpic'])}}"  ></a></td>
 						{% else %}
-						<td><a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png' )}}"  ></a></td>
+						<td><a class="profilepic" href="{{ url_for('userProfile', userid=f['userid']) }}"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/ProfilePic/profile.jpg' )}}"  ></a></td>
 						{% endif %}
-					<td><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h3><b> {{ f['friendname'] }}</b></h3></a></td>
+					<td><a href="{{ url_for('userProfile', userid=f['friendid']) }}"><h4> {{ f['friendname'] }}</h4></a></td>
 					</tr>
 					
 					{% endfor %}
 
 					{% if friend[0] == NULL and u['userid'] == session['userid'] %}
-					<tr><a href="{{ url_for('search') }}"><h3><b>Search friends to add them</b></h3></a></tr>
+					<tr><a href="{{ url_for('search') }}"><h4>Search friends to add them</h4></a></tr>
 					{% endif %}
 					
-				</tbody>
+				</thead>
 			</table>
 			{% if u['userid'] != session['userid'] %}
 						<form action="{{ url_for('sendrequest',uidto=u['userid'],uidfrom=session['userid']) }}" method="POST">
@@ -80,7 +72,7 @@
 
     <!-- Modal for the pending Request -->
     {% if u['userid'] == session['userid'] %}
-                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('pending_req');" onclick="launch_modal('pending_req');">Pending Request(s)</a>
+                            <a href="#" class="btn btn-primary button-center spacing" onload="launch_modal('pending_req');" onclick="launch_modal('pending_req');">Pending Request(s)</a>
                             <div class="modal fade bs-example-modal-lg" id="pending_req" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                             <div class="modal-content edit-modal">
@@ -131,12 +123,12 @@
 		<div class="About-us">
 			<h2 class="text-center"> About : </h2>
 			<dl class="dl-horizontal">
-				<dt> <h3> <b>Username:</b></h3></dt>
-				<dd> <h3>{{u['username']}}</h3></dd>
-				<dt> <h3> <b>Name:</b></h3></dt>
-				<dd><h3>{{ u['name'] }}</h3></dd> 
-				<dt> <h3> <b>Date of Birth:</b></h3></dt>
-				<dd><h3>{{ u['dob'] }}</h3></dd>
+				<dt> <h4> Username:</h4></dt>
+				<dd> <h4>{{u['username']}}</h4></dd>
+				<dt> <h4> Name:</h4></dt>
+				<dd><h4>{{ u['name'] }}</h4></dd> 
+				<dt> <h4> Date of Birth:</h4></dt>
+				<dd><h4>{{ u['dob'] }}</h4></dd>
 			</dl>
 			<!-- Edit modal -->
 			{% if u['userid'] == session['userid'] %}
@@ -175,21 +167,99 @@
 
 
 		</div>
-		<div class="comm-recom">
+
+	<div class="recomend">
+		<div>
+		<h2> Recommendations : </h2></div>
+		
+		{% for r in Recommends %}
+			{% if r['userto']==session['userid'] %}
+			<blockquote>
+				<header><a href="{{ url_for('userProfile', userid=r['userto']) }}"><cite title="Username">{{r['userfrom']}}</cite></a> Recommends :</header>
+				<table class="table table-hover">
+					{%for song in r['song']%}
+					<tbody>
+						<tr>
+						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
+						<td><a href="#"><h4>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}}</h4></a></td>
+						</tr>
+					</tbody>
+					{% endfor %}
+					{%for p in r['playlist']%}
+					<tbody>
+						<tr>
+						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
+						<td><a href="#"><h4>{{ p['pname'] }} - {{p['username']}}, {{p['uname']}}  </h4></a></td>
+						</tr>
+					</tbody>
+					{% endfor %}
+				</table>
+			</blockquote>
+			
+			{% endif %}
+			{%endfor%}
+			{% if Recommends[0] == NULL %}
+				<table class="table table-hover">
+							<tbody>
+								<tr>
+								<td><h4>No recommendations yet ! </h4></td>
+								</tr>
+							</tbody>
+				</table>
+			{% else %}
+			<a ref="javascript:void(null);" class="" onclick="launch_modal('recommend');"> View all recommendations</a>
+			<div class="modal fade bs-example-modal-lg" id="recommend" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content recommend-modal">
+							<h3> All recommendations to {{ u['name'] }} : </h3>
+							{% for r in AllRecommends %}
+								{% if r['userto']==session['userid'] %}
+								<blockquote>
+									<header><a href="{{ url_for('userProfile', userid=r['userto']) }}"><cite title="Username">{{r['userfrom']}}</cite></a> Recommends :</header>
+									<table class="table table-hover">
+										{%for song in r['song']%}
+										<tbody>
+											<tr>
+											<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
+											<td><a href="#"><h4>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}}</h4></a></td>
+											</tr>
+										</tbody>
+										{% endfor %}
+										{%for p in r['playlist']%}
+										<tbody>
+											<tr>
+											<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
+											<td><a href="#"><h4>{{ p['pname'] }} - {{p['username']}}, {{p['uname']}}  </h4></a></td>
+											</tr>
+										</tbody>
+										{% endfor %}
+									</table>
+								</blockquote>
+								
+								{% endif %}
+								{%endfor%}
+						</div>
+					</div>
+				</div>
+			{%endif%}
+			
+		</div>
+			<div class="centry">
 			<form method="POST" action="{{ url_for('comment', rcvrid=userid, senderid=session['userid']) }}" >
 				{{ form4.hidden_tag() }}
 				{{ form4.comment(placeholder="Write Something....", class_="form-control",rows=4) }}
 				<input class="btn btn-default submit" type='submit' name='btn' value='Submit'>
 			</form>
-			
 		</div>
-		<div class="comments">
+			<div class="comments">
+			
 			{% for c in Comments %}
 			<blockquote>
 				<p>{{ c['comment'] }}</p>
 				<footer><a href="{{url_for('userProfile', userid=c['userid'])}}"><cite title="Username">{{ c['username'] }}</cite></a></footer>
 				<!-- Report Add modal -->
-				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
+				<a href="javascript:void(null);" class="btn btn-danger report" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content edit-modal">
@@ -212,53 +282,25 @@
 				</div>
 			</blockquote>
 			{% endfor %}
-			{% for r in Recommends %}
-			{% if r['userto']==session['userid'] %}
-			<blockquote>
-				<header><a href="{{ url_for('userProfile', userid=r['userto']) }}"><cite title="Username">{{r['userfrom']}}</cite></a> Recommends :</header>
-				<table class="table table-hover">
-					<thead>
-						<tr>
-						<th></th>
-						<th></th>
-						<th></th>
-						</tr>
-					</thead>
-					{%for song in r['song']%}
-					<tbody>
-						<tr>
-						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
-						<td><a href="#"><h4><b>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}}</b></h4></a></td>
-						</tr>
-					</tbody>
-					{% endfor %}
-					{%for p in r['playlist']%}
-					<tbody>
-						<tr>
-						<td><a href="#"><img class="img-circle profilepic-small playlists" src="../img/albumart.jpg"></a></td>
-						<td><a href="#"><h4><b>{{ p['pname'] }} - {{p['username']}}, {{p['uname']}}  </b></h4></a></td>
-						</tr>
-					</tbody>
-					{% endfor %}
-				</table>
-			</blockquote>
-		
-			{% else %}
-				<table class="table table-hover">
-							<thead>
-								<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-								<td><h4><b>No recommendations yet ! </b></h4></td>
-								</tr>
-							</tbody>
-			{%endif%}
-			{%endfor%}
+			{% if Comments[0] != NULL %}
+			<a ref="javascript:void(null);" class="comment-in-modal" onclick="launch_modal('comments');"> View all comments</a>
+			<div class="modal fade bs-example-modal-lg" id="comments" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content comment-modal">
+							<h3> All comments on {{ u['name'] }} : </h3>
+							{% for c in AllComments %}
+								<blockquote>
+									<p>{{ c['comment'] }}</p>
+									<footer><a href="{{url_for('userProfile', userid=c['userid'])}}"><cite title="Username">{{ c['username'] }}</cite></a></footer>
+									<!-- Report Add modal -->
+									<a href="javascript:void(null);" class="btn btn-danger report" onclick="launch_modal('report');">Report</a>
+								</blockquote>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 	<div class="col-xs-3 sector-3">
@@ -278,7 +320,7 @@
 			</table>
 			<!-- Playlist Add modal -->
 			{% if u['userid'] == session['userid'] %}
-			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addplaylist');">Add New+</a>
+			<a href="javascript:void(null);" class="btn btn-success" onclick="launch_modal('addplaylist');">+</a>
 			<div class="modal fade bs-example-modal-lg" id="addplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content edit-modal">
@@ -301,18 +343,18 @@
 
 		<div class="songs-section">
 			<h2>Songs:</h2>
+					
+
 			<table class="table table-hover">
 				<thead>
-					<tr>
-						<td></td>
-						<td></td>
-					</tr>
+						<th></th>
+						<th></th>
 				</thead>
 				<tbody>
 					{% for s in song %}
 					<tr>
 						<td><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><img class="img-circle profilepic-small playlists small-margin" src="{{ url_for('static',filename=s['art']) }}"></a></td>
-						<td><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h3>{{ s['songname'] }}</h3></a></td>
+						<td><a href="{{url_for('SONG.songPage',songid=s['songid'])}}"><h4>{{ s['songname'] }}</h4></a></td>
 					</tr>
 					{% endfor %}
 					
@@ -320,10 +362,9 @@
 			</table>
 			<!-- Songs Add modal -->
 			{% if u['userid'] == session['userid'] %}
-			<a href="https://www.dropbox.com/s/d10st2ud6e72n26/client.zip?dl=1" class="btn btn-success" onclick="launch_modal('addsong');">Add New+</a>
+			<a href="https://www.dropbox.com/s/d10st2ud6e72n26/client.zip?dl=1" class="btn btn-success" onclick="launch_modal('addsong');">+</a>
 			{%endif%}
 		</div>
 	</div>
-</div>
 {%endfor%}
 {% endblock %}

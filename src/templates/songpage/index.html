@@ -13,12 +13,12 @@
 		<div class="profilepic-area" >
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename=art)}}"></a>
 			<!-- Modal for the Recommending Songs -->
-			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
+			<a href="javascript:void(null);" class="btn btn-primary button-recommend recommendsong btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
 			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-sm">
 					<div class="modal-content ">
 						<div class="recommend-modal">
-							<h3>Select Your Friend: </h3>
+							<h4>Select Your Friend: </h4>
 							<table>
 								<thead>
 									<tr>
@@ -32,28 +32,28 @@
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 										</td>
-										<td><a href="#"><h3><b> User1</b></h3></a></td>
+										<td><a href="#"><h4> User1</h4></a></td>
 									</tr>
 									<tr>
 										<td>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 										</td>
-										<td><a href="#"><h3><b> User1</b></h3></a></td>
+										<td><a href="#"><h4> User1</h4></a></td>
 									</tr>
 									<tr>
 										<td>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 										</td>
-										<td><a href="#"><h3><b> User1</b></h3></a></td>
+										<td><a href="#"><h4> User1</h4></a></td>
 									</tr>
 									<tr>
 										<td>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
 										</td>
-										<td><a href="#"><h3><b> User1</b></h3></a></td>
+										<td><a href="#"><h4> User1</h4></a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -63,7 +63,7 @@
 			</div>
 
 		</div>
-		<div class="col-xs-12 spacing">
+		<div class="col-xs-12">
 			<h1>Likes({{likes}}): </h1>
 			<table class="table table-hover">
 				<thead>
@@ -78,7 +78,7 @@
 					{% else %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
 					{% endif %}
-					<tr><a href="{{url_for('userProfile',userid=liker['userid']) }}"><h3><b>{{ liker['username']}} </b></h3></a></tr>
+					<tr><a href="{{url_for('userProfile',userid=liker['userid']) }}"><h4>{{ liker['username']}} </h4></a></tr>
 					{% endfor %}
 					{%else%}
 					<tr>Be the first one to like this.</tr>
@@ -106,7 +106,7 @@
 					<div class="modal fade bs-example-modal-lg" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 						<div class="modal-dialog modal-lg">
 							<div class="modal-content edit-modal">
-								<h3 class="text-center">Add to Playlist</h3>
+								<h3 class="text-center">Add to Playlist</h4>
 								<form role="form" class="center" method='POST' name="addtoplaylist" action="{{ url_for('SONG.playlistAdd', songid=songid, userid=session['userid']) }}">
 									<table>
 										<thead>
@@ -135,16 +135,16 @@
 						</div>
 					</div>
 				</dd>
-				<dt> <h3> <b>Song's Name:</b></h3></dt>
-				<dd><h3> {{data['song_name']}}</h3></dd> 
-				<dt> <h3> <b>Genre:</b></h3></dt>
-				<dd><h3>{{data['genre']}}</h3></dd>
-				<dt> <h3> <b>Publisher:</b></h3></dt>
-				<dd><h3>{{data['publisher']}}</h3></dd>	
-				<dt> <h3> <b>Year:</b></h3></dt>
-				<dd><h3>{{ data['year'] }}</h3></dd> 			
-				<dt> <h3> <b>Album:</b></h3></dt>
-				<dd><h3><a href="#"> {{ data['song_album']}}  </a></h3></dd> 
+				<dt> <h4> Song's Name:</h4></dt>
+				<dd><h4> {{data['song_name']}}</h4></dd> 
+				<dt> <h4> Genre:</h4></dt>
+				<dd><h4>{{data['genre']}}</h4></dd>
+				<dt> <h4> Publisher:</h4></dt>
+				<dd><h4>{{data['publisher']}}</h4></dd>	
+				<dt> <h4> Year:</h4></dt>
+				<dd><h4>{{ data['year'] }}</h4></dd> 			
+				<dt> <h4> Album:</h4></dt>
+				<dd><h4><a href="#"> {{ data['song_album']}}  </a></h4></dd> 
 			</dl>
 		</div>
 		<div class="comm-recom">
@@ -195,7 +195,7 @@
 				<tbody>
 					{% for artist in artists %}
 					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h3><b> {{ artist['name'] }}</b></h3></a></tr>
+					<tr><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h4> {{ artist['name'] }}</h4></a></tr>
 					{% endfor %}
 				</tbody>
 			</table>
@@ -213,7 +213,7 @@
 					{% for other in others %}
 					<tr>
 						<td><a href="#"><img class="img-circle profilepic-small playlists small-margin" src="{{url_for('static',filename=art)}}"></a></td>
-						<td><a href="{{ url_for('SONG.songPage', songid=other['songid'])}}"><h3><b> {{ other['title'] }}</b></h3></a></td>
+						<td><a href="{{ url_for('SONG.songPage', songid=other['songid'])}}"><h4> {{ other['title'] }}</h4></a></td>
 					</tr>
 					{% endfor %}
 				</tbody>

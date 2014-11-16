@@ -11,62 +11,53 @@
 </head>
 
 <div class="container main-body">
-	<div class="col-xs-1 sector-1">
-		
-	</div>
 	<div class="col-xs-10 sector-2">
-		<h3 class="text-left"> Search for "{{entry}}" :</h3>
+		<h4 class="text-left"> Search for "{{entry}}" :</h4>
 		<p class="text-right"> <i>returns {{ length }} results : </i> </p>
 		<div class="result">
 			<table class="table table-hover">
-				<thead>
-					<th></th>
-					<th></th>
-					<th></th>
-				</thead>
 				<tbody>
-					<div class="top-margin">
-					{% for song in search_song %}
-					<tr><a href="#"><img class="img-circle profilepic-medium " src="../img/albumart.jpg"></a></tr>
-					<tr><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><h4><b>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}} </b></h4></a></tr>
-					<tr><h4>Song</h4></tr>
-					{% endfor %}
-					</div>
-					{% for f in friends %}
-					<div class="spacing">
-					{%if f['profilepic']%}
-					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><img class="img-circle profilepic-small" src="{{url_for('static',filename=f['profilepic'])}}"></a></tr>
-					{% else %}
-					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><img class="img-circle profilepic-small" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
-					{% endif %}
-					<tr><a href="{{ url_for('userProfile',userid=f['userid']) }}"><h4><b>{{ f['username'] }} - {{ f['name'] }} </b></h4></a></tr>
-					<tr><h4>User</h4></tr>
-					{% endfor %}
-					</div>
-					{% for artists in search_artist %}
-					<div class="spacing">
-					<tr><a href="#"><img class="img-circle profilepic-medium" src="../img/profile.png"></a></tr>
-					<tr><a href="{{ url_for('artistProfile',artistid=artists['artistid']) }}"><h4><b>{{ artists['artistname'] }}</b></h4></a></tr>
-					<tr><h4>Artist</h4></tr>
-					{% endfor %}
-					</div>
-					{% for playlists in search_playlist %}
-					<div class="spacing">
-					<tr><a href="#"><img class="img-circle profilepic-medium" src="../img/playlist.jpg"></a></tr>
-					<tr><a href="{{url_for('playlist.playlistPage',playlistid=playlists['pid'])}}"><h4><b>{{ playlists['pname'] }} - {{playlists['username']}}, {{playlists['uname']}} </b></h4></a></tr>
-					<tr><h4>Playlist</h4></tr>
-					{% endfor %}
-					</div>
+						{% for song in search_song %}
+						<tr>
+							<td><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><img class="img-circle profilepic-medium " src="{{url_for('static',filename=song['art'])}}"></a></td>
+							<td><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><h4>{{ song['title'] }} - {{song['album'] }}, {{song['genre']}}, {{song['publisher']}} </h4></a></td>
+							<td>Song</td>					
+						</tr>
+						{% endfor %}
+
+					
+						{% for f in friends %}
+						{%if f['profilepic']%}
+						<tr>
+						<td><a href="{{ url_for('userProfile',userid=f['userid']) }}"><img class="img-circle profilepic-medium" src="{{url_for('static',filename=f['profilepic'])}}"></a></td>
+						{% else %}
+						<td><a href="{{ url_for('userProfile',userid=f['userid']) }}"><img class="img-circle profilepic-medium" src="{{url_for('static',filename='img/ProfilePic/profile.png')}}"></a></td>
+						{% endif %}
+						<td><a href="{{ url_for('userProfile',userid=f['userid']) }}"><h4>{{ f['username'] }} - {{ f['name'] }} </h4></a></td><td>User</td>
+						</tr>
+						{% endfor %}
+					
+						{% for artists in search_artist %}
+						<tr>
+						<td><a href="{{ url_for('artistProfile',artistid=artists['artistid']) }}"><img class="img-circle profilepic-medium" src="{{url_for('static',filename='img/artist.jpg')}}"></a></td>
+						<td><a href="{{ url_for('artistProfile',artistid=artists['artistid']) }}"><h4>{{ artists['artistname'] }}</h4></a></td><td>Artist</td>
+						</tr>
+						
+						{% endfor %}
+						{% for playlists in search_playlist %}
+						<tr> 
+						<td><a href="{{url_for('playlist.playlistPage',playlistid=playlists['pid'])}}"><img class="img-circle profilepic-medium" src="{{url_for('static',filename='img/playlist.jpg')}}"></a></td>
+						<td><a href="{{url_for('playlist.playlistPage',playlistid=playlists['pid'])}}"><h4>{{ playlists['pname'] }} - {{playlists['username']}}, {{playlists['uname']}} </h4></a></td> <td>Playlist</td>
+						</tr>
+						<tr></tr>
+						{% endfor %}
 				</tbody>
 				{% if length == 0 %}
-				<tr><h4><b>Search did not produce any results !</b></h4></tr>
+				<tr><h4>Search did not produce any results !</h4></tr>
 				{% endif %}
 
 			</table>
 		</div>
-	</div>
-	<div class="col-xs-1 sector-3">
-		
 	</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

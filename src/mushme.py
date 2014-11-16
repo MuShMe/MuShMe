@@ -156,7 +156,8 @@ def userProfile(userid):
                 form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),
                 form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'),form7=AddPlaylist(prefix='form7'),
                 friend=getFriend(userid), playlist=getPlaylist(userid), User=getUserData(userid), Comments=getComments(userid),
-                song=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid),frnd=checkFriend(userid,User))
+                song=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid),frnd=checkFriend(userid,User),
+                AllComments=getAllComments(userid), AllRecommends=getAllRecommend(userid))
 
 def checkFriend(userid,User):
     friendName =[]
@@ -196,9 +197,27 @@ def checkFriend(userid,User):
         else:
             return False
 
+def getAllComments(userid):
+    g.database.execute("SELECT Comment_id FROM user_comments WHERE User_id=%s ORDER BY Comment_id DESC" % (userid))
+    commentids = g.database.fetchall()
+    retval = []
+
+    for commentid in commentids:
+        g.database.execute("SELECT Comment, User_id FROM comments WHERE Comment_id=%s", (commentid[0]))
+        commentdata = g.database.fetchone()
+
+        data = {}
+        data['comment'] = commentdata[0]
+        data['userid'] = commentdata[1]
+        data['commentid'] = commentid[0]
+        g.database.execute("SELECT Username FROM entries WHERE User_id=%s", (data['userid']))
+        data['username'] = g.database.fetchone()[0]
+        retval.append(data)
+
+    return retval
 
 def getComments(userid):
-    g.database.execute("SELECT Comment_id FROM user_comments WHERE User_id=%s ORDER BY Comment_id DESC" % (userid))
+    g.database.execute("SELECT Comment_id FROM user_comments WHERE User_id=%s ORDER BY Comment_id DESC LIMIT 5" % (userid))
     commentids = g.database.fetchall()
     retval = []
 
@@ -285,9 +304,48 @@ def getUserData(userid):
         User.append(data)
     return User
 
-def getRecommend(userid):
+def getAllRecommend(userid):
     recommend =[]
     g.database.execute(""" SELECT Recommend_id,User_id_from,User_id_to from recommend where User_id_to="%s" """ % userid)
+    for a in g.database.fetchall():
+        data={}
+        data['rid']=a[0]
+        data['userfrom'] = a[1]
+        data['userto']=a[2]
+        g.database.execute(""" SELECT Song_id from recommend_songs where Recommend_id="%s" """ % a[0])
+        songid = g.database.fetchone()[0]
+        data['song'] = []
+        g.database.execute(""" SELECT Song_title,Song_Album,Genre,Publisher from songs where Song_id="%s" """ % songid)
+        for song in g.database.fetchall():
+            d = {}
+            d['title']=song[0]
+            d['album'] = song[1]
+            d['genre'] = song[2]
+            d['publisher'] = song[3]
+            d['songid'] = songid
+            data['song'].append(d)
+
+        g.database.execute(""" SELECT Playlists_id from recommend_playlists where Recommend_id="%s" """ % a[0])
+        playlistid = g.database.fetchone()[0]
+        data['playlist'] = []
+        g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
+        for p in g.database.fetchall():
+            d= {}
+            d['pname']=p[0]
+            d['pid']=p[1]
+            g.database.execute(""" SELECT Username, Name,User_id from MuShMe.entries WHERE User_id="%s" """ % p[2])
+            for k in g.database.fetchall():
+                d['username']=k[0]
+                d['uname']=k[1]
+                d['userid']=k[2]
+            data['playlist'].append(d)
+
+        recommend.append(data)
+    return recommend
+
+def getRecommend(userid):
+    recommend =[]
+    g.database.execute(""" SELECT Recommend_id,User_id_from,User_id_to from recommend where User_id_to="%s" LIMIT 5 """ % userid)
     for a in g.database.fetchall():
         data={}
         data['rid']=a[0]
@@ -457,6 +515,13 @@ def requestvalidate(userfrom,userto):
     else:
         return True
 
+def getSongArt(songid):
+    g.database.execute("SELECT Song_Album FROM songs WHERE song_id=%s", (songid))
+    albumname = g.database.fetchone()[0]
+
+    g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s", (albumname))
+    return g.database.fetchone()[0]
+
 @app.route('/search',methods=['POST','GET'])
 def search():
     if request.method == 'POST':
@@ -476,6 +541,7 @@ def search():
             data['genre']=a[2]
             data['publisher']=a[3]
             data['songid']=a[4]
+            data['art']=getSongArt(a[4])
             search_song.append(data)
         check_artist = g.database.execute("""SELECT Artist_name, Artist_id from MuShMe.artists WHERE Artist_name LIKE "%s" """ % ( value ))
         for a in g.database.fetchall():

@@ -7,13 +7,21 @@
 </head>
 <!DOCTYPE html>
 
+<head>
+	<!--<meta charset="utf-8">-->
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
+	<strong><link href="{{url_for('static',filename='css/user.css')}}" rel="stylesheet"></strong>
+	<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> -->
+</head>
+
 <body>
 	<div class="navbar11">
 		<nav class="navbar navbar-default" role="navigation">
 			{% if session['profilepic'] %}
-			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename=session['profilepic'])}}"  ></a>
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}" style="margin-left:7%"><img class="img-circle profilepic" src="{{url_for('static',filename=session['profilepic'])}}"  ></a>
 			{% else %}
-			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-circle profilepic" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}" style="margin-left:7%"><img class="img-circle profilepic" src="{{url_for('static',filename='img/ProfilePic/profile.jpg' )}}"  ></a>
 			{% endif %}
 
 
@@ -26,11 +34,11 @@
 				</div>
 				<input class="btn btn-default" type='submit' name='btn' value='Search' >
 			</form>
-			<ul class="nav navbar-nav navbar-right">
+			<ul class="nav navbar-nav navbar-right" style="margin-right:7%">
 				{% if session['privilege']== 1 %}
 				<li><a class="admin" href="{{url_for('admin.adminPage',userid=session['userid'],status='all')}}">Admin</a></li>
 				{% endif %}
-				<li><a class="logout" href="{{ url_for('index') }}">Logout</a></li>
+				<li><a style="color:white" class="logout" href="{{ url_for('index') }}">Logout</a></li>
 			</ul>
 		</div>
 	</nav>
