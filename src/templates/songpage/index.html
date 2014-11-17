@@ -15,6 +15,7 @@
 			<!-- Modal for the Recommending Songs -->
 			<form action="{{ url_for('SONG.recommendSong', songid=songid) }}">
 			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
+
 			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-sm">
 					<div class="modal-content ">
@@ -47,8 +48,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			</form>
+				</form>
 		</div>
 		<div class="col-xs-12">
 			<h1>Likes({{likes}}): </h1>
