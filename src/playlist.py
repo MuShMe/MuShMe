@@ -101,9 +101,9 @@ def getPlaylistSongs(playlistid):
 
 
 def getFriendsToRecommend(playlistid):
-  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_playlists WHERE Playlist_id=%s))", (session['userid'], session['userid'], playlistid));
+  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id IN (SELECT Recommend_id FROM recommend_playlists WHERE Playlist_id=%s))", (session['userid'], session['userid'], playlistid));
   friendset1= g.database.fetchall()
-  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_playlists WHERE Playlist_id=%s))", (session['userid'], session['userid'], playlistid));
+  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id IN (SELECT Recommend_id FROM recommend_playlists WHERE Playlist_id=%s))", (session['userid'], session['userid'], playlistid));
   friendset2 = g.database.fetchall()
   retval = []
 
