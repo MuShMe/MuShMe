@@ -127,9 +127,9 @@ def getLikers(songid):
 
 
 def getFriendsToRecommend(songid):
-  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_songs WHERE Song_id=%s))", (session['userid'], session['userid'], songid));
+  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id IN (SELECT Recommend_id FROM recommend_songs WHERE Song_id=%s))", (session['userid'], session['userid'], songid));
   friendset1= g.database.fetchall()
-  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_songs WHERE Song_id=%s))", (session['userid'], session['userid'], songid));
+  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id IN (SELECT Recommend_id FROM recommend_songs WHERE Song_id=%s))", (session['userid'], session['userid'], songid));
   friendset2 = g.database.fetchall()
   retval = []
 
@@ -156,6 +156,7 @@ def getFriendsToRecommend(songid):
       data['profilepic'] = userdata[1]
     else:
       data['profilepic'] = ""
+
     retval.append(data)
 
   return retval
