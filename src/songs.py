@@ -126,10 +126,10 @@ def getLikers(songid):
   return retval
 
 
-def getFriendsToRecommend():
-  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s)", (session['userid'], session['userid']));
+def getFriendsToRecommend(songid):
+  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_songs WHERE Song_id=%s))", (session['userid'], session['userid'], songid));
   friendset1= g.database.fetchall()
-  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s)", (session['userid'], session['userid']));
+  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_songs WHERE Song_id=%s))", (session['userid'], session['userid'], songid));
   friendset2 = g.database.fetchall()
   retval = []
 
@@ -180,7 +180,7 @@ def songPage(songid):
               form6 = searchForm(),
               reportform= ReportForm(),
               playlists=getplaylists(),
-              friends=getFriendsToRecommend())
+              friends=getFriendsToRecommend(songid))
 
 
 @SONG.route("/song/<songid>/<userid>/addtoplaylist", methods=["POST"])

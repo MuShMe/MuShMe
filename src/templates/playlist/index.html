@@ -36,9 +36,11 @@
 						{% endif %}
 						<tr>
 							<div class="checkbox placing">
+								{% if session['userid'] == puserdata['userid'] %}
 								<label>
 									<input type="checkbox" name="songselect" id="blankCheckbox" value="{{ song['songid']}}">
 								</label>
+								{% endif %}
 						</tr>
 						<tr><a href="#"><img class="img-circle profilepic-medium" src='{{ url_for("static", filename=song["albumart"] )}}'></a></tr>
 							<tr><a href="{{url_for('SONG.songPage', songid=song['songid'])}}"><h3><b> {{ song['songname'] }}</b></h3></a></tr>
@@ -48,7 +50,9 @@
 				</table>
 			</div>
 			<div class="butt">
+			{% if session['userid'] == puserdata['userid'] %}
 				<input type="submit" class="btn btn-danger " value="Delete Songs">
+			{% endif %}
 			</div>
 		</div>
 		</form>
@@ -81,16 +85,42 @@
 				</form>
 			</div>
 			    <!-- Modal for the Recommend -->
-                            <a href="javascript:void(null);" class="btn btn-primary button-center spacing" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Playlist</a>
-                            <div class="modal fade bs-example-modal-lg" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                            <div class="modal-content edit-modal">
-                                                    <div class="middle">
-                                                            <p>USE WTF FORM TO SELECT ANY FRIEND TO RECOMMEND</p>
-                                                    </div>
-                                            </div>
-                                    </div>
-                            </div>
+            <form action="{{ url_for('playlist.recommendPlaylist', playlistid=playlistid) }}" method="POST">
+			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Playlist</a>
+
+			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content ">
+						<div class="recommend-modal">
+							<h4>Select Your Friend: </h4>
+							<table>
+								<thead>
+									<tr>
+										<td></td>
+										<td></td>
+									</tr>
+								</thead>
+								<tbody>
+								{% for friend in friends %}
+									<tr>
+										<td>
+											{% if friend['profilepic'][0]  != NULL %}
+											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static', filename= friend['profilepic'])}}"  ></a>
+											{% else %}
+											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/profilePic/profile.png')}}"  ></a>
+											{% endif %}
+										</td>
+										<td><a href="{{ url_for('userProfile', userid=friend['userid'])}}"><h3> {{friend['username'] }}</h3></a></td>
+										<td><input type="Submit" class="btn" name="{{friend['userid'] }}" value="Recommend" id="recommend"></td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				</div>
+				</form>
 
 
 		</div>	

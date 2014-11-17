@@ -100,6 +100,41 @@ def getPlaylistSongs(playlistid):
     return retval
 
 
+def getFriendsToRecommend(playlistid):
+  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_playlists WHERE Playlist_id=%s))", (session['userid'], session['userid'], playlistid));
+  friendset1= g.database.fetchall()
+  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s AND Recommend_id NOT IN (SELECT Recommend_id FROM recommend_playlists WHERE Playlist_id=%s))", (session['userid'], session['userid'], playlistid));
+  friendset2 = g.database.fetchall()
+  retval = []
+
+  for friend in friendset1:
+    data = {}
+    g.database.execute("SELECT Username,Profile_pic FROM entries WHERE User_id=%s", (friend[0]))
+    userdata = g.database.fetchone()
+    data['userid'] = friend[0]
+    data['username'] = userdata[0]
+    if userdata[1] != None:
+      data['profilepic'] = userdata[1]
+    else:
+      data['profilepic'] = ""
+    retval.append(data)
+
+  for friend in friendset2:
+    data = {}
+    g.database.execute("SELECT Username,Profile_pic FROM entries WHERE User_id=%s", (friend[0]))
+    userdata = g.database.fetchone()
+    data['userid'] = friend[0]
+    data['username'] = userdata[0]
+    
+    if userdata[1] != None:
+      data['profilepic'] = userdata[1]
+    else:
+      data['profilepic'] = ""
+    retval.append(data)
+
+  return retval
+
+
 @playlist.route('/playlist/report/<playlistid>/<commentid>/', methods=['POST'])
 def reportcomment(playlistid,commentid):
     query = ("""INSERT INTO complaints(Complain_type, Complain_description, Comment_id, reported_by) VALUES ("%s", "%s", %s, %s)
@@ -139,7 +174,8 @@ def playlistPage(playlistid):
                             songs = getPlaylistSongs(playlistid),
                             Comments=getComments(playlistid),
                             form6= searchForm(),
-                            likers= getLikers(playlistid))
+                            likers= getLikers(playlistid),
+                            friends=getFriendsToRecommend(playlistid))
 
 
 @playlist.route('/playlist/<playlistid>/like/')
@@ -163,4 +199,30 @@ def deletesongs(playlistid):
                           (songid, playlistid))
         g.conn.commit()
 
-    return redirect(url_for('playlist.playlistPage', playlistid=playlistid)) 
+    return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
+
+
+@playlist.route('/playlist/<playlistid>/recommend/', methods=['POST'])
+def recommendPlaylist(playlistid):
+  print request.form
+  for name in request.form:
+  
+    if request.form[name] == "Recommend":
+  
+      g.database.execute("SELECT max(Recommend_id) FROM recommend");
+      recommendid = g.database.fetchone()
+
+      if recommendid[0] == None:
+        recommendid = 0
+      else:
+        recommendid = recommendid[0] + 1
+
+      print recommendid, session['userid'], name
+      g.database.execute("INSERT INTO recommend VALUES(%s,%s,%s,CURDATE())", (recommendid,session['userid'],name))
+      g.conn.commit()
+
+      g.database.execute("INSERT INTO recommend_playlists(Playlist_id, Recommend_id) VALUES (%s,%s)", (playlistid, recommendid))
+      g.conn.commit()
+
+
+  return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
