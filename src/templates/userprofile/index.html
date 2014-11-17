@@ -308,12 +308,13 @@
 			<h2>Playlists:</h2>
 			<table class="table table-hover">
 				<thead>
-					<th></th>
-					<th></th>
+					<tr>
+						<td></td>
+					</tr>
 				</thead>
 				<tbody>
 					{% for p in playlist %}
-					<tr><a href="{{url_for('playlist.playlistPage',playlistid=p['pid'])}}"><h4>{{ p['pname'] }}</h4></a></tr>
+					<tr><td><a href="{{url_for('playlist.playlistPage',playlistid=p['pid'])}}"><h4>{{ p['pname'] }}</h4></a></td></tr>
 					{% endfor %}
 					
 				</tbody>

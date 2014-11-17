@@ -188,7 +188,7 @@
 				<tbody>
 					{% for artist in artists %}
 					<tr>
-					<td></td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></td>
+					<td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></td>
 					<td><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h4> {{ artist['name'] }}</h4></a></td>
 					</tr>
 					{% endfor %}
