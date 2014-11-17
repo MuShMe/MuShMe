@@ -126,7 +126,37 @@ def getLikers(songid):
   return retval
 
 
-def getFriends():
+def getFriendsToRecommend():
+  g.database.execute("SELECT User_id1 FROM friends WHERE User_id2=%s AND User_id1 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s)", (session['userid'], session['userid']));
+  friendset1= g.database.fetchall()
+  g.database.execute("SELECT User_id2 FROM friends WHERE User_id1=%s AND User_id2 NOT IN (SELECT User_id_to FROM recommend WHERE User_id_from=%s)", (session['userid'], session['userid']));
+  friendset2 = g.database.fetchall()
+  retval = []
+
+  for friend in friendset1:
+    data = {}
+    g.database.execute("SELECT Username,Profile_pic FROM entries WHERE User_id=%s", (friend[0]))
+    userdata = g.database.fetchone()
+    data['userid'] = friend[0]
+    data['username'] = userdata[0]
+    if userdata[1] != None:
+      data['profilepic'] = userdata[1]
+    else:
+      data['profilepic'] = ""
+    retval.append(data)
+
+  for friend in friendset2:
+    data = {}
+    g.database.execute("SELECT Username,Profile_pic FROM entries WHERE User_id=%s", (friend[0]))
+    data['userid'] = friend[0]
+    data['username'] = g.database.fetchone()[0]
+    if userdata[1] != None:
+      data['profilepic'] = userdata[1]
+    else:
+      data['profilepic'] = ""
+    retval.append(data)
+
+  return retval
 
 
 @SONG.route('/song/<songid>')
@@ -147,7 +177,8 @@ def songPage(songid):
               art=getAlbumArt(songid),
               form6 = searchForm(),
               reportform= ReportForm(),
-              playlists=getplaylists())
+              playlists=getplaylists(),
+              friends=getFriendsToRecommend())
 
 
 @SONG.route("/song/<songid>/<userid>/addtoplaylist", methods=["POST"])
@@ -221,5 +252,7 @@ def user_like(songid):
 
 @SONG.route('/song/<songid>/recommend/')
 def recommendSong(songid):
-  print request
+  if request[name] == "Recommend":
+    print name
+
   return redirect(url_for('SONG.songPage', songid=songid))

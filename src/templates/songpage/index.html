@@ -13,7 +13,7 @@
 		<div class="profilepic-area" >
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename=art)}}"></a>
 			<!-- Modal for the Recommending Songs -->
-			<form action="{{ url_for('SONG.recommendSong', songid=songid) }}">
+			<form action="{{ url_for('SONG.recommendSong', songid=songid) }}" method="POST">
 			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
 
 			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -29,24 +29,24 @@
 									</tr>
 								</thead>
 								<tbody>
+								{% for friend in friends %}
 									<tr>
 										<td>
-											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
+											{% if friend['profilepic'][0]  != NULL %}
+											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static', filename= friend['profilepic'])}}"  ></a>
+											{% else %}
+											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/profile.png')}}"  ></a>
+											{% endif %}
 										</td>
-										<td><a href="#"><h3><b> User1</b></h3></a></td>
-										<td><input type="Submit" class="btn" name="rootavish" value="Recommend" id="recommend"></td>
+										<td><a href="{{ url_for('userProfile', userid=friend['userid'])}}"><h3> {{friend['username'] }}</h3></a></td>
+										<td><input type="Submit" class="btn" name="{{friend['username'] }}" value="Recommend" id="recommend"></td>
 									</tr>
-									<tr>
-										<td>
-											<a class="profilepic" href="#"><img class="img-circle profilepic-small playlists" src="#"  ></a>
-										</td>
-										<td><a href="#"><h3><b> User2</b></h3></a></td>
-										<td><input type="Submit" class="btn" name="blondie" value="Recommend" id="recommend"></td>
-									</tr>
+								{% endfor %}
 								</tbody>
 							</table>
 						</div>
 					</div>
+				</div>
 				</div>
 				</form>
 		</div>
