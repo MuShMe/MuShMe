@@ -21,7 +21,7 @@ img.profilepic{
 	margin: 0 auto;
 	border:2px solid #0088dd;
 	height: 100%;
-	overflow: auto;
+	/*overflow: auto;*/
 }
 .sector-1{
 	border:2px solid grey;
@@ -113,12 +113,12 @@ tr{
 	border-top: 1px solid grey;
 	border-bottom: 1px solid grey;
 	margin-top: 20px;
-	/*height: 800px;*/
+	height: 800px;
 }
 .songs-listing{
 	float:left;
 	overflow-y: auto;
-	/*height: 700px;*/
+	height: 500px;
 }
 .songs-list{
 	border-bottom: 1px solid grey;
@@ -133,4 +133,23 @@ tr{
 }
 .button-like{
 	margin-left: 65px;
+}
+.comm-recom{
+	border:1px solid grey;
+	background: none repeat scroll 0% 0% #FFF;
+	border-width: 1px;
+	border-style: solid;
+	-moz-border-top-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	border-image: none;
+	border-color: #E5E6E9 #DFE0E4 #D0D1D5;
+	border-radius: 3px;
+	float:center;
+	width:570px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top:20px;
+	display: inline-block;
 }

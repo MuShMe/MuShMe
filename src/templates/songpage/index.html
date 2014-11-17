@@ -54,18 +54,22 @@
 			<h1>Likes({{likes}}): </h1>
 			<table class="table table-hover">
 				<thead>
-					<th></th>
-					<th></th>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
 				</thead>
 				<tbody>
 					{% if likes > 0 %}
 					{% for liker in likers %}
+					<tr>
 					{% if liker['profilepic'][0]  != NULL %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=liker['profilepic'])}}"></a></tr>
+					<td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=liker['profilepic'])}}"></a></td>
 					{% else %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></tr>
+					<td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></td>
 					{% endif %}
-					<tr><a href="{{url_for('userProfile',userid=liker['userid']) }}"><h4>{{ liker['username']}} </h4></a></tr>
+					<td><a href="{{url_for('userProfile',userid=liker['userid']) }}"><h4>{{ liker['username']}} </h4></a></td>
+					</tr>
 					{% endfor %}
 					{%else%}
 					<tr>Be the first one to like this.</tr>
@@ -146,7 +150,7 @@
 			<blockquote>
 				<p>{{ comment['comment_text']}}</p>
 				<footer><a href="{{url_for('userProfile', userid=comment['userid'])}}"><cite title="Username">{{ comment['username']}}</cite></a></footer>
-				<a href="javascript:void(null);" class="btn btn-danger submit" onclick="launch_modal('report');">Report</a>
+				<a href="javascript:void(null);" class="btn btn-danger report1" onclick="launch_modal('report');">Report</a>
 				<div class="modal fade bs-example-modal-lg" id="report" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content edit-modal">
@@ -176,13 +180,17 @@
 			<h2>Artists:</h2>
 			<table class="table table-hover">
 				<thead>
-					<th></th>
-					<th></th>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
 				</thead>
 				<tbody>
 					{% for artist in artists %}
-					<tr><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></tr>
-					<tr><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h4> {{ artist['name'] }}</h4></a></tr>
+					<tr>
+					<td></td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/artist.jpg')}}"></a></td>
+					<td><a href="{{ url_for('artist.artistPage', artistid=artist['id']) }}"><h4> {{ artist['name'] }}</h4></a></td>
+					</tr>
 					{% endfor %}
 				</tbody>
 			</table>

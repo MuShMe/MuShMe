@@ -86,7 +86,7 @@
 			</div>
 			    <!-- Modal for the Recommend -->
             <form action="{{ url_for('playlist.recommendPlaylist', playlistid=playlistid) }}" method="POST">
-			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Playlist</a>
+			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Playlist</a>
 
 			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-sm">
@@ -98,20 +98,19 @@
 									<tr>
 										<td></td>
 										<td></td>
+										<td></td>
 									</tr>
 								</thead>
 								<tbody>
 								{% for friend in friends %}
 									<tr>
-										<td>
 											{% if friend['profilepic'][0]  != NULL %}
-											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static', filename= friend['profilepic'])}}"  ></a>
+											<td><a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static', filename= friend['profilepic'])}}"  ></a></td>
 											{% else %}
-											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/profilePic/profile.png')}}"  ></a>
+											<td><a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/profilePic/profile.png')}}"  ></a></td>
 											{% endif %}
-										</td>
-										<td><a href="{{ url_for('userProfile', userid=friend['userid'])}}"><h3> {{friend['username'] }}</h3></a></td>
-										<td><input type="Submit" class="btn" name="{{friend['userid'] }}" value="Recommend" id="recommend"></td>
+										<td><a href="{{ url_for('userProfile', userid=friend['userid'])}}"><h4> {{friend['username'] }}</h4></a></td>
+										<td><input type="Submit" class="btn btn-primary btn-xs button-center" name="{{friend['userid'] }}" value="Recommend" id="recommend"></td>
 									</tr>
 								{% endfor %}
 								</tbody>
