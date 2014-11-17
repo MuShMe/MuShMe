@@ -1,10 +1,38 @@
 
+body{
+	background-color: #EEE;
+}
+
 .navbar11{
-	width: 1200px;
-	margin: 0 auto;
+	width: 1100px;
 	padding-bottom: 5px;
+}
+
+.navbar{
+	background-color: rgba(51, 51, 51, 0.95);
+	color: #FFF;
+	position: fixed;
+	padding-top: 0px;
+	width:100%;
+	height: 50px;
+	z-index: 999;
+	box-shadow: 2px 1px 2px 2px #000;
+	border: medium none;
+	border-radius: 0px;
+	float: center;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: white;
+    background-color: transparent;
 
 }
+
+.nav .navbar-nav{
+	background-color: rgba(51, 51, 51, 0.95);
+	height:50px;
+}
+
 .profilepic{
 	float: left;
 	margin: 2px 5px 0px 3px;
@@ -16,22 +44,24 @@ img.profilepic{
 .input-size{
 	width: 400px;
 }
-.main-body{
-	width: 1100px;
-	margin: 0 auto;
-	border:2px solid #0088dd;
+
+.main-body{    
+	width: 85%;
+	margin: 7%;
 	height: 100%;
 	overflow: auto;
+	width: 1250px;
+	margin-top:60px;
+
 }
 .sector-1{
 	border:2px solid grey;
 	height: 100%;
 }
 .sector-2{
-	height: 100%;
-	border:2px solid grey;
 
 }
+
 .sector-3{
 	height: 100%;
 	border:2px solid grey;
@@ -74,6 +104,14 @@ a:hover{
 }
 tr{
 	margin-left: 5px;
+}
+
+tr:hover{
+	background-color:white;	
+}
+
+td{
+	height:20px;
 }
 
 .comments{
