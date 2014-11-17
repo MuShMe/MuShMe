@@ -126,6 +126,9 @@ def getLikers(songid):
   return retval
 
 
+def getFriends():
+
+
 @SONG.route('/song/<songid>')
 def songPage(songid):
   if g.database.execute("SELECT * FROM songs WHERE Song_id=%s" % songid) == 0:
@@ -216,7 +219,7 @@ def user_like(songid):
     
   return redirect(url_for('SONG.songPage', songid=songid))
 
-  @SONG.route('/song/<songid>/recommend/', methods=['POST'])
-  def recommendSong(songid):
-    print request.form
-    pass
+@SONG.route('/song/<songid>/recommend/')
+def recommendSong(songid):
+  print request
+  return redirect(url_for('SONG.songPage', songid=songid))

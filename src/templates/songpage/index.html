@@ -13,8 +13,8 @@
 		<div class="profilepic-area" >
 			<a class="profilepic-large" href="#"><img class="img-rounded profilepic-large" src="{{url_for('static',filename=art)}}"></a>
 			<!-- Modal for the Recommending Songs -->
+			<form action="{{ url_for('SONG.recommendSong', songid=songid) }}">
 			<a href="javascript:void(null);" class="btn btn-primary button-recommend spacing btn-xs" onload="launch_modal('recommendit');" onclick="launch_modal('recommendit');">Recommend this Song</a>
-			<form action="{{ url_for('SONG.recommendSong', songid=songid) }}" method="POST">
 			<div class="modal fade bs-example-modal-sm" id="recommendit" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-sm">
 					<div class="modal-content ">
