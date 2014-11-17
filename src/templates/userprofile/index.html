@@ -11,7 +11,7 @@
 			{% if u['profilepic'] %}
 			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-rounded profilepic-large" src="{{url_for('static',filename=u['profilepic'])}}"  ></a>
 			{% else %}
-			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-rounded profilepic-large" src="{{url_for('static',filename='img/profile.png' )}}"  ></a>
+			<a class="profilepic" href="{{ url_for('userProfile', userid=session['userid']) }}"><img class=" img-rounded profilepic-large" src="{{url_for('static',filename='img/ProfilePic/profile.png' )}}"  ></a>
 			{% endif %}
 			{% if u['userid'] == session['userid'] %}
 			<a  class="btn-text" onclick="launch_modal('uploadpic');">Edit</a>

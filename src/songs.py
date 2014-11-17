@@ -148,8 +148,10 @@ def getFriendsToRecommend():
   for friend in friendset2:
     data = {}
     g.database.execute("SELECT Username,Profile_pic FROM entries WHERE User_id=%s", (friend[0]))
+    userdata = g.database.fetchone()
     data['userid'] = friend[0]
-    data['username'] = g.database.fetchone()[0]
+    data['username'] = userdata[0]
+    
     if userdata[1] != None:
       data['profilepic'] = userdata[1]
     else:
@@ -250,9 +252,28 @@ def user_like(songid):
     
   return redirect(url_for('SONG.songPage', songid=songid))
 
-@SONG.route('/song/<songid>/recommend/')
+
+@SONG.route('/song/<songid>/recommend/', methods=['POST'])
 def recommendSong(songid):
-  if request[name] == "Recommend":
-    print name
+  print request.form
+  for name in request.form:
+  
+    if request.form[name] == "Recommend":
+  
+      g.database.execute("SELECT max(Recommend_id) FROM recommend");
+      recommendid = g.database.fetchone()
+
+      if recommendid[0] == None:
+        recommendid = 0
+      else:
+        recommendid = recommendid[0] + 1
+
+      print recommendid, session['userid'], name
+      g.database.execute("INSERT INTO recommend VALUES(%s,%s,%s,CURDATE())", (recommendid,session['userid'],name))
+      g.conn.commit()
+
+      g.database.execute("INSERT INTO recommend_songs VALUES (%s,%s)", (songid, recommendid))
+      g.conn.commit()
+
 
   return redirect(url_for('SONG.songPage', songid=songid))

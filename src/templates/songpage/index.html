@@ -35,11 +35,11 @@
 											{% if friend['profilepic'][0]  != NULL %}
 											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static', filename= friend['profilepic'])}}"  ></a>
 											{% else %}
-											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/profile.png')}}"  ></a>
+											<a class="profilepic" href="{{ url_for('userProfile', userid=friend['userid'])}}"><img class="img-circle profilepic-small playlists" src="{{ url_for('static',filename='img/profilePic/profile.png')}}"  ></a>
 											{% endif %}
 										</td>
 										<td><a href="{{ url_for('userProfile', userid=friend['userid'])}}"><h3> {{friend['username'] }}</h3></a></td>
-										<td><input type="Submit" class="btn" name="{{friend['username'] }}" value="Recommend" id="recommend"></td>
+										<td><input type="Submit" class="btn" name="{{friend['userid'] }}" value="Recommend" id="recommend"></td>
 									</tr>
 								{% endfor %}
 								</tbody>
