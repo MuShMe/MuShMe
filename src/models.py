@@ -193,7 +193,8 @@ def dbinsert(metadata):
     else:
       return False    
 
-  #if song exists, add it to only the playlist.
+  #if song exists, add it to only the playlist, and the User's songs.
   else:
     playlistInsert(songid[0],playlistid)
+    userSongInsert(metadata['userid'],songid[0])
     return True
