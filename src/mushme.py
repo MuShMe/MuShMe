@@ -330,7 +330,7 @@ def getAllRecommend(userid):
         if check_playlist:
             playlistid = g.database.fetchone()[0]
             data['playlist'] = []
-            g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
+            g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Playlist_id="%s" """ % playlistid)
             for p in g.database.fetchall():
                 d= {}
                 d['pname']=p[0]
@@ -375,7 +375,7 @@ def getRecommend(userid):
         if check_playlist:
             playlistid = g.database.fetchone()[0]
             data['playlist'] = []
-            g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
+            g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Playlist_id="%s" """ % playlistid)
             for p in g.database.fetchall():
                 d= {}
                 d['pname']=p[0]
