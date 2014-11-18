@@ -141,9 +141,7 @@
 						<div class="modal-content edit-modal">
 							<form role="form" class="center" method="POST" action="{{ url_for('playlist.reportcomment',commentid=comment['commentid'], playlistid=playlistid) }}">
 								<div class="radio">
-									<label>
 										{{ reportform.report() }}
-									</label>
 									</div>
 										{{ reportform.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
 								<div class="modal-footer">

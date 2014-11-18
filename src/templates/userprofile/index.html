@@ -265,9 +265,7 @@
 						<div class="modal-content edit-modal">
 							<form role="form" class="center" action="{{ url_for('report',commentid=c['commentid'], userid=c['userid']) }}" method='POST'>
 								<div class="radio">
-									<label>
 										{{ form5.report() }}
-									</label>
 									</div>
 										{{ form5.other(class="form-control", rows="4", placeholder="Write some description for your Complaint..") }}
 										<div class="modal-footer">
