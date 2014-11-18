@@ -270,7 +270,7 @@ def recommendSong(songid):
         recommendid = recommendid[0] + 1
 
       print recommendid, session['userid'], name
-      g.database.execute("INSERT INTO recommend VALUES(%s,%s,%s,CURDATE())", (recommendid,session['userid'],name))
+      g.database.execute("INSERT INTO recommend VALUES (%s,%s,%s,CURDATE()) ", (recommendid,session['userid'],name))
       g.conn.commit()
 
       g.database.execute("INSERT INTO recommend_songs VALUES (%s,%s)", (songid, recommendid))

@@ -5,6 +5,11 @@
 	padding-bottom: 5px;
 
 }
+
+
+.admin{
+    color:white;
+}
 .profilepic{
 	float: left;
 	margin: 2px 5px 0px 3px;
@@ -17,15 +22,28 @@ img.profilepic{
 	width: 400px;
 }
 .main-body{
-	width: 1200px;
-	margin: 0 auto;
-	border:2px solid #0088dd;
+	width: 1080px;
+	margin: 7%;
+	margin-top:60px;
 	height: 100%;
 	overflow: auto;
 }
 .sector-1{
-	border:2px solid grey;
-	height: 100%;
+	border:1px solid grey;
+	background: none repeat scroll 0% 0% #FFF;
+	border-width: 1px;
+	border-style: solid;
+	-moz-border-top-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	border-image: none;
+	border-color: #E5E6E9 #DFE0E4 #D0D1D5;
+	border-radius: 3px;
+	margin-top: 0px;
+	width:240px;
+	float:left;
+	padding-bottom: 40px;
 }
 .sector-2{
 	height: 100%;
@@ -37,14 +55,11 @@ img.profilepic{
 	border:2px solid grey;
 
 }
-.profilepic-area{
-	height: 400px;
-}
 img.profilepic-large{
 	width: 150px;
 	height: 150px;
-	margin-left: 50px;
-	margin-top: 100px;
+	margin-top: 10px;
+	margin-left: 35px;
 }
 a.logout{
 	margin-right: 5px;

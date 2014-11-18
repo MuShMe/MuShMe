@@ -156,7 +156,7 @@ def userProfile(userid):
                 form4=CommentForm(prefix='form4'), form3=editForm(prefix='form3'),
                 form6=searchForm(prefix='form6'), form5=ReportForm(prefix='form5'),form7=AddPlaylist(prefix='form7'),
                 friend=getFriend(userid), playlist=getPlaylist(userid), User=getUserData(userid), Comments=getComments(userid),
-                song=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid),frnd=checkFriend(userid,User),
+                songs=getSong(userid), Recommends=getRecommend(userid), Requests=getRequest(userid),frnd=checkFriend(userid,User),
                 AllComments=getAllComments(userid), AllRecommends=getAllRecommend(userid))
 
 def checkFriend(userid,User):
@@ -270,7 +270,6 @@ def getPlaylist(userid):
         playlist.append(data)
     return playlist
 
-
 def getSong(userid):
     songName = []
     g.database.execute("""SELECT Song_id from MuShMe.user_song WHERE User_id=%s LIMIT 5""" % userid)
@@ -287,7 +286,6 @@ def getSong(userid):
 
         songName.append(data)
     return songName
-
 
 def getUserData(userid):
     User = []
@@ -312,33 +310,37 @@ def getAllRecommend(userid):
         data['rid']=a[0]
         data['userfrom'] = a[1]
         data['userto']=a[2]
-        g.database.execute(""" SELECT Song_id from recommend_songs where Recommend_id="%s" """ % a[0])
-        songid = g.database.fetchone()[0]
-        data['song'] = []
-        g.database.execute(""" SELECT Song_title,Song_Album,Genre,Publisher from songs where Song_id="%s" """ % songid)
-        for song in g.database.fetchall():
-            d = {}
-            d['title']=song[0]
-            d['album'] = song[1]
-            d['genre'] = song[2]
-            d['publisher'] = song[3]
-            d['songid'] = songid
-            data['song'].append(d)
+        g.database.execute(""" SELECT Username from entries where User_id='%s' """ % a[1])
+        data['userfromname'] = g.database.fetchone()[0]
+        check_song = g.database.execute(""" SELECT Song_id from recommend_songs where Recommend_id="%s" """ % a[0])
+        if check_song:
+            songid = g.database.fetchone()[0]
+            data['song'] = []
+            g.database.execute(""" SELECT Song_title,Song_Album,Genre,Publisher from songs where Song_id="%s" """ % songid)
+            for song in g.database.fetchall():
+                d = {}
+                d['title']=song[0]
+                d['album'] = song[1]
+                d['genre'] = song[2]
+                d['publisher'] = song[3]
+                d['songid'] = songid
+                data['song'].append(d)
 
-        g.database.execute(""" SELECT Playlists_id from recommend_playlists where Recommend_id="%s" """ % a[0])
-        playlistid = g.database.fetchone()[0]
-        data['playlist'] = []
-        g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
-        for p in g.database.fetchall():
-            d= {}
-            d['pname']=p[0]
-            d['pid']=p[1]
-            g.database.execute(""" SELECT Username, Name,User_id from MuShMe.entries WHERE User_id="%s" """ % p[2])
-            for k in g.database.fetchall():
-                d['username']=k[0]
-                d['uname']=k[1]
-                d['userid']=k[2]
-            data['playlist'].append(d)
+        check_playlist = g.database.execute(""" SELECT Playlist_id from recommend_playlists where Recommend_id="%s" """ % a[0])
+        if check_playlist:
+            playlistid = g.database.fetchone()[0]
+            data['playlist'] = []
+            g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
+            for p in g.database.fetchall():
+                d= {}
+                d['pname']=p[0]
+                d['pid']=p[1]
+                g.database.execute(""" SELECT Username, Name,User_id from MuShMe.entries WHERE User_id="%s" """ % p[2])
+                for k in g.database.fetchall():
+                    d['username']=k[0]
+                    d['uname']=k[1]
+                    d['userid']=k[2]
+                data['playlist'].append(d)
 
         recommend.append(data)
     return recommend
@@ -351,33 +353,39 @@ def getRecommend(userid):
         data['rid']=a[0]
         data['userfrom'] = a[1]
         data['userto']=a[2]
-        g.database.execute(""" SELECT Song_id from recommend_songs where Recommend_id="%s" """ % a[0])
-        songid = g.database.fetchone()[0]
-        data['song'] = []
-        g.database.execute(""" SELECT Song_title,Song_Album,Genre,Publisher from songs where Song_id="%s" """ % songid)
-        for song in g.database.fetchall():
-            d = {}
-            d['title']=song[0]
-            d['album'] = song[1]
-            d['genre'] = song[2]
-            d['publisher'] = song[3]
-            d['songid'] = songid
-            data['song'].append(d)
+        g.database.execute(""" SELECT Username from entries where User_id='%s' """ % a[1])
+        data['userfromname'] = g.database.fetchone()[0]
+        print data['userfromname']
+        check_song = g.database.execute(""" SELECT Song_id from recommend_songs where Recommend_id="%s" """ % a[0])
+        if check_song:
+            songid = g.database.fetchone()[0]
+            data['song'] = []
+            g.database.execute(""" SELECT Song_title,Song_Album,Genre,Publisher from songs where Song_id="%s" """ % songid)
+            for song in g.database.fetchall():
+                d = {}
+                d['title']=song[0]
+                d['album'] = song[1]
+                d['genre'] = song[2]
+                d['publisher'] = song[3]
+                d['songid'] = songid
+                d['songart'] = getSongArt(songid)
+                data['song'].append(d)
 
-        g.database.execute(""" SELECT Playlists_id from recommend_playlists where Recommend_id="%s" """ % a[0])
-        playlistid = g.database.fetchone()[0]
-        data['playlist'] = []
-        g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
-        for p in g.database.fetchall():
-            d= {}
-            d['pname']=p[0]
-            d['pid']=p[1]
-            g.database.execute(""" SELECT Username, Name,User_id from MuShMe.entries WHERE User_id="%s" """ % p[2])
-            for k in g.database.fetchall():
-                d['username']=k[0]
-                d['uname']=k[1]
-                d['userid']=k[2]
-            data['playlist'].append(d)
+        check_playlist = g.database.execute(""" SELECT Playlist_id from recommend_playlists where Recommend_id="%s" """ % a[0])
+        if check_playlist:
+            playlistid = g.database.fetchone()[0]
+            data['playlist'] = []
+            g.database.execute(""" SELECT Playlist_name,Playlist_id,User_id from playlists where Song_id="%s" """ % playlistid)
+            for p in g.database.fetchall():
+                d= {}
+                d['pname']=p[0]
+                d['pid']=p[1]
+                g.database.execute(""" SELECT Username, Name,User_id from MuShMe.entries WHERE User_id="%s" """ % p[2])
+                for k in g.database.fetchall():
+                    d['username']=k[0]
+                    d['uname']=k[1]
+                    d['userid']=k[2]
+                data['playlist'].append(d)
 
         recommend.append(data)
     return recommend
@@ -405,6 +413,12 @@ def getRequest(userid):
         request.append(data)
     return request
 
+def getSongArt(songid):
+    g.database.execute("SELECT Song_Album FROM songs WHERE song_id=%s", (songid))
+    albumname = g.database.fetchone()[0]
+
+    g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s", (albumname))
+    return g.database.fetchone()[0]
 
 @app.route('/user/<userid>/edit',methods=['POST','GET'])
 def editName(userid):
@@ -515,12 +529,7 @@ def requestvalidate(userfrom,userto):
     else:
         return True
 
-def getSongArt(songid):
-    g.database.execute("SELECT Song_Album FROM songs WHERE song_id=%s", (songid))
-    albumname = g.database.fetchone()[0]
 
-    g.database.execute("SELECT Album_pic FROM albums WHERE Album_id=%s", (albumname))
-    return g.database.fetchone()[0]
 
 @app.route('/search',methods=['POST','GET'])
 def search():
@@ -582,6 +591,17 @@ def addplaylist(userid):
         g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (addplaylistform.add.data,userid))
         g.conn.commit()
         return redirect(url_for('userProfile',userid=userid))
+
+@app.route("/playlist/<userid>/deleteplaylist", methods=["POST"])
+def deleteplaylist(userid):
+    playlist = request.form.getlist('playlistselect')
+
+    for playlistid in playlist:
+        g.database.execute("""DELETE FROM playlists WHERE Playlist_id=%s and User_id=%s """ %
+                          (playlistid, userid))
+        g.conn.commit()
+
+    return redirect(url_for('userProfile',userid=userid))
 
 #All your profile are belong to us.
 @app.route('/artist/<artistid>')

@@ -12,21 +12,17 @@
 <!--Mainbody-->
 <div class="container main-body">
 	<div class="col-xs-12">
-		<h3 class="text-center"><b>{{ pname }}</b></h3>
-		<a href="{{ url_for('userProfile', userid= puserdata['userid'])}}"><h4 class="text-right">{{ puserdata['username']}}</h4></a>
+		<h3 class="text-center">{{ pname }}</h4>
+		<a href="{{ url_for('userProfile', userid= puserdata['userid'])}}"><h4 class="text-right">{{ puserdata['username'] }}</h4></a>
 	</div>
 	<!-- Songs Section -->
 	<form action="{{url_for('playlist.deletesongs', playlistid=playlistid)}}" method="POST">
-	<div class="col-xs-12 songs-section">
-		<h3 class="text-center songs-list"><b>Songs</b></h3>
+	<div class="col-xs-12 songs-section songs-listing">
+		<h3 class="text-center songs-list">Songs</h4>
 		<div class="col-xs-1"></div>
-		<div class="col-xs-11 songs-listing">
+		<div class="col-xs-11 ">
 			<table class="table table-hover">
-				<thead>
-					<th></th>
-					<th></th>
-					<th></th>
-				</thead>
+				
 				<tbody>
 					{% for song in songs %}
 						{% if song == songs[0] %}
@@ -38,12 +34,12 @@
 							<div class="checkbox placing">
 								{% if session['userid'] == puserdata['userid'] %}
 								<label>
-									<input type="checkbox" name="songselect" id="blankCheckbox" value="{{ song['songid']}}">
+									<input type="checkbox" name="songselect" id="blankCheckbox" value="{{ song['songid'] }}">
 								</label>
 								{% endif %}
 						</tr>
 						<tr><a href="#"><img class="img-circle profilepic-medium" src='{{ url_for("static", filename=song["albumart"] )}}'></a></tr>
-							<tr><a href="{{url_for('SONG.songPage', songid=song['songid'])}}"><h3><b> {{ song['songname'] }}</b></h3></a></tr>
+							<tr><a href="{{url_for('SONG.songPage', songid=song['songid'])}}"><h4> {{ song['songname'] }}</h4></a></tr>
 						</div>
 					{% endfor %}
 					</tbody>
@@ -51,7 +47,7 @@
 			</div>
 			<div class="butt">
 			{% if session['userid'] == puserdata['userid'] %}
-				<input type="submit" class="btn btn-danger " value="Delete Songs">
+				<input type="submit" class="btn btn-danger dlt-songs" value="Delete Songs">
 			{% endif %}
 			</div>
 		</div>
@@ -72,10 +68,10 @@
 							{% else %}
 							<tr><img class="img-circle profilepic-small playlists" src=" {{ url_for('static',filename='img/profile.png') }}"></tr>
 							{%endif %}
-							<tr><a href="{{ url_for('userProfile', userid=liker['userid'])}}"><h3><b> {{ liker['username']}}</b></h3></a></tr>
+							<tr><a href="{{ url_for('userProfile', userid=liker['userid'])}}"><h4> {{ liker['username']}}</h4></a></tr>
 						{% endfor %}
 						{% else %}
-							<tr><h3><b> Be the first one to like this.</b></h3></tr>
+							<tr><h4> Be the first one to like this.</h4></tr>
 						{% endif %}
 					</tbody>
 				</table>
