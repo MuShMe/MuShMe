@@ -1,37 +1,3 @@
-body{
-	background-color: #EEE;
-}
-
-.navbar11{
-	width: 1000px;
-	padding-bottom: 5px;
-}
-
-.navbar{
-	background-color: rgba(51, 51, 51, 0.95);
-	color: #FFF;
-	position: fixed;
-	padding-top: 0px;
-	width:100%;
-	height: 50px;
-	z-index: 999;
-	box-shadow: 2px 1px 2px 2px #000;
-	border: medium none;
-	border-radius: 0px;
-	float: center;
-}
-
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-    color: white;
-    background-color: transparent;
-
-}
-
-.nav .navbar-nav{
-	background-color: rgba(51, 51, 51, 0.95);
-	height:50px;
-}
-
 .profilepic{
 	float: left;
 	margin: 2px 5px 0px 3px;
@@ -47,12 +13,10 @@ img.profilepic{
 	width: 1100px;
 	/*margin: 7%;*/
 	margin-top:60px;
-	margin-left: 355px;
 	height: 100%;
 	/*overflow: auto;*/
 }
 .sector-1{
-	height: 100%;
 	background: none repeat scroll 0% 0% #FFF;
 	border-width: 1px;
 	border-style: solid;
@@ -69,7 +33,6 @@ img.profilepic{
 }
 
 .sector-3{
-	height: 900px;
 	border:1px solid grey;
 	background: none repeat scroll 0% 0% #FFF;
 	border-width: 1px;
@@ -117,10 +80,9 @@ a:hover{
 .playlist-section{
 	width:200px;
 	height: 200px;
-	display:inline-block;
+	display:inline;
 }
 .songs-section{
-	margin-top:280px;
 }
 tr{
 	margin-left: 5px;
@@ -136,7 +98,7 @@ tr{
 	margin-left: 25px;
 }
 .submit{
-	margin-left: 478px;
+	margin-left: 499px;
 	margin-top: 0px;
 	border-radius: 0px;
 }
@@ -238,7 +200,7 @@ blockquote{
 	padding-bottom:30px;
 	padding-left: 20px;
 	padding-right: 20px;
-	margin-top:-70px;
+	margin-top:-60px;
 	display: inline-block;
 }
 
@@ -257,7 +219,6 @@ blockquote{
 	float:center;
 	width:570px;
 	padding-top: 40px;
-	padding-bottom:30px;
 	padding-left: 20px;
 	padding-right: 20px;
 	margin-top:15px;
@@ -278,9 +239,8 @@ blockquote{
 	border-radius: 3px;
 	float:center;
 	width:570px;
-	padding-left: 20px;
-	padding-right: 20px;
-	margin-top:-20px;
+	margin-top:-57px;
+	padding: 0px;
 	display: inline-block;
 }
 
@@ -298,21 +258,20 @@ blockquote{
 	border-radius: 3px;
 	float:center;
 	width:570px;
-	padding-left: 20px;
-	padding-right: 20px;
-	margin-top:15px;
+	margin-top:17px;
+	padding: 0px;
 	display: inline-block;
 }
 
 #comment{
 	width: 569px;
-    margin-left: -21px;
+    margin-left: 0px;
     border-radius: 0;
 }
 
 #form4-comment{
     width: 569px;
-    margin-left: -21px;
+    margin-left: 0px;
     border-radius: 0;
 }
 
@@ -341,4 +300,8 @@ blockquote{
 .report1{
 	margin-left: 300px;
 	margin-bottom: 20px;
+}
+
+.dltplaylist-modal{
+	height:100%;
 }
