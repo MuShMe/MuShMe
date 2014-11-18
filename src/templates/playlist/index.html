@@ -66,7 +66,7 @@
 						{% if liker['profilepic'][0] != NULL %}
 							<tr><img class="img-circle profilepic-small playlists" src=" {{ url_for('static',filename=liker['profilepic']) }}"></tr>
 							{% else %}
-							<tr><img class="img-circle profilepic-small playlists" src=" {{ url_for('static',filename='img/profile.png') }}"></tr>
+							<tr><img class="img-circle profilepic-small playlists" src=" {{ url_for('static',filename='img/ProfilePic/profile.png') }}"></tr>
 							{%endif %}
 							<tr><a href="{{ url_for('userProfile', userid=liker['userid'])}}"><h4> {{ liker['username']}}</h4></a></tr>
 						{% endfor %}
@@ -76,8 +76,12 @@
 					</tbody>
 				</table>
 				<!-- hide it if already liked  -->
-				<form action="{{url_for('playlist.user_like', playlistid=playlistid)}}">
-				<input type="submit" class="btn btn-primary button-like" value="Like">
+				<form action="{{url_for('playlist.user_like', playlistid=playlistid)}}" method="POST">
+				{% if liked == False %}
+				<input type="submit" name="liketype" class="btn btn-primary button-like" value="Like">
+				{% else %}
+				<input type="submit" name="liketype" class="btn btn-danger button-like" value="Unlike">
+				{% endif %}
 				</form>
 			</div>
 			    <!-- Modal for the Recommend -->

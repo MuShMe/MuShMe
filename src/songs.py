@@ -253,7 +253,6 @@ def reportsongcomment(songid,commentid):
 
 @SONG.route('/song/<songid>/like', methods=['POST'])
 def user_like(songid):
-  print request.form
   if request.form['liketype'] == "Like":
     query = (("SELECT * FROM user_like_song WHERE Song_id=%s AND User_id=%s") % (songid,session['userid']))
 

@@ -37,6 +37,15 @@ def getLikes(playlistid):
     return likes[0]
 
 
+def getLiked(playlistid):
+  likes = g.database.execute("SELECT User_id FROM user_like_playlist WHERE User_id=%s AND Playlist_id=%s", (session['userid'],playlistid))
+
+  if likes > 0:
+    return True
+  else:
+    return False
+
+
 def getLikers(playlistid):
   g.database.execute("SELECT User_id FROM user_like_playlist WHERE playlist_id=%s" % (playlistid))
   retval= []
@@ -175,18 +184,25 @@ def playlistPage(playlistid):
                             Comments=getComments(playlistid),
                             form6= searchForm(),
                             likers= getLikers(playlistid),
-                            friends=getFriendsToRecommend(playlistid))
+                            friends=getFriendsToRecommend(playlistid),
+                            liked=getLiked(playlistid))
 
 
-@playlist.route('/playlist/<playlistid>/like/')
+@playlist.route('/playlist/<playlistid>/like', methods=['POST'])
 def user_like(playlistid):
-  query = (("SELECT * FROM user_like_playlist WHERE Playlist_id=%s AND User_id=%s") % (playlistid,session['userid']))
+  
+  if request.form['liketype'] == "Like":
+    query = (("SELECT * FROM user_like_playlist WHERE Playlist_id=%s AND User_id=%s") % (playlistid,session['userid']))
 
-  if (g.database.execute(query) == 0):
-    query = ("INSERT INTO user_like_playlist(Playlist_id,User_id) VALUES (%s,%s)" % (playlistid, session['userid']))
-    g.database.execute(query)
+    if (g.database.execute(query) == 0):
+      query = ("INSERT INTO user_like_playlist(Playlist_id,User_id) VALUES (%s,%s)" % (playlistid, session['userid']))
+      g.database.execute(query)
+      g.conn.commit()
+  
+  else:
+    g.database.execute("DELETE FROM user_like_playlist WHERE Playlist_id=%s AND User_id=%s", (playlistid, session['userid']))
     g.conn.commit()
-    
+  
   return redirect(url_for('playlist.playlistPage', playlistid=playlistid))
 
 
