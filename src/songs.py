@@ -184,17 +184,17 @@ def songPage(songid):
               friends=getFriendsToRecommend(songid))
 
 
-@SONG.route("/song/<songid>/<userid>/addtoplaylist", methods=["POST"])
+@SONG.route("/song/<int:songid>/<userid>/addtoplaylist", methods=["POST"])
 def playlistAdd(songid, userid):
   playname = request.form['btn']
-  print playname
+
   query = ("""SELECT Playlist_id FROM playlists WHERE User_id=%s AND Playlist_name='%s' """ % 
                       (userid, playname))
   g.database.execute(query)
 
   playlistid = g.database.fetchone()
 
-  if playlistid != None:
+  if playlistid[0] != None:
     g.database.execute("""SELECT Song_id FROM song_playlist WHERE Playlist_id=%s""" % (playlistid[0]))
     presentsongids = g.database.fetchall()
 
@@ -207,7 +207,7 @@ def playlistAdd(songid, userid):
     if add==0:
       query = ("INSERT INTO song_playlist(Song_id,Playlist_id) VALUES (%s,%s)" 
                           %(songid,playlistid[0]))
-      print query
+
       g.database.execute(query)
       g.conn.commit()
 
@@ -270,7 +270,7 @@ def recommendSong(songid):
         recommendid = recommendid[0] + 1
 
       print recommendid, session['userid'], name
-      g.database.execute("INSERT INTO recommend VALUES (%s,%s,%s,CURDATE()) ", (recommendid,session['userid'],name))
+      g.database.execute("INSERT INTO recommend VALUES(%s,%s,%s,CURDATE())", (recommendid,session['userid'],name))
       g.conn.commit()
 
       g.database.execute("INSERT INTO recommend_songs VALUES (%s,%s)", (songid, recommendid))
