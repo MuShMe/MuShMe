@@ -25,6 +25,15 @@ def getLikes(songid):
   return g.database.fetchone()[0]
 
 
+def getLiked(songid):
+  likes = g.database.execute("SELECT User_id FROM user_like_song WHERE User_id=%s AND Song_id=%s", (session['userid'],songid))
+
+  if likes > 0:
+    return True
+  else:
+    return False
+
+
 def getplaylists():
   g.database.execute("SELECT Playlist_id FROM playlists WHERE User_id=%s" % (session['userid']))
   playlists = g.database.fetchall()
@@ -181,7 +190,8 @@ def songPage(songid):
               form6 = searchForm(),
               reportform= ReportForm(),
               playlists=getplaylists(),
-              friends=getFriendsToRecommend(songid))
+              friends=getFriendsToRecommend(songid),
+              liked=getLiked(songid))
 
 
 @SONG.route("/song/<int:songid>/<userid>/addtoplaylist", methods=["POST"])
@@ -241,16 +251,22 @@ def reportsongcomment(songid,commentid):
     return redirect(url_for('SONG.songPage', songid=songid))
 
 
-@SONG.route('/song/<songid>/like/')
+@SONG.route('/song/<songid>/like', methods=['POST'])
 def user_like(songid):
-  query = (("SELECT * FROM user_like_song WHERE Song_id=%s AND User_id=%s") % (songid,session['userid']))
+  print request.form
+  if request.form['liketype'] == "Like":
+    query = (("SELECT * FROM user_like_song WHERE Song_id=%s AND User_id=%s") % (songid,session['userid']))
 
-  if (g.database.execute(query) == 0):
-    query = ("INSERT INTO user_like_song(Song_id, User_id) VALUES (%s,%s)" % (songid, session['userid']))
-    print query
-    g.database.execute(query)
+    if (g.database.execute(query) == 0):
+      query = ("INSERT INTO user_like_song(Song_id, User_id) VALUES (%s,%s)" % (songid, session['userid']))
+      print query
+      g.database.execute(query)
+      g.conn.commit()
+  
+  else:
+    g.database.execute("DELETE FROM user_like_song WHERE Song_id=%s AND User_id=%s", (songid, session['userid']))
     g.conn.commit()
-    
+
   return redirect(url_for('SONG.songPage', songid=songid))
 
 

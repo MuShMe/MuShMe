@@ -67,7 +67,7 @@
 					{% if liker['profilepic'][0]  != NULL %}
 					<td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename=liker['profilepic'])}}"></a></td>
 					{% else %}
-					<td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/profile.png')}}"></a></td>
+					<td><a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/ProfilePic/profile.png')}}"></a></td>
 					{% endif %}
 					<td><a href="{{url_for('userProfile',userid=liker['userid']) }}"><h4>{{ liker['username']}} </h4></a></td>
 					</tr>
@@ -77,9 +77,12 @@
 					{%endif%}
 				</tbody>
 			</table>
-			<!-- if(already_liked)!=True -->
-			<form action="{{url_for('SONG.user_like', songid=songid)}}">
-				<input type="submit" class="btn btn-primary button-like" value="Like">
+			<form action="{{url_for('SONG.user_like', songid=songid)}}" method="POST">
+				{% if liked == False %}
+				<input type="submit" name="liketype" class="btn btn-primary button-like" value="Like">
+				{% else %}
+				<input type="submit" name="liketype" class="btn btn-danger button-like" value="Unlike">
+				{% endif %}
 			</form>
 		</div>
 	</div>
