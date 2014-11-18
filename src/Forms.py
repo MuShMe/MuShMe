@@ -33,12 +33,12 @@ class SelectDateWidget(object):
 class ContactForm(Form):
 	name = TextField("Full Name", [validators.Required("Please enter a Name")])
 	username = TextField('Username', [validators.Length(min=4, max=25,message="Username should be of minimum 4 and maximum 25 characters"),validators.Required("Please fill in a username")])
-	email = TextField('Email Address', [validators.Length(min=6, max=35),validators.Required()])
+	email = TextField('Email Address', [validators.Length(min=6, max=35),validators.Required(), validators.Email()])
 	password = PasswordField('Password', [
 		validators.Required("You need to type a password"),
 		validators.EqualTo('confirm', message='Passwords must match')
 	])
-	confirm = PasswordField('Confirm Password',[validators.Required("Please Enter your Date Of Birth")])
+	confirm = PasswordField('Confirm Password',[validators.Required("Please reenter your password")])
 	accept_tos = BooleanField('I accept the Terms Of Services', [validators.Required("Please Accept the Terms Of Services")])
 
 class LoginForm(Form):

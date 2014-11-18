@@ -97,44 +97,57 @@ def login():
         return redirect(url_for(('index')))
 
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ))
+
+
 @app.route('/signup', methods=['POST'])
 def signup():
     session["signup"] = True    
     session["login"] = False
     contactform = ContactForm(request.form, prefix='form2')
 
-    if validate(contactform.email.data,contactform.username.data):
-        check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ("%s","%s","%s","%s")""" % 
-                                        (contactform.username.data,
-                                        contactform.email.data,
-                                        hashlib.sha1(contactform.password.data).hexdigest(),contactform.name.data,
-                                        ))
-        if check_signup:
-            g.conn.commit()
-            g.database.execute("""SELECT User_id from MuShMe.entries WHERE Email_id="%s" AND Pwdhash="%s" """ %
-                                        (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
-            user_id = g.database.fetchone()
-            for uid in user_id:
-                session['userid'] = uid
-                g.database.execute("""SELECT Username from MuShMe.entries WHERE User_id="%s" """ % uid )
-                session['UserName']=g.database.fetchone()[0]
-                g.database.execute("""SELECT Privilege FROM MuShMe.entries WHERE User_id="%s" """ % uid)
-                session['privilege'] = g.database.fetchone()[0]
-                g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
-                session['profilepic'] = g.database.fetchone()[0]
-                session['logged_in'] = True
-                g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
-                session["Name"]=g.database.fetchone()
-                g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % uid )
-                session["dob"]=str(g.database.fetchone())
-                newPlaylist = session['UserName'] + ' default collection'
-                g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (newPlaylist,uid))
+    if contactform.validate_on_submit():
+        if validate(contactform.email.data,contactform.username.data):
+            check_signup = g.database.execute("""INSERT into MuShMe.entries (Username,Email_id,Pwdhash,Name) VALUES ("%s","%s","%s","%s")""" % 
+                                            (contactform.username.data,
+                                            contactform.email.data,
+                                            hashlib.sha1(contactform.password.data).hexdigest(),contactform.name.data,
+                                            ))
+            if check_signup:
                 g.conn.commit()
-                return redirect(url_for('userProfile',userid=uid))
+                g.database.execute("""SELECT User_id from MuShMe.entries WHERE Email_id="%s" AND Pwdhash="%s" """ %
+                                            (contactform.email.data, hashlib.sha1(contactform.password.data).hexdigest()))
+                user_id = g.database.fetchone()
+                for uid in user_id:
+                    session['userid'] = uid
+                    g.database.execute("""SELECT Username from MuShMe.entries WHERE User_id="%s" """ % uid )
+                    session['UserName']=g.database.fetchone()[0]
+                    g.database.execute("""SELECT Privilege FROM MuShMe.entries WHERE User_id="%s" """ % uid)
+                    session['privilege'] = g.database.fetchone()[0]
+                    g.database.execute("""SELECT Profile_Pic FROM MuShMe.entries WHERE User_id="%s" """ % uid)
+                    session['profilepic'] = g.database.fetchone()[0]
+                    session['logged_in'] = True
+                    g.database.execute("""SELECT Name from MuShMe.entries WHERE User_id="%s" """ % uid )
+                    session["Name"]=g.database.fetchone()
+                    g.database.execute("""SELECT DOB from MuShMe.entries WHERE User_id="%s" """ % uid )
+                    session["dob"]=str(g.database.fetchone())
+                    newPlaylist = session['UserName'] + ' default collection'
+                    g.database.execute("""INSERT INTO MuShMe.playlists (Playlist_name, User_id) VALUES ("%s","%s")""" % (newPlaylist,uid))
+                    g.conn.commit()
+                    return redirect(url_for('userProfile',userid=uid))
+            else:
+                flash("Please enter valid data !")
         else:
-            flash("Please enter valid data !")
+            flash("Username or Email has been taken")
     else:
-        flash("Username or Email has been taken")
+        flash_errors(contactform)
+
     return render_template('homepage/index.html', form1=LoginForm(prefix='form1'), form2=contactform)
 
 def validate(email,username):
