@@ -43,12 +43,12 @@ CONTRIBUTION
 
 TODO
 ====
-* Get recommendations working.
-* Get everything sorted so our app doesn't break all the time.
-* Improve the search.
-* A possibly better looking interface.
+* ~~Get recommendations working.~~
+* ~~Get everything sorted so our app doesn't break all the time.~~
+* ~~Improve the search.~~
+* ~~A possibly better looking interface.~~
 * A lot of minor fixes.
-* Fix the damn profile pics.
+* ~~Fix the damn profile pics.~~
 
 
 OPTIONALLY
