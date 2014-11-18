@@ -24,27 +24,10 @@ import getpass
 #For hashing said passwords
 import hashlib
 
-def readtags(library):
+def readtags(library, authreturn, headers):
     
     if library[-1] != '/':
         library += '/'
-
-    #Authenticate the user
-    auth = {}
-    headers = {}
-    headers['Content-Type'] = 'application/json'
-
-    auth['email'] = raw_input("Enter email-id for mushme.com: ")
-    auth['password'] = hashlib.sha1(getpass.getpass("Enter password for %s: " % auth['email'])).hexdigest()
-
-    request = urllib2.Request('http://localhost:5000/api/auth/',json.dumps(auth), headers)
-    response = urllib2.urlopen(request)
-
-    authreturn = json.load(response)
-
-    if 'token' not in authreturn:
-        print("Authentication failure.")
-        sys.exit(0)
 
     for files in os.listdir(library):
 
@@ -80,7 +63,7 @@ def readtags(library):
                     else:
                         print("Tags for %s are not complete, not added to database, or collection.", library+ files)        
         else:
-            readtags(filepath)
+            readtags(filepath, authreturn, headers)
 
 
 '''
@@ -96,7 +79,24 @@ def main():
         library = sys.argv[1]
 
     if os.path.isdir(library):
-        readtags(library)
+        #Authenticate the user
+        auth = {}
+        headers = {}
+        headers['Content-Type'] = 'application/json'
+
+        auth['email'] = raw_input("Enter email-id for mushme.com: ")
+        auth['password'] = hashlib.sha1(getpass.getpass("Enter password for %s: " % auth['email'])).hexdigest()
+
+        request = urllib2.Request('http://localhost:5000/api/auth/',json.dumps(auth), headers)
+        response = urllib2.urlopen(request)
+
+        authreturn = json.load(response)
+
+        if 'token' not in authreturn:
+            print("Authentication failure.")
+            sys.exit(0)
+
+        readtags(library,authreturn,headers)
     else:
         print(library + ' is not a valid path to a folder')
         sys.exit(2)
