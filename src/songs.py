@@ -56,12 +56,16 @@ def getArtistData(songid):
   artist = []
 
   for artistid in artistids:
-    g.database.execute("SELECT Artist_id,Artist_name FROM artists WHERE Artist_id=%s" % artistid[0])
+    g.database.execute("SELECT Artist_id,Artist_name, Artist_pic FROM artists WHERE Artist_id=%s" % artistid[0])
     temp = g.database.fetchone()
 
     if temp:
       data['id'] = temp[0]
       data['name'] = temp[1]
+      data['pic'] = temp[2]
+
+      if data['pic'] == None:
+        data['pic'] = 'img/artist.jpg'
       artist.append(data)
 
   return artist
@@ -280,15 +284,17 @@ def recommendSong(songid):
       recommendid = g.database.fetchone()
 
       if recommendid[0] == None:
-        recommendid = 0
+        recommendid = 1
       else:
         recommendid = recommendid[0] + 1
 
       print recommendid, session['userid'], name
-      g.database.execute("INSERT INTO recommend VALUES(%s,%s,%s,CURDATE())", (recommendid,session['userid'],name))
+      query = ("INSERT INTO recommend VALUES(%s,%s,%s,CURDATE())" % (recommendid,session['userid'],name))
+      g.database.execute(query);
       g.conn.commit()
 
-      g.database.execute("INSERT INTO recommend_songs VALUES (%s,%s)", (songid, recommendid))
+      query = ("INSERT INTO recommend_songs(Song_id, Recommend_id) VALUES (%s,%s)" % (songid, recommendid))
+      g.database.execute(query);
       g.conn.commit()
 
 

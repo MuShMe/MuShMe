@@ -25,6 +25,9 @@ def getArtistdata(artistid):
     data['end'] = row[3]
     data['update'] = row[4]
     data['profilepic'] = row[1]
+
+    if data['profilepic'] == None:
+      data['profilepic'] = 'img/artist.png'
     Artists.append(data)
   return Artists
 

@@ -73,4 +73,4 @@ def addremark(complaintid):
 		g.database.execute("""UPDATE complaints SET remarks="%s" WHERE Complain_id=%s """ % (request.form['remarks'], complaintid))
 		g.conn.commit()
 
-	return redirect(url_for('admin.adminPage', userid= session['userid']))		
+	return redirect(url_for('admin.adminPage', userid= session['userid'], status="all"))		

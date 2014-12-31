@@ -104,7 +104,7 @@
 						<a href="#"><img class="img-circle profilepic-small playlists" src="{{url_for('static',filename='img/albumart.jpg')}}"></a>
 						{% endif %}
 					</td>
-					<td><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><h4>{{ song['songname'] }}></h4></a></td>
+					<td><a href="{{url_for('SONG.songPage',songid=song['songid'])}}"><h4>{{ song['songname'] }}</h4></a></td>
 					</tr>
 					{%endfor%}
 				</tbody>
