@@ -322,9 +322,13 @@ form{
     }
     
     .back {
+
+      background: #fff;
+      opacity: 0.8;
+      color: #000;
       position: absolute;
       top: 25%;
-      left: 30%;
+      left: 18%;
       text-align: center;
       display: block;
       padding: 7px;
@@ -336,17 +340,11 @@ form{
       /*background:rgba(255, 255, 255, 0.09);*/
       font-weight: bold;
       font-size: 13px;
-      color: #bbb;
+      color: #000;
       -webkit-transition: all 200ms ease-out;
       -moz-transition: all 200ms ease-out;
       -o-transition: all 200ms ease-out;
       transition: all 200ms ease-out;
-      color: #fff;
-    }
-    .back:hover {
-      background: #fff;
-      opacity: 0.8;
-      color: #000;
     }
     
     
@@ -440,8 +438,8 @@ a.forgot:hover{
 .foot{
       float: bottom;
       text-align: center;
-      margin-top: 65%;
-      word-spacing: 4em;
+      margin-top: 40%;
+      clear: both;
     }
 .top{
         margin-top: 6em;
@@ -450,7 +448,7 @@ a.forgot:hover{
 
 .pushitup{
   top: 15%;
-      left: 23%;
+      left: 18%;
       padding: 50px 50px 10px;
     }
 
